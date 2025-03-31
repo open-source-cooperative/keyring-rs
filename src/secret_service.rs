@@ -174,8 +174,7 @@ impl CredentialApi for SsCredential {
     /// returns an [Ambiguous](ErrorCode::Ambiguous)
     /// error with a credential for each matching item.
     fn get_password(&self) -> Result<String> {
-        let passwords: Vec<String> = self.map_matching_items(get_item_password, true)?;
-        Ok(passwords[0].clone())
+        Ok(self.map_matching_items(get_item_password, true)?.remove(0))
     }
 
     /// Gets the secret on a unique matching item, if it exists.
@@ -186,8 +185,7 @@ impl CredentialApi for SsCredential {
     /// returns an [Ambiguous](ErrorCode::Ambiguous)
     /// error with a credential for each matching item.
     fn get_secret(&self) -> Result<Vec<u8>> {
-        let secrets: Vec<Vec<u8>> = self.map_matching_items(get_item_secret, true)?;
-        Ok(secrets[0].clone())
+        Ok(self.map_matching_items(get_item_secret, true)?.remove(0))
     }
 
     /// Get attributes on a unique matching item, if it exists
@@ -282,7 +280,7 @@ impl SsCredential {
     ///
     /// The created credential will have all the attributes and label
     /// of the underlying item, so you can examine them.
-    pub fn new_from_item(item: &Item) -> Result<Self> {
+    pub fn new_from_item(item: Item) -> Result<Self> {
         let attributes = item.get_attributes().map_err(decode_error)?;
         let target = attributes.get("target").cloned();
         Ok(Self {
@@ -295,8 +293,9 @@ impl SsCredential {
     /// Construct a credential for this credential's underlying matching item,
     /// if there is exactly one.
     pub fn new_from_matching_item(&self) -> Result<Self> {
-        let credentials = self.map_matching_items(Self::new_from_item, true)?;
-        Ok(credentials[0].clone())
+        Ok(self
+            .map_matching_items(Self::new_from_item, true)?
+            .remove(0))
     }
 
     /// If there are multiple matching items for this credential, get all of their passwords.
@@ -328,40 +327,48 @@ impl SsCredential {
     /// credential for each of the matching items.
     pub fn map_matching_items<F, T>(&self, f: F, require_unique: bool) -> Result<Vec<T>>
     where
-        F: Fn(&Item) -> Result<T>,
+        F: Fn(Item) -> Result<T>,
         T: Sized,
     {
         #[cfg(any(feature = "crypto-rust", feature = "crypto-openssl"))]
         let session_type = EncryptionType::Dh;
         #[cfg(not(any(feature = "crypto-rust", feature = "crypto-openssl")))]
         let session_type = EncryptionType::Plain;
+
         let ss = SecretService::connect(session_type).map_err(platform_failure)?;
-        let attributes: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
-        let search = ss.search_items(attributes).map_err(decode_error)?;
-        let count = search.locked.len() + search.unlocked.len();
-        if count == 0 && matches!(self.target.as_ref(), Some(t) if t == "default") {
-            return self.map_matching_legacy_items(&ss, f, require_unique);
-        }
-        if require_unique {
-            if count == 0 {
-                return Err(ErrorCode::NoEntry);
-            } else if count > 1 {
-                let mut creds: Vec<Box<Credential>> = vec![];
-                for item in search.locked.iter().chain(search.unlocked.iter()) {
-                    let cred = Self::new_from_item(item)?;
-                    creds.push(Box::new(cred))
-                }
-                return Err(ErrorCode::Ambiguous(creds));
+
+        let attrs: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
+        let search = ss.search_items(attrs).map_err(decode_error)?;
+
+        if search.locked.is_empty() && search.unlocked.is_empty() {
+            if let Some("default") = self.target.as_deref() {
+                return self.map_matching_legacy_items(&ss, f, require_unique);
             }
         }
-        let mut results: Vec<T> = vec![];
-        for item in search.unlocked.iter() {
-            results.push(f(item)?);
+
+        let items: Vec<Item<'_>> = search.unlocked.into_iter().chain(search.locked).collect();
+
+        match items.len() {
+            0 => return Err(ErrorCode::NoEntry),
+            n if n > 1 && require_unique => {
+                let creds: Result<Vec<Box<Credential>>> = items
+                    .into_iter()
+                    .map(|item| {
+                        Self::new_from_item(item).map(|cred| Box::new(cred) as Box<Credential>)
+                    })
+                    .collect();
+                return Err(ErrorCode::Ambiguous(creds?));
+            }
+            _ => {}
         }
-        for item in search.locked.iter() {
+
+        let mut results: Vec<T> = Vec::with_capacity(items.len());
+
+        for item in items.into_iter() {
             item.unlock().map_err(decode_error)?;
             results.push(f(item)?);
         }
+
         Ok(results)
     }
 
@@ -395,28 +402,33 @@ impl SsCredential {
         require_unique: bool,
     ) -> Result<Vec<T>>
     where
-        F: Fn(&Item) -> Result<T>,
+        F: Fn(Item<'_>) -> Result<T>,
         T: Sized,
     {
         let collection = ss.get_default_collection().map_err(decode_error)?;
         let attributes = self.search_attributes(true);
-        let search = collection.search_items(attributes).map_err(decode_error)?;
-        if require_unique {
-            if search.is_empty() && require_unique {
-                return Err(ErrorCode::NoEntry);
-            } else if search.len() > 1 {
-                let mut creds: Vec<Box<Credential>> = vec![];
-                for item in search.iter() {
-                    let cred = Self::new_from_item(item)?;
-                    creds.push(Box::new(cred))
-                }
-                return Err(ErrorCode::Ambiguous(creds));
+        let items = collection.search_items(attributes).map_err(decode_error)?;
+
+        match items.len() {
+            0 => return Err(ErrorCode::NoEntry),
+            n if n > 1 && require_unique => {
+                let creds: Result<Vec<Box<Credential>>> = items
+                    .into_iter()
+                    .map(|item| {
+                        Self::new_from_item(item).map(|cred| Box::new(cred) as Box<Credential>)
+                    })
+                    .collect();
+                return Err(ErrorCode::Ambiguous(creds?));
             }
+            _ => {}
         }
-        let mut results: Vec<T> = vec![];
-        for item in search.iter() {
+
+        let mut results: Vec<T> = Vec::with_capacity(items.len());
+
+        for item in items.into_iter() {
             results.push(f(item)?);
         }
+
         Ok(results)
     }
 
@@ -510,24 +522,24 @@ pub fn create_collection<'a>(ss: &'a SecretService, name: &str) -> Result<Collec
 }
 
 /// Given an existing item, set its secret.
-pub fn set_item_secret(item: &Item, secret: &[u8]) -> Result<()> {
+pub fn set_item_secret(item: Item, secret: &[u8]) -> Result<()> {
     item.set_secret(secret, "text/plain").map_err(decode_error)
 }
 
 /// Given an existing item, retrieve and decode its password.
-pub fn get_item_password(item: &Item) -> Result<String> {
+pub fn get_item_password(item: Item) -> Result<String> {
     let bytes = item.get_secret().map_err(decode_error)?;
     decode_password(bytes)
 }
 
 /// Given an existing item, retrieve its secret.
-pub fn get_item_secret(item: &Item) -> Result<Vec<u8>> {
+pub fn get_item_secret(item: Item) -> Result<Vec<u8>> {
     let secret = item.get_secret().map_err(decode_error)?;
     Ok(secret)
 }
 
 /// Given an existing item, retrieve its non-controlled attributes.
-pub fn get_item_attributes(item: &Item) -> Result<HashMap<String, String>> {
+pub fn get_item_attributes(item: Item) -> Result<HashMap<String, String>> {
     let mut attributes = item.get_attributes().map_err(decode_error)?;
     attributes.remove("target");
     attributes.remove("service");
@@ -537,7 +549,7 @@ pub fn get_item_attributes(item: &Item) -> Result<HashMap<String, String>> {
 }
 
 /// Given an existing item, retrieve its non-controlled attributes.
-pub fn update_item_attributes(item: &Item, attributes: &HashMap<&str, &str>) -> Result<()> {
+pub fn update_item_attributes(item: Item, attributes: &HashMap<&str, &str>) -> Result<()> {
     let existing = item.get_attributes().map_err(decode_error)?;
     let mut updated: HashMap<&str, &str> = HashMap::new();
     for (k, v) in existing.iter() {
@@ -567,7 +579,7 @@ pub fn update_item_attributes(item: &Item, attributes: &HashMap<&str, &str>) -> 
 }
 
 // Given an existing item, delete it.
-pub fn delete_item(item: &Item) -> Result<()> {
+pub fn delete_item(item: Item) -> Result<()> {
     item.delete().map_err(decode_error)
 }
 
