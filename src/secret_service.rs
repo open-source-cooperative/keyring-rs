@@ -265,7 +265,7 @@ impl SsCredential {
     ///
     /// The created credential will have all the attributes and label
     /// of the underlying item, so you can examine them.
-    pub fn new_from_item(item: Item) -> Result<Self> {
+    pub fn new_from_item(item: &Item) -> Result<Self> {
         let attributes = item.get_attributes().map_err(decode_error)?;
         let target = attributes.get("target").cloned();
         Ok(Self {
@@ -312,7 +312,7 @@ impl SsCredential {
     /// credential for each of the matching items.
     pub fn map_matching_items<F, T>(&self, f: F, require_unique: bool) -> Result<Vec<T>>
     where
-        F: Fn(Item) -> Result<T>,
+        F: Fn(&Item) -> Result<T>,
         T: Sized,
     {
         #[cfg(feature = "encrypted")]
@@ -337,7 +337,7 @@ impl SsCredential {
             0 => return Err(ErrorCode::NoEntry),
             n if n > 1 && require_unique => {
                 let creds: Result<Vec<Box<Credential>>> = items
-                    .into_iter()
+                    .iter()
                     .map(|item| {
                         Self::new_from_item(item).map(|cred| Box::new(cred) as Box<Credential>)
                     })
@@ -349,7 +349,7 @@ impl SsCredential {
 
         let mut results: Vec<T> = Vec::with_capacity(items.len());
 
-        for item in items.into_iter() {
+        for item in items.iter() {
             item.unlock().map_err(decode_error)?;
             results.push(f(item)?);
         }
@@ -387,7 +387,7 @@ impl SsCredential {
         require_unique: bool,
     ) -> Result<Vec<T>>
     where
-        F: Fn(Item<'_>) -> Result<T>,
+        F: Fn(&Item<'_>) -> Result<T>,
         T: Sized,
     {
         let collection = ss.get_default_collection().map_err(decode_error)?;
@@ -398,7 +398,7 @@ impl SsCredential {
             0 => return Err(ErrorCode::NoEntry),
             n if n > 1 && require_unique => {
                 let creds: Result<Vec<Box<Credential>>> = items
-                    .into_iter()
+                    .iter()
                     .map(|item| {
                         Self::new_from_item(item).map(|cred| Box::new(cred) as Box<Credential>)
                     })
@@ -410,7 +410,7 @@ impl SsCredential {
 
         let mut results: Vec<T> = Vec::with_capacity(items.len());
 
-        for item in items.into_iter() {
+        for item in items.iter() {
             results.push(f(item)?);
         }
 
@@ -507,24 +507,24 @@ pub fn create_collection<'a>(ss: &'a SecretService, name: &str) -> Result<Collec
 }
 
 /// Given an existing item, set its secret.
-pub fn set_item_secret(item: Item, secret: &[u8]) -> Result<()> {
+pub fn set_item_secret(item: &Item, secret: &[u8]) -> Result<()> {
     item.set_secret(secret, "text/plain").map_err(decode_error)
 }
 
 /// Given an existing item, retrieve and decode its password.
-pub fn get_item_password(item: Item) -> Result<String> {
+pub fn get_item_password(item: &Item) -> Result<String> {
     let bytes = item.get_secret().map_err(decode_error)?;
     decode_password(bytes)
 }
 
 /// Given an existing item, retrieve its secret.
-pub fn get_item_secret(item: Item) -> Result<Vec<u8>> {
+pub fn get_item_secret(item: &Item) -> Result<Vec<u8>> {
     let secret = item.get_secret().map_err(decode_error)?;
     Ok(secret)
 }
 
 /// Given an existing item, retrieve its non-controlled attributes.
-pub fn get_item_attributes(item: Item) -> Result<HashMap<String, String>> {
+pub fn get_item_attributes(item: &Item) -> Result<HashMap<String, String>> {
     let mut attributes = item.get_attributes().map_err(decode_error)?;
     attributes.remove("target");
     attributes.remove("service");
@@ -534,7 +534,7 @@ pub fn get_item_attributes(item: Item) -> Result<HashMap<String, String>> {
 }
 
 /// Given an existing item, retrieve its non-controlled attributes.
-pub fn update_item_attributes(item: Item, attributes: &HashMap<&str, &str>) -> Result<()> {
+pub fn update_item_attributes(item: &Item, attributes: &HashMap<&str, &str>) -> Result<()> {
     let existing = item.get_attributes().map_err(decode_error)?;
     let mut updated: HashMap<&str, &str> = HashMap::new();
     for (k, v) in existing.iter() {
@@ -564,7 +564,7 @@ pub fn update_item_attributes(item: Item, attributes: &HashMap<&str, &str>) -> R
 }
 
 // Given an existing item, delete it.
-pub fn delete_item(item: Item) -> Result<()> {
+pub fn delete_item(item: &Item) -> Result<()> {
     item.delete().map_err(decode_error)
 }
 
