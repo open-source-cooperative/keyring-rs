@@ -350,7 +350,9 @@ impl SsCredential {
         let mut results: Vec<T> = Vec::with_capacity(items.len());
 
         for item in items.iter() {
-            item.unlock().map_err(decode_error)?;
+            if item.is_locked().map_err(decode_error)? {
+                item.unlock().map_err(decode_error)?;
+            }
             results.push(f(item)?);
         }
 
