@@ -346,7 +346,7 @@ impl SsCredential {
             }
         }
 
-        let items: Vec<Item<'_>> = search.unlocked.into_iter().chain(search.locked).collect();
+        let items: Vec<Item> = search.unlocked.into_iter().chain(search.locked).collect();
 
         match items.len() {
             0 => return Err(ErrorCode::NoEntry),
@@ -404,7 +404,7 @@ impl SsCredential {
         require_unique: bool,
     ) -> Result<Vec<T>>
     where
-        F: Fn(&Item<'_>) -> Result<T>,
+        F: Fn(&Item) -> Result<T>,
         T: Sized,
     {
         let collection = ss.get_default_collection().map_err(decode_error)?;
