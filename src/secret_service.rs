@@ -339,35 +339,33 @@ impl SsCredential {
 
         let attrs: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
         let search = ss.search_items(attrs).map_err(decode_error)?;
+        let count = search.locked.len() + search.unlocked.len();
 
-        if search.locked.is_empty() && search.unlocked.is_empty() {
+        if count == 0 {
             if let Some("default") = self.target.as_deref() {
                 return self.map_matching_legacy_items(&ss, f, require_unique);
             }
         }
 
-        let items: Vec<Item> = search.unlocked.into_iter().chain(search.locked).collect();
-
-        match items.len() {
-            0 => return Err(ErrorCode::NoEntry),
-            n if n > 1 && require_unique => {
-                let creds: Result<Vec<Box<Credential>>> = items
-                    .iter()
-                    .map(|item| {
-                        Self::new_from_item(item).map(|cred| Box::new(cred) as Box<Credential>)
-                    })
-                    .collect();
-                return Err(ErrorCode::Ambiguous(creds?));
+        if require_unique {
+            if count == 0 {
+                return Err(ErrorCode::NoEntry);
+            } else if count > 1 {
+                let mut creds: Vec<Box<Credential>> = vec![];
+                for item in search.locked.iter().chain(search.unlocked.iter()) {
+                    let cred = Self::new_from_item(item)?;
+                    creds.push(Box::new(cred))
+                }
+                return Err(ErrorCode::Ambiguous(creds));
             }
-            _ => {}
         }
 
-        let mut results: Vec<T> = Vec::with_capacity(items.len());
-
-        for item in items.iter() {
-            if item.is_locked().map_err(decode_error)? {
-                item.unlock().map_err(decode_error)?;
-            }
+        let mut results: Vec<T> = vec![];
+        for item in search.unlocked.iter() {
+            results.push(f(item)?);
+        }
+        for item in search.locked.iter() {
+            item.unlock().map_err(decode_error)?;
             results.push(f(item)?);
         }
 
@@ -409,28 +407,23 @@ impl SsCredential {
     {
         let collection = ss.get_default_collection().map_err(decode_error)?;
         let attributes = self.search_attributes(true);
-        let items = collection.search_items(attributes).map_err(decode_error)?;
-
-        match items.len() {
-            0 => return Err(ErrorCode::NoEntry),
-            n if n > 1 && require_unique => {
-                let creds: Result<Vec<Box<Credential>>> = items
-                    .iter()
-                    .map(|item| {
-                        Self::new_from_item(item).map(|cred| Box::new(cred) as Box<Credential>)
-                    })
-                    .collect();
-                return Err(ErrorCode::Ambiguous(creds?));
+        let search = collection.search_items(attributes).map_err(decode_error)?;
+        if require_unique {
+            if search.is_empty() && require_unique {
+                return Err(ErrorCode::NoEntry);
+            } else if search.len() > 1 {
+                let mut creds: Vec<Box<Credential>> = vec![];
+                for item in search.iter() {
+                    let cred = Self::new_from_item(item)?;
+                    creds.push(Box::new(cred))
+                }
+                return Err(ErrorCode::Ambiguous(creds));
             }
-            _ => {}
         }
-
-        let mut results: Vec<T> = Vec::with_capacity(items.len());
-
-        for item in items.iter() {
+        let mut results: Vec<T> = vec![];
+        for item in search.iter() {
             results.push(f(item)?);
         }
-
         Ok(results)
     }
 
