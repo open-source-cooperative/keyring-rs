@@ -37,7 +37,9 @@ pub trait CredentialApi {
     /// Set the credential's password (a string).
     ///
     /// This will persist the password in the underlying store.
-    fn set_password(&self, password: &str) -> Result<()>;
+    fn set_password(&self, password: &str) -> Result<()> {
+        self.set_secret(password.as_bytes())
+    }
 
     /// Set the credential's secret (a byte array).
     ///
@@ -48,7 +50,10 @@ pub trait CredentialApi {
     ///
     /// This has no effect on the underlying store. If there is no credential
     /// for this entry, a [NoEntry](crate::Error::NoEntry) error is returned.
-    fn get_password(&self) -> Result<String>;
+    fn get_password(&self) -> Result<String> {
+        let secret = self.get_secret()?;
+        super::error::decode_password(secret)
+    }
 
     /// Retrieve a secret (a byte array) from the credential.
     ///
