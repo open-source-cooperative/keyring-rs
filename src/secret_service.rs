@@ -159,8 +159,7 @@ impl CredentialApi for SsCredential {
     /// returns an [Ambiguous](ErrorCode::Ambiguous)
     /// error with a credential for each matching item.
     fn get_password(&self) -> Result<String> {
-        let passwords: Vec<String> = self.map_matching_items(get_item_password, true)?;
-        Ok(passwords[0].clone())
+        Ok(self.map_matching_items(get_item_password, true)?.remove(0))
     }
 
     /// Gets the secret on a unique matching item, if it exists.
@@ -171,8 +170,7 @@ impl CredentialApi for SsCredential {
     /// returns an [Ambiguous](ErrorCode::Ambiguous)
     /// error with a credential for each matching item.
     fn get_secret(&self) -> Result<Vec<u8>> {
-        let secrets: Vec<Vec<u8>> = self.map_matching_items(get_item_secret, true)?;
-        Ok(secrets[0].clone())
+        Ok(self.map_matching_items(get_item_secret, true)?.remove(0))
     }
 
     /// Get attributes on a unique matching item, if it exists
@@ -280,8 +278,9 @@ impl SsCredential {
     /// Construct a credential for this credential's underlying matching item,
     /// if there is exactly one.
     pub fn new_from_matching_item(&self) -> Result<Self> {
-        let credentials = self.map_matching_items(Self::new_from_item, true)?;
-        Ok(credentials[0].clone())
+        Ok(self
+            .map_matching_items(Self::new_from_item, true)?
+            .remove(0))
     }
 
     /// If there are multiple matching items for this credential, get all of their passwords.
@@ -324,8 +323,10 @@ impl SsCredential {
         let attributes: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
         let search = ss.search_items(attributes).map_err(decode_error)?;
         let count = search.locked.len() + search.unlocked.len();
-        if count == 0 && matches!(self.target.as_ref(), Some(t) if t == "default") {
-            return self.map_matching_legacy_items(&ss, f, require_unique);
+        if count == 0 {
+            if let Some("default") = self.target.as_deref() {
+                return self.map_matching_legacy_items(&ss, f, require_unique);
+            }
         }
         if require_unique {
             if count == 0 {
