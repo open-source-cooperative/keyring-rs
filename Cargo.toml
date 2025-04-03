@@ -24,8 +24,6 @@ windows-native = ["dep:windows-sys", "dep:byteorder"]
 
 ## Link any external required libraries statically
 vendored = ["dbus-secret-service?/vendored"]
-## Encrypt values when passing them to/from the keystore, if supported.
-encrypted = []
 
 [dependencies]
 log = "0.4"

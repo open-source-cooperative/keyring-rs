@@ -132,11 +132,7 @@ impl CredentialApi for SsCredential {
         // an item, the credential must have an explicit target.  All entries created with
         // the [new] or [new_with_target] commands will have explicit targets.  But entries
         // created to wrap 3rd-party items that don't have `target` attributes may not.
-        #[cfg(feature = "encrypted")]
-        let session_type = EncryptionType::Dh;
-        #[cfg(not(feature = "encrypted"))]
-        let session_type = EncryptionType::Plain;
-        let ss = SecretService::connect(session_type).map_err(platform_failure)?;
+        let ss = SecretService::connect(EncryptionType::Dh).map_err(platform_failure)?;
         let name = self.target.as_ref().ok_or_else(empty_target)?;
         let collection = get_collection(&ss, name).or_else(|_| create_collection(&ss, name))?;
         collection
@@ -315,11 +311,7 @@ impl SsCredential {
         F: Fn(&Item) -> Result<T>,
         T: Sized,
     {
-        #[cfg(feature = "encrypted")]
-        let session_type = EncryptionType::Dh;
-        #[cfg(not(feature = "encrypted"))]
-        let session_type = EncryptionType::Plain;
-        let ss = SecretService::connect(session_type).map_err(platform_failure)?;
+        let ss = SecretService::connect(EncryptionType::Dh).map_err(platform_failure)?;
         let attributes: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
         let search = ss.search_items(attributes).map_err(decode_error)?;
         let count = search.locked.len() + search.unlocked.len();
@@ -831,7 +823,7 @@ mod tests {
 
     fn delete_collection(name: &str) {
         let ss =
-            SecretService::connect(EncryptionType::Plain).expect("Can't connect to secret service");
+            SecretService::connect(EncryptionType::Dh).expect("Can't connect to secret service");
         let collection = super::get_collection(&ss, name).expect("Can't find collection to delete");
         collection.delete().expect("Can't delete collection");
     }
@@ -842,7 +834,7 @@ mod tests {
         let cred = SsCredential::new_with_no_target(name, name)
             .expect("Can't create credential with no target");
         let ss =
-            SecretService::connect(EncryptionType::Plain).expect("Can't connect to secret service");
+            SecretService::connect(EncryptionType::Dh).expect("Can't connect to secret service");
         let collection = ss
             .get_default_collection()
             .expect("Can't get default collection");
