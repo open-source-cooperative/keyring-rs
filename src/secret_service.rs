@@ -320,8 +320,8 @@ impl SsCredential {
         #[cfg(not(feature = "encrypted"))]
         let session_type = EncryptionType::Plain;
         let ss = SecretService::connect(session_type).map_err(platform_failure)?;
-        let attrs: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
-        let search = ss.search_items(attrs).map_err(decode_error)?;
+        let attributes: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
+        let search = ss.search_items(attributes).map_err(decode_error)?;
         let count = search.locked.len() + search.unlocked.len();
         if count == 0 {
             if let Some("default") = self.target.as_deref() {
