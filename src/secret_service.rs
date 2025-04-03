@@ -334,19 +334,15 @@ impl SsCredential {
         let session_type = EncryptionType::Dh;
         #[cfg(not(any(feature = "crypto-rust", feature = "crypto-openssl")))]
         let session_type = EncryptionType::Plain;
-
         let ss = SecretService::connect(session_type).map_err(platform_failure)?;
-
         let attrs: HashMap<&str, &str> = self.search_attributes(false).into_iter().collect();
         let search = ss.search_items(attrs).map_err(decode_error)?;
         let count = search.locked.len() + search.unlocked.len();
-
         if count == 0 {
             if let Some("default") = self.target.as_deref() {
                 return self.map_matching_legacy_items(&ss, f, require_unique);
             }
         }
-
         if require_unique {
             if count == 0 {
                 return Err(ErrorCode::NoEntry);
@@ -359,7 +355,6 @@ impl SsCredential {
                 return Err(ErrorCode::Ambiguous(creds));
             }
         }
-
         let mut results: Vec<T> = vec![];
         for item in search.unlocked.iter() {
             results.push(f(item)?);
@@ -368,7 +363,6 @@ impl SsCredential {
             item.unlock().map_err(decode_error)?;
             results.push(f(item)?);
         }
-
         Ok(results)
     }
 
