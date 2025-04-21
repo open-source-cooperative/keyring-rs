@@ -253,14 +253,14 @@ pub fn default_credential_builder() -> Box<CredentialBuilder> {
 }
 
 fn build_default_credential(target: Option<&str>, service: &str, user: &str) -> Result<Entry> {
-    static DEFAULT: std::sync::OnceLock<Box<CredentialBuilder>> = std::sync::OnceLock::new();
+    static DEFAULT: std::sync::LazyLock<Box<CredentialBuilder>> = std::sync::LazyLock::new(default_credential_builder);
     let guard = DEFAULT_BUILDER
         .read()
         .expect("Poisoned RwLock in keyring-rs: please report a bug!");
     let builder = guard
         .inner
         .as_ref()
-        .unwrap_or_else(|| DEFAULT.get_or_init(|| default_credential_builder()));
+        .unwrap_or_else(|| &DEFAULT);
     let credential = builder.build(target, service, user)?;
     Ok(Entry { inner: credential })
 }
