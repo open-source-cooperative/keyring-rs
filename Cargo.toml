@@ -13,14 +13,10 @@ exclude = [".github/"]
 readme = "README.md"
 
 [features]
-default = ["apple-native", "secret-service", "windows-native"]
+default = ["platform-store"]
 
-## Use the built-in Keychain Services on macOS and iOS
-apple-native = ["dep:security-framework"]
-## Use the secret-service on *nix.
-secret-service = ["dep:dbus-secret-service"]
-## Use the built-in credential store on Windows
-windows-native = ["dep:windows-sys", "dep:byteorder"]
+## Enable platform-specific store by default
+platform-store = ["dep:security-framework", "dep:dbus-secret-service", "dep:windows-sys", "dep:byteorder"]
 
 ## Link any external required libraries statically
 vendored = ["dbus-secret-service?/vendored"]

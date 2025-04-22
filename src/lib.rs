@@ -167,15 +167,14 @@ use std::collections::HashMap;
 pub use credential::{Credential, CredentialBuilder};
 pub use error::{Error, Result};
 
+#[cfg(debug_assertions)]
 pub mod mock;
 
 //
 // pick the *nix keystore
 //
-#[cfg(all(
-    any(target_os = "linux", target_os = "freebsd", target_os = "openbsd"),
-    feature = "secret-service"
-))]
+#[cfg(feature = "platform-store")]
+#[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "openbsd"))]
 #[cfg_attr(
     docsrs,
     doc(cfg(any(target_os = "linux", target_os = "freebsd", target_os = "openbsd")))
@@ -185,18 +184,21 @@ pub mod secret_service;
 //
 // pick the Apple keystore
 //
-#[cfg(all(target_os = "macos", feature = "apple-native"))]
+#[cfg(feature = "platform-store")]
+#[cfg(target_os = "macos")]
 #[cfg_attr(docsrs, doc(cfg(target_os = "macos")))]
 pub mod macos;
 
-#[cfg(all(any(target_os = "macos", target_os = "ios"), feature = "apple-native"))]
+#[cfg(feature = "platform-store")]
+#[cfg(any(target_os = "macos", target_os = "ios"))]
 #[cfg_attr(docsrs, doc(cfg(any(target_os = "macos", target_os = "ios"))))]
 pub mod ios;
 
 //
 // pick the Windows keystore
 //
-#[cfg(all(target_os = "windows", feature = "windows-native"))]
+#[cfg(feature = "platform-store")]
+#[cfg(target_os = "windows")]
 #[cfg_attr(docsrs, doc(cfg(target_os = "windows")))]
 pub mod windows;
 
@@ -229,27 +231,28 @@ pub fn set_default_credential_builder(new: Box<CredentialBuilder>) {
 }
 
 pub fn default_credential_builder() -> Box<CredentialBuilder> {
-    #[cfg(any(
-        all(target_os = "linux", feature = "secret-service"),
-        all(target_os = "freebsd", feature = "secret-service"),
-        all(target_os = "openbsd", feature = "secret-service")
-    ))]
-    return secret_service::default_credential_builder();
-    #[cfg(all(target_os = "macos", feature = "apple-native"))]
-    return macos::default_credential_builder();
-    #[cfg(all(target_os = "ios", feature = "apple-native"))]
-    return ios::default_credential_builder();
-    #[cfg(all(target_os = "windows", feature = "windows-native"))]
-    return windows::default_credential_builder();
-    #[cfg(not(any(
-        all(target_os = "linux", feature = "secret-service"),
-        all(target_os = "freebsd", feature = "secret-service"),
-        all(target_os = "openbsd", feature = "secret-service"),
-        all(target_os = "macos", feature = "apple-native"),
-        all(target_os = "ios", feature = "apple-native"),
-        all(target_os = "windows", feature = "windows-native"),
-    )))]
-    credential::nop_credential_builder()
+    #[cfg(not(feature = "platform-store"))]
+    return credential::nop_credential_builder();
+
+    #[cfg(feature = "platform-store")]
+    {
+        #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "openbsd"))]
+        let builder = secret_service::default_credential_builder();
+
+        #[cfg(feature = "platform-store")]
+        #[cfg(target_os = "macos")]
+        let builder = macos::default_credential_builder();
+
+        #[cfg(feature = "platform-store")]
+        #[cfg(target_os = "ios")]
+        let builder = ios::default_credential_builder();
+
+        #[cfg(feature = "platform-store")]
+        #[cfg(target_os = "windows")]
+        let builder = windows::default_credential_builder();
+
+        builder
+    }
 }
 
 fn build_default_credential(target: Option<&str>, service: &str, user: &str) -> Result<Entry> {

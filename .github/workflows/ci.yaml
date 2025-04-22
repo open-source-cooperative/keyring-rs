@@ -121,7 +121,7 @@ jobs:
           target: aarch64-apple-ios
 
       - name: Build iOS library
-        run: cargo build --target aarch64-apple-ios --features=apple-native --example=iostest
+        run: cargo build --target aarch64-apple-ios --example=iostest
 
   msrv_native:
     runs-on: ubuntu-latest
