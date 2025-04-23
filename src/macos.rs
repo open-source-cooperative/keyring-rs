@@ -86,7 +86,7 @@ impl CredentialApi for MacCredential {
         let (password_bytes, _) =
             find_generic_password(Some(&[get_keychain(self)?]), &self.service, &self.account)
                 .map_err(decode_error)?;
-        decode_password(password_bytes.to_vec())
+        decode_password(password_bytes.to_owned())
     }
 
     /// Look up the secret for this entry, if any.
@@ -97,7 +97,7 @@ impl CredentialApi for MacCredential {
         let (password_bytes, _) =
             find_generic_password(Some(&[get_keychain(self)?]), &self.service, &self.account)
                 .map_err(decode_error)?;
-        Ok(password_bytes.to_vec())
+        Ok(password_bytes.to_owned())
     }
 
     /// Delete the underlying generic credential for this entry, if any.

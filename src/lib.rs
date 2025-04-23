@@ -47,7 +47,7 @@ by two types (with associated traits):
 
 This crate runs on several different platforms, and on each one
 it provides (by default) an implementation of a default credential store used
-on that platform (see [builtin_credential_builder]).
+on that platform (see [default_credential_builder]).
 These implementations work by mapping the data used to identify an entry
 to data used to identify platform-specific storage objects.
 For example, on macOS, the service and user provided for an entry

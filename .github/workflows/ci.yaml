@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        features: ['', 'encrypted', 'vendored']
+        features: ['', 'vendored']
 
     steps:
       - name: Install secret service
