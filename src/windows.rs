@@ -36,6 +36,8 @@ shown that modifying the same entry in the same (almost simultaneous) order from
 different threads produces different results on different runs.
 */
 
+use super::credential::{Credential, CredentialApi, CredentialBuilder, CredentialBuilderApi};
+use super::error::{Error as ErrorCode, Result};
 use byteorder::{ByteOrder, LittleEndian};
 use std::collections::HashMap;
 use std::iter::once;
@@ -50,9 +52,7 @@ use windows_sys::Win32::Security::Credentials::{
     CRED_MAX_STRING_LENGTH, CRED_MAX_USERNAME_LENGTH, CRED_PERSIST_ENTERPRISE, CRED_TYPE_GENERIC,
     CREDENTIAL_ATTRIBUTEW, CREDENTIALW, CredDeleteW, CredFree, CredReadW, CredWriteW,
 };
-
-use super::credential::{Credential, CredentialApi, CredentialBuilder, CredentialBuilderApi};
-use super::error::{Error as ErrorCode, Result};
+use zeroize::Zeroize;
 
 /// The representation of a Windows Generic credential.
 ///
@@ -83,10 +83,14 @@ impl CredentialApi for WinCredential {
         // charset for Windows strings.  This allows interoperability with native
         // Windows credential APIs.  But the storage for the credential is actually
         // a little-endian blob, because Windows credentials can contain anything.
-        let blob_u16 = to_wstr_no_null(password);
+        let mut blob_u16 = to_wstr_no_null(password);
         let mut blob = vec![0; blob_u16.len() * 2];
         LittleEndian::write_u16_into(&blob_u16, &mut blob);
-        self.set_secret(&blob)
+        let result = self.set_secret(&blob);
+        // make sure that the copies of the secret are erased
+        blob_u16.zeroize();
+        blob.zeroize();
+        result
     }
 
     /// Create and write a credential with secret for this entry.
@@ -264,10 +268,13 @@ impl WinCredential {
         // raw pointer to credential, is coerced from &mut
         let p_credential: *const CREDENTIALW = &mut credential;
         // Call windows API
-        match unsafe { CredWriteW(p_credential, 0) } {
+        let result = match unsafe { CredWriteW(p_credential, 0) } {
             0 => Err(decode_error()),
             _ => Ok(()),
-        }
+        };
+        // erase the copy of the secret
+        blob.zeroize();
+        result
     }
 
     /// Construct a credential from this credential's underlying Generic credential.
@@ -311,7 +318,8 @@ impl WinCredential {
                 let w_credential: CREDENTIALW = unsafe { *p_credential };
                 // Now we can apply the passed extractor function to the credential.
                 let result = f(&w_credential);
-                // Finally, we free the allocated credential.
+                // Finally, we erase the secret and free the allocated credential.
+                erase_secret(&w_credential);
                 unsafe { CredFree(p_credential as *mut _) };
                 result
             }
@@ -404,17 +412,27 @@ impl CredentialBuilderApi for WinCredentialBuilder {
 }
 
 fn extract_password(credential: &CREDENTIALW) -> Result<String> {
-    let blob = extract_secret(credential)?;
+    let mut blob = extract_secret(credential)?;
     // 3rd parties may write credential data with an odd number of bytes,
     // so we make sure that we don't try to decode those as utf16
     if blob.len() % 2 != 0 {
         return Err(ErrorCode::BadEncoding(blob));
     }
-    // Now we know this _can_ be a UTF-16 string, so convert it to
-    // as UTF-16 vector and then try to decode it.
+    // This should be a UTF-16 string, so convert it to
+    // a UTF-16 vector and then try to decode it.
     let mut blob_u16 = vec![0; blob.len() / 2];
     LittleEndian::read_u16_into(&blob, &mut blob_u16);
-    String::from_utf16(&blob_u16).map_err(|_| ErrorCode::BadEncoding(blob))
+    let result = match String::from_utf16(&blob_u16) {
+        Err(_) => Err(ErrorCode::BadEncoding(blob)),
+        Ok(s) => {
+            // we aren't returning the blob, so clear it
+            blob.zeroize();
+            Ok(s)
+        }
+    };
+    // we aren't returning the utf16 blob, so clear it
+    blob_u16.zeroize();
+    result
 }
 
 fn extract_secret(credential: &CREDENTIALW) -> Result<Vec<u8>> {
@@ -425,6 +443,16 @@ fn extract_secret(credential: &CREDENTIALW) -> Result<Vec<u8>> {
     }
     let blob = unsafe { std::slice::from_raw_parts(blob_pointer, blob_len) };
     Ok(blob.to_vec())
+}
+
+fn erase_secret(credential: &CREDENTIALW) {
+    let blob_pointer: *mut u8 = credential.CredentialBlob;
+    let blob_len: usize = credential.CredentialBlobSize as usize;
+    if blob_len == 0 {
+        return;
+    }
+    let blob = unsafe { std::slice::from_raw_parts_mut(blob_pointer, blob_len) };
+    blob.zeroize();
 }
 
 fn to_wstr(s: &str) -> Vec<u16> {
