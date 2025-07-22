@@ -8,6 +8,7 @@ and [CredentialApi] for the entries in the store.  These traits must be implemen
 in a thread-safe way, a requirement captured in the [CredentialBuilder] and
 [Credential] types that wrap them.
  */
+
 use std::any::Any;
 use std::collections::HashMap;
 
@@ -25,7 +26,7 @@ pub trait CredentialApi {
     /// Set the credential's secret (a byte array).
     ///
     /// This will persist the secret in the underlying store.
-    fn set_secret(&self, password: &[u8]) -> Result<()>;
+    fn set_secret(&self, secret: &[u8]) -> Result<()>;
 
     /// Retrieve the password (a string) from the underlying credential.
     ///

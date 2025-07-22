@@ -1,19 +1,22 @@
 [package]
+name = "keyring"
 authors = ["Walther Chen <walther.chen@gmail.com>", "Daniel Brotsky <dev@brotsky.com>"]
 description = "Cross-platform library for managing passwords/credentials"
-homepage = "https://github.com/hwchen/keyring-rs"
-keywords = ["password", "credential", "keychain", "secret-service", "cross-platform"]
-license = "MIT OR Apache-2.0"
-name = "keyring"
-repository = "https://github.com/hwchen/keyring-rs.git"
+
 version = "4.0.0-rc.2"
 rust-version = "1.85"
 edition = "2024"
+
+homepage = "https://github.com/hwchen/keyring-rs"
+keywords = ["password", "credential", "keychain", "secret-service", "cross-platform"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/hwchen/keyring-rs.git"
 exclude = [".github/"]
 readme = "README.md"
 
 [features]
 default = ["apple-native", "secret-service", "windows-native"]
+cast = ["bytemuck"]
 
 ## Use the built-in Keychain Services on macOS and iOS
 apple-native = ["dep:security-framework"]
@@ -28,10 +31,12 @@ vendored = ["dbus-secret-service?/vendored"]
 [dependencies]
 log = "0.4"
 
+bytemuck = { version = "1.23", optional = true , features = ["extern_crate_std"] }
+
 [target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
 security-framework = { version = "3", optional = true }
 
-[target.'cfg(any(target_os = "linux",target_os = "freebsd", target_os = "openbsd"))'.dependencies]
+[target.'cfg(any(target_os = "linux", target_os = "freebsd", target_os = "openbsd"))'.dependencies]
 dbus-secret-service = { version = "4", features = ["crypto-rust"], optional = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
