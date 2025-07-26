@@ -57,6 +57,15 @@ pub enum Error {
     /// This indicates that there was no default credential builder to use;
     /// the client must set one before creating entries.
     NoDefaultCredentialBuilder,
+    #[cfg(feature = "cast")]
+    CastError(bytemuck::PodCastError),
+}
+
+#[cfg(feature = "cast")]
+impl From<bytemuck::PodCastError> for Error {
+    fn from(b_err: bytemuck::PodCastError) -> Self {
+        Self::CastError(b_err)
+    }
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
@@ -90,6 +99,8 @@ impl std::fmt::Display for Error {
                     "No default credential builder is available; set one before creating entries"
                 )
             }
+            #[cfg(feature = "cast")]
+            Error::CastError(b_err) => write!(f, "{b_err}"),
         }
     }
 }
@@ -99,6 +110,8 @@ impl std::error::Error for Error {
         match self {
             Error::PlatformFailure(err) => Some(err.as_ref()),
             Error::NoStorageAccess(err) => Some(err.as_ref()),
+            #[cfg(feature = "cast")]
+            Error::CastError(err) => Some(err),
             _ => None,
         }
     }

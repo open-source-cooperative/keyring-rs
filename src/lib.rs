@@ -201,6 +201,7 @@ pub mod ios;
 pub mod windows;
 
 pub mod credential;
+pub mod credential_ext;
 pub mod error;
 
 #[derive(Default, Debug)]

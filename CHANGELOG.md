@@ -1,4 +1,5 @@
 ## Version 4.0
+- Add optional bytemuck cast utils.
 - Remove all keystores but apple-native, windows-native, and secret-service.
 - Remove use of the async secret-service crate.
 - Remove ability to use plaintext or openssl crypto with secret-service.
