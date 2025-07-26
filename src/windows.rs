@@ -354,7 +354,7 @@ impl WinCredential {
                 username: user.to_string(),
                 target_name: target.to_string(),
                 target_alias: String::new(),
-                comment: format!("{user}@{service}:{target} (keyring v{VERSION})"),
+                comment: format!("keyring v{VERSION}"),
             }
         } else {
             Self {
@@ -369,7 +369,7 @@ impl WinCredential {
                 username: user.to_string(),
                 target_name: format!("{user}.{service}"),
                 target_alias: String::new(),
-                comment: format!("{user}@{service}:{user}.{service} (keyring v{VERSION})"),
+                comment: format!("keyring v{VERSION}"),
             }
         };
         credential.validate_attributes(None, None)?;
