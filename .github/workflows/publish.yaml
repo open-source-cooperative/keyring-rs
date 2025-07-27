@@ -6,6 +6,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ${{ matrix.os }}
@@ -38,8 +41,6 @@ jobs:
       - name: Post keyring-cli executable
         uses: svenstaro/upload-release-action@v2
         with:
-          permissions:
-            contents: write
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: target/release/${{ matrix.executable_name }}
           asset_name: ${{ matrix.posted_name }}
