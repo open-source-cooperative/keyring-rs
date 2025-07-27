@@ -143,6 +143,7 @@ Thanks to the following for helping make this library better, whether through co
 - @thewh1teagle
 - @tmpfs
 - @unkcpz
+- @vermiculus
 - @VorpalBlade
 - @zschreur
 
