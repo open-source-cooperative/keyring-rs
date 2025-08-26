@@ -43,13 +43,13 @@ use std::collections::HashMap;
 use std::iter::once;
 use std::str;
 use windows_sys::Win32::Foundation::{
-    ERROR_BAD_USERNAME, ERROR_INVALID_FLAGS, ERROR_INVALID_PARAMETER, ERROR_NO_SUCH_LOGON_SESSION,
-    ERROR_NOT_FOUND, FILETIME, GetLastError,
+    GetLastError, ERROR_BAD_USERNAME, ERROR_INVALID_FLAGS, ERROR_INVALID_PARAMETER,
+    ERROR_NOT_FOUND, ERROR_NO_SUCH_LOGON_SESSION, FILETIME,
 };
 use windows_sys::Win32::Security::Credentials::{
-    CRED_FLAGS, CRED_MAX_CREDENTIAL_BLOB_SIZE, CRED_MAX_GENERIC_TARGET_NAME_LENGTH,
-    CRED_MAX_STRING_LENGTH, CRED_MAX_USERNAME_LENGTH, CRED_PERSIST_ENTERPRISE, CRED_TYPE_GENERIC,
-    CREDENTIAL_ATTRIBUTEW, CREDENTIALW, CredDeleteW, CredFree, CredReadW, CredWriteW,
+    CredDeleteW, CredFree, CredReadW, CredWriteW, CREDENTIALW, CREDENTIAL_ATTRIBUTEW, CRED_FLAGS,
+    CRED_MAX_CREDENTIAL_BLOB_SIZE, CRED_MAX_GENERIC_TARGET_NAME_LENGTH, CRED_MAX_STRING_LENGTH,
+    CRED_MAX_USERNAME_LENGTH, CRED_PERSIST_ENTERPRISE, CRED_TYPE_GENERIC,
 };
 use zeroize::Zeroize;
 
@@ -504,9 +504,9 @@ fn wrap(code: u32) -> Box<dyn std::error::Error + Send + Sync> {
 mod tests {
     use super::*;
 
-    use crate::Entry;
     use crate::credential::CredentialPersistence;
     use crate::tests::{generate_random_string, generate_random_string_of_len};
+    use crate::Entry;
 
     #[test]
     fn test_persistence() {
