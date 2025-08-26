@@ -41,16 +41,15 @@ use super::error::{Error as ErrorCode, Result};
 use byteorder::{ByteOrder, LittleEndian};
 use std::collections::HashMap;
 use std::iter::once;
-use std::mem::MaybeUninit;
 use std::str;
 use windows_sys::Win32::Foundation::{
-    GetLastError, ERROR_BAD_USERNAME, ERROR_INVALID_FLAGS, ERROR_INVALID_PARAMETER,
-    ERROR_NOT_FOUND, ERROR_NO_SUCH_LOGON_SESSION, FILETIME,
+    ERROR_BAD_USERNAME, ERROR_INVALID_FLAGS, ERROR_INVALID_PARAMETER, ERROR_NO_SUCH_LOGON_SESSION,
+    ERROR_NOT_FOUND, FILETIME, GetLastError,
 };
 use windows_sys::Win32::Security::Credentials::{
-    CredDeleteW, CredFree, CredReadW, CredWriteW, CREDENTIALW, CREDENTIAL_ATTRIBUTEW, CRED_FLAGS,
-    CRED_MAX_CREDENTIAL_BLOB_SIZE, CRED_MAX_GENERIC_TARGET_NAME_LENGTH, CRED_MAX_STRING_LENGTH,
-    CRED_MAX_USERNAME_LENGTH, CRED_PERSIST_ENTERPRISE, CRED_TYPE_GENERIC,
+    CRED_FLAGS, CRED_MAX_CREDENTIAL_BLOB_SIZE, CRED_MAX_GENERIC_TARGET_NAME_LENGTH,
+    CRED_MAX_STRING_LENGTH, CRED_MAX_USERNAME_LENGTH, CRED_PERSIST_ENTERPRISE, CRED_TYPE_GENERIC,
+    CREDENTIAL_ATTRIBUTEW, CREDENTIALW, CredDeleteW, CredFree, CredReadW, CredWriteW,
 };
 use zeroize::Zeroize;
 
@@ -251,7 +250,7 @@ impl WinCredential {
         };
         let attribute_count = 0;
         let attributes: *mut CREDENTIAL_ATTRIBUTEW = std::ptr::null_mut();
-        let mut credential = CREDENTIALW {
+        let credential = CREDENTIALW {
             Flags: flags,
             Type: cred_type,
             TargetName: target_name.as_mut_ptr(),
@@ -265,10 +264,8 @@ impl WinCredential {
             TargetAlias: target_alias.as_mut_ptr(),
             UserName: username.as_mut_ptr(),
         };
-        // raw pointer to credential, is coerced from &mut
-        let p_credential: *const CREDENTIALW = &mut credential;
         // Call windows API
-        let result = match unsafe { CredWriteW(p_credential, 0) } {
+        let result = match unsafe { CredWriteW(&credential, 0) } {
             0 => Err(decode_error()),
             _ => Ok(()),
         };
@@ -289,20 +286,13 @@ impl WinCredential {
         F: FnOnce(&CREDENTIALW) -> Result<T>,
     {
         self.validate_attributes(None, None)?;
-        let mut p_credential = MaybeUninit::uninit();
+        let mut p_credential = std::ptr::null_mut();
         // at this point, p_credential is just a pointer to nowhere.
         // The allocation happens in the `CredReadW` call below.
         let result = {
             let cred_type = CRED_TYPE_GENERIC;
             let target_name = to_wstr(&self.target_name);
-            unsafe {
-                CredReadW(
-                    target_name.as_ptr(),
-                    cred_type,
-                    0,
-                    p_credential.as_mut_ptr(),
-                )
-            }
+            unsafe { CredReadW(target_name.as_ptr(), cred_type, 0, &mut p_credential) }
         };
         match result {
             0 => {
@@ -310,16 +300,11 @@ impl WinCredential {
                 Err(decode_error())
             }
             _ => {
-                // `CredReadW` succeeded, so p_credential points at an allocated credential.
-                // To do anything with it, we need to cast it to the right type.  That takes two steps:
-                // first we remove the "uninitialized" guard around it, then we reinterpret it as a
-                // pointer to the right structure type.
-                let p_credential = unsafe { p_credential.assume_init() };
-                let w_credential: CREDENTIALW = unsafe { *p_credential };
-                // Now we can apply the passed extractor function to the credential.
-                let result = f(&w_credential);
+                // `CredReadW` succeeded, so p_credential points at an allocated credential. Apply
+                // the passed extractor function to it.
+                let result = f(unsafe { &*p_credential });
                 // Finally, we erase the secret and free the allocated credential.
-                erase_secret(&w_credential);
+                erase_secret(unsafe { &mut *p_credential });
                 unsafe { CredFree(p_credential as *mut _) };
                 result
             }
@@ -390,7 +375,7 @@ pub struct WinCredentialBuilder {}
 
 /// Returns an instance of the Windows credential builder.
 ///
-/// On Windows,
+/// On Windows, with the default feature set,
 /// this is called once when an entry is first created.
 pub fn default_credential_builder() -> Box<CredentialBuilder> {
     Box::new(WinCredentialBuilder {})
@@ -445,7 +430,7 @@ fn extract_secret(credential: &CREDENTIALW) -> Result<Vec<u8>> {
     Ok(blob.to_vec())
 }
 
-fn erase_secret(credential: &CREDENTIALW) {
+fn erase_secret(credential: &mut CREDENTIALW) {
     let blob_pointer: *mut u8 = credential.CredentialBlob;
     let blob_len: usize = credential.CredentialBlobSize as usize;
     if blob_len == 0 {
@@ -469,11 +454,11 @@ unsafe fn from_wstr(ws: *const u16) -> String {
         return String::new();
     }
     // this code from https://stackoverflow.com/a/48587463/558006
-    let len = (0..).take_while(|&i| *ws.offset(i) != 0).count();
+    let len = (0..).take_while(|&i| unsafe { *ws.offset(i) != 0 }).count();
     if len == 0 {
         return String::new();
     }
-    let slice = std::slice::from_raw_parts(ws, len);
+    let slice = unsafe { std::slice::from_raw_parts(ws, len) };
     String::from_utf16_lossy(slice)
 }
 
@@ -519,9 +504,9 @@ fn wrap(code: u32) -> Box<dyn std::error::Error + Send + Sync> {
 mod tests {
     use super::*;
 
+    use crate::Entry;
     use crate::credential::CredentialPersistence;
     use crate::tests::{generate_random_string, generate_random_string_of_len};
-    use crate::Entry;
 
     #[test]
     fn test_persistence() {
