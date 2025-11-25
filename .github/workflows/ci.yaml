@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Fetch head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust stable
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -70,7 +70,7 @@ jobs:
           sudo apt install -y libdbus-1-dev libssl-dev gnome-keyring
 
       - name: Fetch head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust stable
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -103,7 +103,7 @@ jobs:
 
     steps:
       - name: Fetch head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust stable
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -119,7 +119,7 @@ jobs:
 
     steps:
       - name: Fetch head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust MSRV
         uses: actions-rust-lang/setup-rust-toolchain@v1

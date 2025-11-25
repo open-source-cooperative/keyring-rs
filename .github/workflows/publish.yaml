@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Fetch head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust stable
         uses: actions-rust-lang/setup-rust-toolchain@v1
