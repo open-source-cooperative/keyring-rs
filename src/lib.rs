@@ -150,7 +150,7 @@ mod keyring_rs {
         {
             use linux_keyutils_keyring_store::Store;
             keyring_core::set_default_store(Store::new_with_configuration(&config)?);
-            Ok(());
+            Ok(())
         }
         #[cfg(not(target_os = "linux"))]
         {
@@ -169,7 +169,7 @@ mod keyring_rs {
         {
             use dbus_secret_service_keyring_store::Store;
             keyring_core::set_default_store(Store::new_with_configuration(&config)?);
-            Ok(());
+            Ok(())
         }
         #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
         {
@@ -188,7 +188,7 @@ mod keyring_rs {
         {
             use zbus_secret_service_keyring_store::Store;
             keyring_core::set_default_store(Store::new_with_configuration(&config)?);
-            Ok(());
+            Ok(())
         }
         #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
         {
@@ -207,7 +207,7 @@ mod keyring_rs {
         {
             use windows_native_keyring_store::Store;
             keyring_core::set_default_store(Store::new_with_configuration(&config)?);
-            Ok(());
+            Ok(())
         }
         #[cfg(not(target_os = "windows"))]
         {
