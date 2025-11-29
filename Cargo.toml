@@ -8,6 +8,7 @@ keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
 version = "4.0.0-alpha.3"
+rust-version = "1.88.0"     # uses let chains
 edition = "2024"
 
 [features]
