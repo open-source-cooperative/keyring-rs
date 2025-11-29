@@ -7,7 +7,7 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.0.0-alpha.2"
+version = "4.0.0-alpha.3"
 edition = "2024"
 
 [features]
