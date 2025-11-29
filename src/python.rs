@@ -101,10 +101,9 @@ mod rust_native_keyring {
         }
 
         #[staticmethod]
-        #[pyo3(signature = (spec))]
-        fn search(spec: HashMap<String, String>) -> Result<Vec<Entry>, Error> {
-            let spec: HashMap<&str, &str> =
-                spec.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
+        #[pyo3(signature = (spec = None))]
+        fn search(spec: Option<HashMap<String, String>>) -> Result<Vec<Entry>, Error> {
+            let spec = crate::internalize(spec.as_ref());
             Ok(keyring_core::Entry::search(&spec)?
                 .into_iter()
                 .map(|e| Entry { inner: e })
