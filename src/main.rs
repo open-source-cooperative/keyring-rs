@@ -1,8 +1,11 @@
 use clap::{Args, Parser};
 use keyring_core::{Entry, Error, Result};
 use rust_native_keyring::{
-    internalize, release_store, use_apple_native_store, use_dbus_secret_service_store,
-    use_linux_keyutils_store, use_sample_store, use_windows_native_store,
+    internalize,
+    stores::{
+        release_store, store_info, use_apple_native_store, use_dbus_secret_service_store,
+        use_linux_keyutils_store, use_sample_store, use_windows_native_store,
+    },
 };
 use std::collections::HashMap;
 
@@ -13,13 +16,17 @@ fn main() {
         Ok(entry) => entry,
         Err(err) => {
             let description = args.description();
-            eprintln!("Couldn't create entry for '{description}': {err:?}");
+            println!("Couldn't create entry for '{description}': {err:?}");
             std::process::exit(1)
         }
     };
     match &args.command {
+        Command::Info => {
+            println!("Store info: {}", store_info());
+            println!("Entry info: {entry:?}");
+        }
         Command::Set { .. } => {
-            let value = args.get_password_and_attributes();
+            let value = args.read_value_to_set();
             match &value {
                 Value::Secret(secret) => match entry.set_secret(secret) {
                     Ok(()) => args.success_message_for(&value),
@@ -30,11 +37,7 @@ fn main() {
                     Err(err) => args.error_message_for(err),
                 },
                 Value::Attributes(attributes) => {
-                    let attrs: HashMap<&str, &str> = attributes
-                        .iter()
-                        .map(|(k, v)| (k.as_str(), v.as_str()))
-                        .collect();
-                    match entry.update_attributes(&attrs) {
+                    match entry.update_attributes(&internalize(Some(attributes))) {
                         Ok(()) => args.success_message_for(&value),
                         Err(err) => args.error_message_for(err),
                     }
@@ -78,7 +81,7 @@ fn set_store(args: &Cli) {
         .split_once(':')
         .unwrap_or((args.module.as_str(), ""));
     let modifiers = Some(parse_attributes(rest.to_string()));
-    let mods = internalize(&modifiers);
+    let mods = internalize(modifiers.as_ref());
     match name {
         "sample" => use_sample_store(&mods),
         "apple" => use_apple_native_store(&mods),
@@ -86,13 +89,13 @@ fn set_store(args: &Cli) {
         "keyutils" => use_linux_keyutils_store(&mods),
         "secret-service" => use_dbus_secret_service_store(&mods),
         _ => {
-            eprintln!("Unknown credential-store module: {}", args.module);
-            eprintln!("Available modules are: sample, apple, windows, keyutils, secret-service");
+            println!("Unknown credential-store module: {}", args.module);
+            println!("Available modules are: sample, apple, windows, keyutils, secret-service");
             std::process::exit(1);
         }
     }
     .unwrap_or_else(|err| {
-        eprintln!(
+        println!(
             "Couldn't initialize {} credential store: {:?}",
             args.module, err
         );
@@ -101,10 +104,10 @@ fn set_store(args: &Cli) {
     if let Some(mods) = modifiers
         && !mods.is_empty()
     {
-        eprintln!("Using the {name} credential store with the following attributes:");
-        eprint_attributes(&mods)
+        println!("Using the {name} credential store with the following attributes:");
+        print_attributes(&mods)
     } else {
-        eprintln!("Using the {name} credential store");
+        println!("Using the {name} credential store");
     }
 }
 
@@ -135,6 +138,8 @@ pub struct Cli {
 
 #[derive(Debug, Parser)]
 pub enum Command {
+    /// Show info about the store and entry in use.
+    Info,
     /// Set the password or update the attributes in the secure store
     Set {
         #[command(flatten)]
@@ -199,32 +204,33 @@ impl Cli {
         let description = self.description();
         match err {
             Error::NoEntry => {
-                eprintln!("No credential found for '{description}'");
+                println!("No credential found for '{description}'");
             }
             Error::Ambiguous(creds) => {
-                eprintln!("More than one credential found for '{description}':");
+                println!("More than one credential found for '{description}':");
                 for (i, cred) in creds.iter().enumerate() {
-                    eprintln!("{: >4}: {cred:?}", i + 1);
+                    println!("{: >4}: {cred:?}", i + 1);
                 }
             }
             err => match self.command {
+                Command::Info => panic!("Can't happen: info command should never fail"),
                 Command::Set { .. } => {
-                    eprintln!("Couldn't set credential data for '{description}': {err:?}");
+                    println!("Couldn't set credential data for '{description}': {err:?}");
                 }
                 Command::Password => {
-                    eprintln!("Couldn't get password for '{description}': {err:?}");
+                    println!("Couldn't get password for '{description}': {err:?}");
                 }
                 Command::Secret => {
-                    eprintln!("Couldn't get secret for '{description}': {err:?}");
+                    println!("Couldn't get secret for '{description}': {err:?}");
                 }
                 Command::Attributes => {
-                    eprintln!("Couldn't get attributes for '{description}': {err:?}");
+                    println!("Couldn't get attributes for '{description}': {err:?}");
                 }
                 Command::Credential => {
-                    eprintln!("Couldn't get credential for '{description}': {err:?}");
+                    println!("Couldn't get credential for '{description}': {err:?}");
                 }
                 Command::Delete => {
-                    eprintln!("Couldn't delete credential for '{description}': {err:?}");
+                    println!("Couldn't delete credential for '{description}': {err:?}");
                 }
             },
         }
@@ -234,24 +240,25 @@ impl Cli {
     fn success_message_for(&self, value: &Value) {
         let description = self.description();
         match self.command {
+            Command::Info => panic!("Can't happen: info command should not invoke success message"),
             Command::Set { .. } => match value {
                 Value::Secret(secret) => {
                     let secret = secret_string(secret);
-                    eprintln!("Set secret for '{description}' to decode of '{secret}'");
+                    println!("Set secret for '{description}' to decode of '{secret}'");
                 }
                 Value::Password(password) => {
-                    eprintln!("Set password for '{description}' to '{password}'");
+                    println!("Set password for '{description}' to '{password}'");
                 }
                 Value::Attributes(attributes) => {
-                    eprintln!("The following attributes for '{description}' were sent for update:");
-                    eprint_attributes(attributes);
+                    println!("The following attributes for '{description}' were sent for update:");
+                    print_attributes(attributes);
                 }
                 _ => panic!("Can't set without a value"),
             },
             Command::Password => {
                 match value {
                     Value::Password(password) => {
-                        eprintln!("Password for '{description}' is '{password}'");
+                        println!("Password for '{description}' is '{password}'");
                     }
                     _ => panic!("Wrong value type for command"),
                 };
@@ -259,34 +266,34 @@ impl Cli {
             Command::Secret => match value {
                 Value::Secret(secret) => {
                     let encoded = secret_string(secret);
-                    eprintln!("Secret for '{description}' encodes as {encoded}");
+                    println!("Secret for '{description}' encodes as {encoded}");
                 }
                 _ => panic!("Wrong value type for command"),
             },
             Command::Attributes => match value {
                 Value::Attributes(attributes) => {
                     if attributes.is_empty() {
-                        eprintln!("No attributes found for '{description}'");
+                        println!("No attributes found for '{description}'");
                     } else {
-                        eprintln!("Attributes for '{description}' are:");
-                        eprint_attributes(attributes);
+                        println!("Attributes for '{description}' are:");
+                        print_attributes(attributes);
                     }
                 }
                 _ => panic!("Wrong value type for command"),
             },
             Command::Credential => match value {
                 Value::Credential(credential) => {
-                    eprintln!("Credential for '{description}' is: {credential:?}");
+                    println!("Credential for '{description}' is: {credential:?}");
                 }
                 _ => panic!("Wrong value type for command"),
             },
             Command::Delete => {
-                eprintln!("Successfully deleted credential for '{description}'");
+                println!("Successfully deleted credential for '{description}'");
             }
         }
     }
 
-    fn get_password_and_attributes(&self) -> Value {
+    fn read_value_to_set(&self) -> Value {
         if let Command::Set { what, input } = &self.command {
             if what.password {
                 Value::Password(read_password(input))
@@ -296,7 +303,7 @@ impl Cli {
                 Value::Attributes(read_and_parse_attributes(input))
             }
         } else {
-            panic!("Can't happen: asking for password and attributes on non-set command")
+            panic!("Can't happen: only set command takes a value input")
         }
     }
 }
@@ -307,7 +314,7 @@ fn secret_string(secret: &[u8]) -> String {
     BASE64_STANDARD.encode(secret)
 }
 
-fn eprint_attributes(attributes: &HashMap<String, String>) {
+fn print_attributes(attributes: &HashMap<String, String>) {
     for (key, value) in attributes {
         println!("    {key}: {value}");
     }
@@ -327,7 +334,7 @@ fn decode_secret(input: &Option<String>) -> Vec<u8> {
     match BASE64_STANDARD.decode(encoded) {
         Ok(secret) => secret,
         Err(err) => {
-            eprintln!("Sorry, the provided secret data is not base64-encoded: {err:?}");
+            println!("Sorry, the provided secret data is not base64-encoded: {err:?}");
             std::process::exit(1);
         }
     }
@@ -348,7 +355,7 @@ fn read_and_parse_attributes(input: &Option<String>) -> HashMap<String, String> 
         rprompt::prompt_reply("Attributes: ").unwrap_or_else(|_| String::new())
     };
     if input.is_empty() {
-        eprintln!("You must specify at least one key=value attribute pair to set");
+        println!("You must specify at least one key=value attribute pair to set");
         std::process::exit(1);
     }
     parse_attributes(input)
@@ -363,7 +370,7 @@ fn parse_attributes(input: String) -> HashMap<String, String> {
     for s in parts.into_iter() {
         let parts: Vec<&str> = s.split("=").collect();
         if parts.len() != 2 || parts[0].is_empty() {
-            eprintln!("Sorry, this part of the attributes string is not a key=val pair: {s}");
+            println!("Sorry, this part of the attributes string is not a key=val pair: {s}");
             std::process::exit(1);
         }
         attributes.insert(parts[0].to_string(), parts[1].to_string());
