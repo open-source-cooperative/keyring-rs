@@ -1,13 +1,15 @@
-[workspace]
-members = ["python-module"]
-
 [package]
 name = "keyring"
 version = "4.0.0-alpha.2"
 edition = "2024"
 
+[lib]
+name = "rust_native_keyring"
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 keyring-core = { version = "0.7", features = ["sample"] }
+pyo3 = { version = "0.27", features = ["extension-module"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 apple-native-keyring-store = { version = "0.2", features = ["keychain"] }

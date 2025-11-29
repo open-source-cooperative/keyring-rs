@@ -8,7 +8,9 @@ Cargo.lock
 target
 fuzz
 libtest.rmeta
-# profiling
+# don't check in the profiling artifacts
 *.profdata
 *.profraw
 
+# don't check in the built python wheels
+/dist/

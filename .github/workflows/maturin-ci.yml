@@ -17,11 +17,6 @@ on:
 permissions:
   contents: read
 
-# this CI only applies to the python-module directory
-defaults:
-  run:
-    working-directory: ./python-module
-
 jobs:
   linux:
     runs-on: ${{ matrix.platform.runner }}
@@ -49,7 +44,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --bindings=pyo3-ffi --release --out dist --find-interpreter
+          args: --bindings=pyo3 --release --out dist --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: auto
       - name: Upload wheels
@@ -80,7 +75,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --bindings=pyo3-ffi --release --out dist --find-interpreter
+          args: --bindings=pyo3 --release --out dist --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: musllinux_1_2
       - name: Upload wheels
@@ -108,7 +103,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --bindings=pyo3-ffi --release --out dist --find-interpreter
+          args: --bindings=pyo3 --release --out dist --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
       - name: Upload wheels
         uses: actions/upload-artifact@v4
@@ -134,7 +129,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --bindings=pyo3-ffi --release --out dist --find-interpreter
+          args: --bindings=pyo3 --release --out dist --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
       - name: Upload wheels
         uses: actions/upload-artifact@v4
@@ -150,7 +145,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: sdist
-          args: --bindings=pyo3-ffi --out dist
+          args: --bindings=pyo3 --out dist
       - name: Upload sdist
         uses: actions/upload-artifact@v4
         with:
