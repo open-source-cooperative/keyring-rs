@@ -17,6 +17,11 @@ on:
 permissions:
   contents: read
 
+# this CI only applies to the python-module directory
+defaults:
+  run:
+    working-directory: ./python-module
+
 jobs:
   linux:
     runs-on: ${{ matrix.platform.runner }}
