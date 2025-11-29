@@ -3,15 +3,14 @@
 #
 #    maturin generate-ci github
 #
-name: CI
+name: maturin-ci
 
 on:
   push:
-    branches:
-      - main
-      - master
     tags:
-      - '*'
+      - v*
+    branches:
+      - *-pyo3
   pull_request:
   workflow_dispatch:
 
@@ -37,7 +36,7 @@ jobs:
           - runner: ubuntu-22.04
             target: ppc64le
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
@@ -68,7 +67,7 @@ jobs:
           - runner: ubuntu-22.04
             target: armv7
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
@@ -95,7 +94,7 @@ jobs:
           - runner: windows-latest
             target: x86
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
@@ -122,7 +121,7 @@ jobs:
           - runner: macos-14
             target: aarch64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
@@ -157,7 +156,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
-    needs: [linux, musllinux, windows, macos, sdist]
+    needs: [ linux, musllinux, windows, macos, sdist ]
     permissions:
       # Use to sign the release artifacts
       id-token: write

@@ -1,14 +1,12 @@
+[workspace]
+members = ["python-module"]
+
 [package]
 name = "keyring"
 version = "4.0.0-alpha.2"
 edition = "2024"
 
-[lib]
-name = "keyring_rs"
-crate-type = ["cdylib"]
-
 [dependencies]
-pyo3 = "0.27"
 keyring-core = { version = "0.7", features = ["sample"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
