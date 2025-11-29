@@ -1,8 +1,8 @@
 ## Keyring-rs
 
-[![build](https://github.com/hwchen/keyring-rs/actions/workflows/ci.yaml/badge.svg)](https://github.com/hwchen/keyring-rs/actions)
-[![dependencies](https://deps.rs/repo/github/hwchen/keyring-rs/status.svg)](https://deps.rs/repo/github/hwchen/keyring-rs)
-[![crates.io](https://img.shields.io/crates/v/keyring.svg?style=flat-square)](https://crates.io/crates/keyring)
+[![build](https://github.com/open-source-cooperative/keyring-rs/actions/workflows/ci.yaml/badge.svg)](https://github.com/open-source-cooperative/keyring-rs/actions)
+[![dependencies](https://deps.rs/repo/github/open-source-cooperative/keyring-rs/status.svg)](https://deps.rs/repo/github/open-source-cooperative/keyring-rs)
+[![crates.io](https://img.shields.io/crates/v/keyring.svg)](https://crates.io/crates/keyring)
 [![docs.rs](https://docs.rs/keyring/badge.svg)](https://docs.rs/keyring)
 
 This crate provides a simple CLI and various other clients of the [Rust keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring). It provides sample Rust code for developers who are looking to use the keyring infrastructure in their projects, a variety of tools for users who want to access their keyring-compatible credential stores, and an inventory of available credential store modules.
