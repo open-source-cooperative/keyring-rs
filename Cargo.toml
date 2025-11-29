@@ -18,7 +18,7 @@ apple-native-keyring-store = { version = "0.2", features = ["keychain"] }
 linux-keyutils-keyring-store = { version = "0.2" }
 
 [target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
-dbus-secret-service-keyring-store = { version = "0.3", features = ["crypto-rust"] }
+dbus-secret-service-keyring-store = { version = "0.3", features = ["crypto-rust", "vendored"] }
 zbus-secret-service-keyring-store = { version = "0.2", features = ["rt-async-io-crypto-rust"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
