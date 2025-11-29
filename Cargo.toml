@@ -1,15 +1,29 @@
 [package]
+authors = ["Daniel Brotsky <dev@brotsky.com>"]
+description = "Sample code and CLI for the Rust Keyring"
+readme = "README.md"
+repository = "https://github.com/open-source-cooperative/keyring-rs"
+homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
+keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
+license = "MIT OR Apache-2.0"
 name = "keyring"
 version = "4.0.0-alpha.2"
 edition = "2024"
+
+[features]
+extension-module = ["pyo3/extension-module"]
 
 [lib]
 name = "rust_native_keyring"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+base64 = "0.22.1"
+clap = { version = "4.5.53", features = ["derive"] }
 keyring-core = { version = "0.7", features = ["sample"] }
-pyo3 = { version = "0.27", features = ["extension-module"] }
+pyo3 = "0.27"
+rpassword = "7.4.0"
+rprompt = "2.2.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 apple-native-keyring-store = { version = "0.2", features = ["keychain"] }

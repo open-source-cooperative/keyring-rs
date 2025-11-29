@@ -4,21 +4,6 @@ use pyo3::prelude::*;
 
 use keyring_core::{Error, Result, set_default_store, unset_default_store};
 
-pub fn internalize(config: &Option<HashMap<String, String>>) -> HashMap<&str, &str> {
-    if let Some(config) = config {
-        config
-            .iter()
-            .map(|(k, v)| (k.as_str(), v.as_str()))
-            .collect()
-    } else {
-        HashMap::new()
-    }
-}
-
-pub fn release_store() {
-    unset_default_store();
-}
-
 #[allow(unused_variables)]
 pub fn use_sample_store(config: &HashMap<&str, &str>) -> Result<()> {
     use keyring_core::sample::Store;
@@ -103,6 +88,21 @@ pub fn use_windows_native_store(config: &HashMap<&str, &str>) -> Result<()> {
         Err(Error::NotSupportedByStore(
             "The Windows credential store is only available on Windows".to_string(),
         ))
+    }
+}
+
+pub fn release_store() {
+    unset_default_store();
+}
+
+pub fn internalize(config: &Option<HashMap<String, String>>) -> HashMap<&str, &str> {
+    if let Some(config) = config {
+        config
+            .iter()
+            .map(|(k, v)| (k.as_str(), v.as_str()))
+            .collect()
+    } else {
+        HashMap::new()
     }
 }
 
