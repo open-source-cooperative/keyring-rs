@@ -10,7 +10,7 @@ on:
     tags:
       - v*
     branches:
-      - *-pyo3
+      - py*
   pull_request:
   workflow_dispatch:
 
