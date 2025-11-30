@@ -1,4 +1,14 @@
-//! Connections to the keyring stores.
+//! Connections to available keyring stores.
+//!
+//! The connectors in this module serve as sample code and are also used both by the
+//! Rust-based CLI and the Python-based REPL client.
+//!
+//! For each available keyring-compatible credential store (other than mock),
+//! this module defines a `use_...` function which sets that store
+//! as the default credential store. As developers make new credential store modules available,
+//! they are encouraged to submit a pull request that adds a connection here for their module.
+//! (When doing so, they should also extend both the Rust-base CLI and the Python-based REPL client
+//! to support the new store.)
 
 use std::collections::HashMap;
 

@@ -5,18 +5,31 @@
 [![crates.io](https://img.shields.io/crates/v/keyring.svg)](https://crates.io/crates/keyring)
 [![docs.rs](https://docs.rs/keyring/badge.svg)](https://docs.rs/keyring)
 
-This crate provides a simple CLI and various other clients of the [Rust keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring). It provides sample Rust code for developers who are looking to use the keyring infrastructure in their projects, a variety of tools for users who want to access their keyring-compatible credential stores, and an inventory of available credential store modules.
+This crate provides two client apps---one in Rust, one in Python---for the [Rust keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring). It also provides sample Rust code for developers who are looking to use the keyring infrastructure in their projects and an inventory of available credential store modules.
 
-## Library
+## Rust CLI
 
-The `lib.rs` file in this crate provides the sample Rust code and the inventory of available credential store modules. The first part of the library contains connectors for each of the available keyring credential stores. As developers make new credential store modules available, they are encouraged to submit a pull request that adds their module to the library. The second part of the library contains sample calls to each member of the keyring `Entry` API.
+The `keyring` binary produced by building this crate is a command-line interface for issuing one keyring call at a time and examining its results. Issue the command
+```shell
+keyring  help
+```
+for usage information.
 
-## Applications
+## Python Module
 
-There are currently two application-level tools provided by this crate:
+This crate, when built using the PyO3's project `maturin` tool, produces a Python module that can be used to access the keyring ecosystem from Python. The built module is also available on PyPI in the [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/); use
+```shell
+pip install rust-native-keyring
+```
+to install it and
+```python
+import rust_native_keyring
+```
+to load it into your Python REPL. The `python` module documentation in this crate provides some sample usage information.
 
-* The `keyring-cli` application is a simple command-line interface for issuing one keyring call at a time and examining its results. You can build this application using cargo.
-* The `rust_native_keyring` Python module provides a way of accessing entries in the context of a Python application or REPL. You can download this module from [PyPI](https://pypi.org/project/rust_native_keyring/).
+## Credential Stores Wanted!
+
+If you are a credential store module developer, you are strongly encouraged to contribute a connector for your module to the library in this crate, thus making it available to both client applications. See the [module documentation](https://docs.rs/keyring/latest/keyring/) for details.
 
 ## License
 

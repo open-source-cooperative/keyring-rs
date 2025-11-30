@@ -1,3 +1,13 @@
+//! A exceedingly simple CLI for the Rust keyring crate.
+//!
+//! This is more sample code than anything else because each command requires
+//! a separate invocation, including connecting to and disconnecting from a store.
+//!
+//! If you really want to play around with a keyring, you can import the Python module
+//! in the [rust-native-keyring](https://pypi.org/project/rust-native-keyring/) project
+//! into your Python REPL.
+//!
+//! Do `keyring --help` for usage information.
 use clap::{Args, Parser};
 use keyring_core::{Entry, Error, Result};
 use rust_native_keyring::{
@@ -116,6 +126,7 @@ fn set_store(args: &Cli) {
 /// Keyring CLI: A command-line interface to platform secure storage
 pub struct Cli {
     #[clap(
+        global = true,
         short,
         long,
         value_parser,
@@ -124,11 +135,23 @@ pub struct Cli {
     /// The credential store module to use.
     pub module: String,
 
-    #[clap(short, long, value_parser, default_value = "keyring-cli")]
+    #[clap(
+        global = true,
+        short,
+        long,
+        value_parser,
+        default_value = "keyring-cli"
+    )]
     /// The service for the entry.
     pub service: String,
 
-    #[clap(short, long, value_parser, default_value = "keyring-user")]
+    #[clap(
+        global = true,
+        short,
+        long,
+        value_parser,
+        default_value = "keyring-user"
+    )]
     /// The user for the entry.
     pub user: String,
 
@@ -140,7 +163,7 @@ pub struct Cli {
 pub enum Command {
     /// Show info about the store and entry in use.
     Info,
-    /// Set the password or update the attributes in the secure store
+    /// Set the password/secret or update the attributes in the secure store
     Set {
         #[command(flatten)]
         what: What,
@@ -168,11 +191,11 @@ pub enum Command {
 #[derive(Debug, Args)]
 #[group(multiple = false, required = true)]
 pub struct What {
-    #[clap(short, long, action, help = "The input is a password")]
-    password: bool,
+    #[clap(short, long, action, help = "The input is a utf8-encoded password")]
+    utf8: bool,
 
     #[clap(short, long, action, help = "The input is a base64-encoded secret")]
-    secret: bool,
+    base64: bool,
 
     #[clap(
         short,
@@ -295,9 +318,9 @@ impl Cli {
 
     fn read_value_to_set(&self) -> Value {
         if let Command::Set { what, input } = &self.command {
-            if what.password {
+            if what.utf8 {
                 Value::Password(read_password(input))
-            } else if what.secret {
+            } else if what.base64 {
                 Value::Secret(decode_secret(input))
             } else {
                 Value::Attributes(read_and_parse_attributes(input))
