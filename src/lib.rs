@@ -1,4 +1,13 @@
 //! Keyring access utilities.
+//!
+//! The [stores] module has functions for choosing an available credential store.
+//! It's used both by the Rust-based CLI and the Python-based REPL client.
+//!
+//! The [python] module defines a Python wrapper over keyring core functionality. This
+//! module is available from PyPI via the
+//! [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/).
+//! Imported into a REPL, it makes for a much better testing and discovery tool
+//! than the Rust-based CLI.
 
 use std::collections::HashMap;
 

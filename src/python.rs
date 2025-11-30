@@ -1,4 +1,41 @@
 //! Python bindings for the Rust keyring_core crate.
+//!
+//! This module defines a Python module that wraps all the functionality
+//! of the keyring core `Entry`. It also has wrappers for the store connections
+//! defined in the [stores](crate::stores) module.
+//!
+//! The Python module defined here is available from PyPI in the
+//! [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/).
+//! So you can install it into your Python environment with
+//! ```bash
+//! pip install rust-native-keyring
+//! ```
+//! and then import it into your Python REPL with
+//! ```python
+//! import rust_native_keyring
+//! ```
+//!
+//! Here is a sample of what you can do:
+//! ```python
+//! import rust_native_keyring as rnk
+//!
+//! rnk.use_sample_store({ 'backing-file': 'sample-test.ron' })
+//! rnk.store_info()
+//!
+//! entry = rnk.Entry('service', 'user')
+//! entry.set_password('test password')
+//! entry.info()
+//! entry.get_credential().info()
+//! if entry.get_password() == 'test password':
+//!     print('Passwords match!')
+//!
+//! e2 = rnk.Entry('service', 'user2')
+//! e2.set_password('test password 2')
+//! entries = rnk.Entry.search({ 'service': 'service' })
+//! print(list(map(lambda e: e.info(), entries)))
+//!
+//! rnk.release_store()
+//! ```
 use pyo3::prelude::*;
 
 #[pymodule]
@@ -101,10 +138,9 @@ mod rust_native_keyring {
         }
 
         #[staticmethod]
-        #[pyo3(signature = (spec))]
-        fn search(spec: HashMap<String, String>) -> Result<Vec<Entry>, Error> {
-            let spec: HashMap<&str, &str> =
-                spec.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
+        #[pyo3(signature = (spec = None))]
+        fn search(spec: Option<HashMap<String, String>>) -> Result<Vec<Entry>, Error> {
+            let spec = crate::internalize(spec.as_ref());
             Ok(keyring_core::Entry::search(&spec)?
                 .into_iter()
                 .map(|e| Entry { inner: e })
