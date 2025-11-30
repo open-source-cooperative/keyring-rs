@@ -825,9 +825,9 @@ dependencies = [
 
 [[package]]
 name = "keyring-core"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64ad182c4841eb5795af9d20e6e020b65a895517f6a41e6358ed8af74ba35d98"
+checksum = "c9e072725d9cb9cf27d5ab18ce54e1cc2e2a51e0da2db7f56a493e71c7c6f449"
 dependencies = [
  "chrono",
  "dashmap",
