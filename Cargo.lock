@@ -1920,9 +1920,9 @@ dependencies = [
 
 [[package]]
 name = "zbus-secret-service-keyring-store"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0371a7e111fe248bf8e2d4648faa87b9d59ce4eabc0ff515bc3432a7d8ccf84f"
+checksum = "a18bc7d2904915ee2ec0a1a5511d586a436b039a19c9e0fbf8842161ed25d0d5"
 dependencies = [
  "keyring-core",
  "secret-service",
