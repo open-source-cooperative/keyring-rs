@@ -1,8 +1,8 @@
 //! Python bindings for the Rust keyring_core crate.
 //!
 //! This module defines a Python module that wraps all the functionality
-//! of the keyring core `Entry`. It also has wrappers for the store connections
-//! defined in the [stores](crate::stores) module.
+//! of the keyring-core `Entry`. It also provides the ability to use
+//! of the keyring-provided named stores, and to release that store.
 //!
 //! The Python module defined here is available from PyPI in the
 //! [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/).
@@ -19,7 +19,7 @@
 //! ```python
 //! import rust_native_keyring as rnk
 //!
-//! rnk.use_sample_store({ 'backing-file': 'sample-test.ron' })
+//! rnk.use_named_store("sample", { 'backing-file': 'sample-test.ron' })
 //! rnk.store_info()
 //!
 //! entry = rnk.Entry('service', 'user')
@@ -159,94 +159,11 @@ mod rust_native_keyring {
     }
 
     #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_sample_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
+    #[pyo3(signature = (name, config = None))]
+    fn use_named_store(name: &str, config: Option<HashMap<String, String>>) -> Result<(), Error> {
         let config = crate::internalize(config.as_ref());
-        Ok(crate::stores::use_sample_store(&config)?)
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_apple_native_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(target_os = "macos")]
-        {
-            Ok(crate::stores::use_apple_native_store(&config)?)
-        }
-        #[cfg(not(target_os = "macos"))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The macOS keychain is only available on macOS".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_linux_keyutils_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(target_os = "linux")]
-        {
-            Ok(crate::stores::use_linux_keyutils_store(&config)?)
-        }
-        #[cfg(not(target_os = "linux"))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The keyutils store is only available on Linux".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_dbus_secret_service_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(any(target_os = "linux", target_os = "freebsd"))]
-        {
-            Ok(crate::stores::use_dbus_secret_service_store(&config)?)
-        }
-        #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The dbus Secret Service store is only available on Linux and FreeBSD".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_zbus_secret_service_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(any(target_os = "linux", target_os = "freebsd"))]
-        {
-            Ok(crate::stores::use_zbus_secret_service_store(&config)?)
-        }
-        #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The zbus Secret Service store is only available on Linux and FreeBSD".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_windows_native_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(target_os = "windows")]
-        {
-            Ok(crate::stores::use_windows_native_store(&config)?)
-        }
-        #[cfg(not(target_os = "windows"))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The Windows credential store is only available on Windows".to_string(),
-            )))
-        }
+        Ok(crate::stores::use_named_store_with_modifiers(
+            name, &config,
+        )?)
     }
 }
