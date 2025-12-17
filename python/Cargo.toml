@@ -1,0 +1,13 @@
+[package]
+name = "rust-native-keyring"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "rust_native_keyring"
+crate-type = ["cdylib"]
+
+[dependencies]
+keyring = { version = "4.0.0-alpha.3", path = ".." }
+keyring-core = "0.7.1"
+pyo3 = {  version = "0.27", features = ["extension-module"] }

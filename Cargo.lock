@@ -816,7 +816,6 @@ dependencies = [
  "dbus-secret-service-keyring-store",
  "keyring-core",
  "linux-keyutils-keyring-store",
- "pyo3",
  "rpassword",
  "rprompt",
  "windows-native-keyring-store",
@@ -1308,6 +1307,15 @@ checksum = "a7cc970b249fbe527d6e02e0a227762c9108b2f49d81094fe357ffc6d14d7f6f"
 dependencies = [
  "libc",
  "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "rust-native-keyring"
+version = "0.1.0"
+dependencies = [
+ "keyring",
+ "keyring-core",
+ "pyo3",
 ]
 
 [[package]]

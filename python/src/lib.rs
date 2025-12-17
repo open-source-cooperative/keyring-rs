@@ -1,8 +1,8 @@
-//! Python bindings for the Rust keyring_core crate.
+//! Python bindings for the Rust keyring ecosystem.
 //!
 //! This module defines a Python module that wraps all the functionality
 //! of the keyring-core `Entry`. It also provides the ability to use
-//! of the keyring-provided named stores, and to release that store.
+//! any of the named stores provided by the keyring crate.
 //!
 //! The Python module defined here is available from PyPI in the
 //! [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/).
@@ -45,6 +45,7 @@ mod rust_native_keyring {
     use pyo3::exceptions::PyRuntimeError;
     use pyo3::prelude::*;
 
+    use keyring;
     use keyring_core;
 
     struct Error(keyring_core::Error);
@@ -75,7 +76,7 @@ mod rust_native_keyring {
             user: String,
             modifiers: Option<HashMap<String, String>>,
         ) -> Result<Self, Error> {
-            let modifiers = crate::internalize(modifiers.as_ref());
+            let modifiers = keyring::internalize(modifiers.as_ref());
             Ok(Self {
                 inner: keyring_core::Entry::new_with_modifiers(&service, &user, &modifiers)?,
             })
@@ -140,7 +141,7 @@ mod rust_native_keyring {
         #[staticmethod]
         #[pyo3(signature = (spec = None))]
         fn search(spec: Option<HashMap<String, String>>) -> Result<Vec<Entry>, Error> {
-            let spec = crate::internalize(spec.as_ref());
+            let spec = keyring::internalize(spec.as_ref());
             Ok(keyring_core::Entry::search(&spec)?
                 .into_iter()
                 .map(|e| Entry { inner: e })
@@ -155,15 +156,13 @@ mod rust_native_keyring {
 
     #[pyfunction]
     fn store_info() -> String {
-        crate::stores::store_info()
+        keyring::store_info()
     }
 
     #[pyfunction]
     #[pyo3(signature = (name, config = None))]
     fn use_named_store(name: &str, config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        let config = crate::internalize(config.as_ref());
-        Ok(crate::stores::use_named_store_with_modifiers(
-            name, &config,
-        )?)
+        let config = keyring::internalize(config.as_ref());
+        Ok(keyring::use_named_store_with_modifiers(name, &config)?)
     }
 }

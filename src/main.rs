@@ -12,11 +12,8 @@ use std::collections::HashMap;
 
 use clap::{Args, Parser};
 
+use keyring::{internalize, release_store, store_info, use_named_store_with_modifiers};
 use keyring_core::{Entry, Error, Result};
-use rust_native_keyring::{
-    internalize,
-    stores::{release_store, store_info, use_named_store_with_modifiers},
-};
 
 fn main() {
     let args: Cli = Cli::parse();
