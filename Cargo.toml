@@ -27,7 +27,10 @@ rpassword = "7.4.0"
 rprompt = "2.2.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "0.2", features = ["keychain"] }
+apple-native-keyring-store = { version = "0.2", features = ["keychain", "protected"] }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+apple-native-keyring-store = { version = "0.2", features = ["protected"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 linux-keyutils-keyring-store = { version = "0.2" }
