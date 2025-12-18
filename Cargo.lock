@@ -799,12 +799,13 @@ dependencies = [
 
 [[package]]
 name = "keyring"
-version = "4.0.0-alpha.4"
+version = "4.0.0-alpha.5"
 dependencies = [
  "apple-native-keyring-store",
  "base64",
  "clap",
  "dbus-secret-service-keyring-store",
+ "fastrand",
  "keyring-core",
  "linux-keyutils-keyring-store",
  "rpassword",

@@ -30,7 +30,10 @@ jobs:
       - name: Clippy check
         run: cargo clippy --no-deps --all-targets --all-features -- -D warnings
 
-      - name: Build and Test
+      - name: Build all targets
+        run: cargo build --all-targets --all-features --verbose
+
+      - name: Run tests
         run: cargo test --verbose
 
   ci_msrv:
