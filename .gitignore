@@ -8,6 +8,3 @@ libtest.rmeta
 # don't check in the profiling artifacts
 *.profdata
 *.profraw
-
-# don't check in the built python wheels
-/dist/

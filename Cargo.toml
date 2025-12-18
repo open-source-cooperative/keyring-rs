@@ -1,6 +1,3 @@
-[workspace]
-members = ["python"]
-
 [package]
 authors = ["Daniel Brotsky <dev@brotsky.com>"]
 description = "Sample code and CLI for the Rust Keyring"
@@ -10,9 +7,10 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.0.0-alpha.3"
+version = "4.0.0-alpha.4"
 rust-version = "1.88.0"     # uses let chains
 edition = "2024"
+exclude = ["python"]
 
 [dependencies]
 base64 = "0.22.1"
