@@ -1,4 +1,4 @@
-//! A exceedingly simple CLI for the Rust keyring crate.
+//! An exceedingly simple CLI for the Rust keyring crate.
 //!
 //! This is more sample code than anything else because each command requires
 //! a separate invocation, including connecting to and disconnecting from a store.
@@ -8,16 +8,12 @@
 //! into your Python REPL.
 //!
 //! Do `keyring --help` for usage information.
-use clap::{Args, Parser};
-use keyring_core::{Entry, Error, Result};
-use rust_native_keyring::{
-    internalize,
-    stores::{
-        release_store, store_info, use_apple_native_store, use_dbus_secret_service_store,
-        use_linux_keyutils_store, use_sample_store, use_windows_native_store,
-    },
-};
 use std::collections::HashMap;
+
+use clap::{Args, Parser};
+
+use keyring::{internalize, release_store, store_info, use_named_store_with_modifiers};
+use keyring_core::{Entry, Error, Result};
 
 fn main() {
     let args: Cli = Cli::parse();
@@ -92,23 +88,8 @@ fn set_store(args: &Cli) {
         .unwrap_or((args.module.as_str(), ""));
     let modifiers = Some(parse_attributes(rest.to_string()));
     let mods = internalize(modifiers.as_ref());
-    match name {
-        "sample" => use_sample_store(&mods),
-        "apple" => use_apple_native_store(&mods),
-        "windows" => use_windows_native_store(&mods),
-        "keyutils" => use_linux_keyutils_store(&mods),
-        "secret-service" => use_dbus_secret_service_store(&mods),
-        _ => {
-            println!("Unknown credential-store module: {}", args.module);
-            println!("Available modules are: sample, apple, windows, keyutils, secret-service");
-            std::process::exit(1);
-        }
-    }
-    .unwrap_or_else(|err| {
-        println!(
-            "Couldn't initialize {} credential store: {:?}",
-            args.module, err
-        );
+    use_named_store_with_modifiers(name, &mods).unwrap_or_else(|err| {
+        println!("{err}");
         std::process::exit(1);
     });
     if let Some(mods) = modifiers

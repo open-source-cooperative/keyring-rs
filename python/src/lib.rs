@@ -1,8 +1,8 @@
-//! Python bindings for the Rust keyring_core crate.
+//! Python bindings for the Rust keyring ecosystem.
 //!
 //! This module defines a Python module that wraps all the functionality
-//! of the keyring core `Entry`. It also has wrappers for the store connections
-//! defined in the [stores](crate::stores) module.
+//! of the keyring-core `Entry`. It also provides the ability to use
+//! any of the named stores provided by the keyring crate.
 //!
 //! The Python module defined here is available from PyPI in the
 //! [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/).
@@ -15,11 +15,27 @@
 //! import rust_native_keyring
 //! ```
 //!
+//! This module provides an `Entry` class that wraps the `Entry` type from the keyring-core crate.
+//! The `Entry` class constructor takes a service, a user, and an optional dictionary of modifiers
+//! as arguments and returns an instance that wraps the Rust-constructed `Entry` instance. All
+//! the (snake_case) Rust methods on the underlying instance are then available on the Python
+//! side, plus one more---`info`---that produces the debug format string of the
+//! Rust entry. The Entry class also provides a static `search` method
+//! that takes a search specification as its (optional) argument
+//! and searches the default credential store.
+//!
+//! This module also provides a `use_named_store` function that allows you to use any of
+//! the named stores provided by the keyring crate, and a `release_store` method that
+//! releases the underlying store. The `use_named_store`
+//! function takes a store name and an optional configuration dictionary as arguments.
+//! See the [keyring crate documentation](https://docs.rs/keyring/)
+//! for details on which store names are accepted.
+//!
 //! Here is a sample of what you can do:
 //! ```python
 //! import rust_native_keyring as rnk
 //!
-//! rnk.use_sample_store({ 'backing-file': 'sample-test.ron' })
+//! rnk.use_named_store("sample", { 'backing-file': 'sample-test.ron' })
 //! rnk.store_info()
 //!
 //! entry = rnk.Entry('service', 'user')
@@ -36,6 +52,7 @@
 //!
 //! rnk.release_store()
 //! ```
+
 use pyo3::prelude::*;
 
 #[pymodule]
@@ -45,6 +62,7 @@ mod rust_native_keyring {
     use pyo3::exceptions::PyRuntimeError;
     use pyo3::prelude::*;
 
+    use keyring;
     use keyring_core;
 
     struct Error(keyring_core::Error);
@@ -75,7 +93,7 @@ mod rust_native_keyring {
             user: String,
             modifiers: Option<HashMap<String, String>>,
         ) -> Result<Self, Error> {
-            let modifiers = crate::internalize(modifiers.as_ref());
+            let modifiers = keyring::internalize(modifiers.as_ref());
             Ok(Self {
                 inner: keyring_core::Entry::new_with_modifiers(&service, &user, &modifiers)?,
             })
@@ -140,7 +158,7 @@ mod rust_native_keyring {
         #[staticmethod]
         #[pyo3(signature = (spec = None))]
         fn search(spec: Option<HashMap<String, String>>) -> Result<Vec<Entry>, Error> {
-            let spec = crate::internalize(spec.as_ref());
+            let spec = keyring::internalize(spec.as_ref());
             Ok(keyring_core::Entry::search(&spec)?
                 .into_iter()
                 .map(|e| Entry { inner: e })
@@ -155,98 +173,13 @@ mod rust_native_keyring {
 
     #[pyfunction]
     fn store_info() -> String {
-        crate::stores::store_info()
+        keyring::store_info()
     }
 
     #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_sample_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        let config = crate::internalize(config.as_ref());
-        Ok(crate::stores::use_sample_store(&config)?)
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_apple_native_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(target_os = "macos")]
-        {
-            Ok(crate::stores::use_apple_native_store(&config)?)
-        }
-        #[cfg(not(target_os = "macos"))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The macOS keychain is only available on macOS".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_linux_keyutils_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(target_os = "linux")]
-        {
-            Ok(crate::stores::use_linux_keyutils_store(&config)?)
-        }
-        #[cfg(not(target_os = "linux"))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The keyutils store is only available on Linux".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_dbus_secret_service_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(any(target_os = "linux", target_os = "freebsd"))]
-        {
-            Ok(crate::stores::use_dbus_secret_service_store(&config)?)
-        }
-        #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The dbus Secret Service store is only available on Linux and FreeBSD".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_zbus_secret_service_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(any(target_os = "linux", target_os = "freebsd"))]
-        {
-            Ok(crate::stores::use_zbus_secret_service_store(&config)?)
-        }
-        #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The zbus Secret Service store is only available on Linux and FreeBSD".to_string(),
-            )))
-        }
-    }
-
-    #[pyfunction]
-    #[pyo3(signature = (config = None))]
-    fn use_windows_native_store(config: Option<HashMap<String, String>>) -> Result<(), Error> {
-        #[allow(unused_variables)]
-        let config = crate::internalize(config.as_ref());
-        #[cfg(target_os = "windows")]
-        {
-            Ok(crate::stores::use_windows_native_store(&config)?)
-        }
-        #[cfg(not(target_os = "windows"))]
-        {
-            Err(Error(keyring_core::Error::NotSupportedByStore(
-                "The Windows credential store is only available on Windows".to_string(),
-            )))
-        }
+    #[pyo3(signature = (name, config = None))]
+    fn use_named_store(name: &str, config: Option<HashMap<String, String>>) -> Result<(), Error> {
+        let config = keyring::internalize(config.as_ref());
+        Ok(keyring::use_named_store_with_modifiers(name, &config)?)
     }
 }

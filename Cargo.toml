@@ -7,27 +7,23 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.0.0-alpha.3"
+version = "4.0.0-alpha.4"
 rust-version = "1.88.0"     # uses let chains
 edition = "2024"
-
-[features]
-extension-module = ["pyo3/extension-module"]
-
-[lib]
-name = "rust_native_keyring"
-crate-type = ["cdylib", "rlib"]
+exclude = ["python"]
 
 [dependencies]
 base64 = "0.22.1"
 clap = { version = "4.5.53", features = ["derive"] }
 keyring-core = { version = "0.7", features = ["sample"] }
-pyo3 = "0.27"
 rpassword = "7.4.0"
 rprompt = "2.2.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "0.2", features = ["keychain"] }
+apple-native-keyring-store = { version = "0.2", features = ["keychain", "protected"] }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+apple-native-keyring-store = { version = "0.2", features = ["protected"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 linux-keyutils-keyring-store = { version = "0.2" }

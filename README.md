@@ -5,7 +5,7 @@
 [![crates.io](https://img.shields.io/crates/v/keyring.svg)](https://crates.io/crates/keyring)
 [![docs.rs](https://docs.rs/keyring/badge.svg)](https://docs.rs/keyring)
 
-This crate provides two client apps---one in Rust, one in Python---for the [Rust keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring). It also provides sample Rust code for developers who are looking to use the keyring infrastructure in their projects and an inventory of available credential store modules.
+This crate provides a simple CLI for the [Rust keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring). It also provides sample Rust code for developers who are looking to use the keyring infrastructure in their projects and an inventory of available credential store modules.
 
 ## Rust CLI
 
@@ -15,9 +15,9 @@ keyring  help
 ```
 for usage information.
 
-## Python Module
+## Python interface for scripting
 
-This crate, when built using the PyO3's project `maturin` tool, produces a Python module that can be used to access the keyring ecosystem from Python. The built module is also available on PyPI in the [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/); use
+The CLI provided by this crate is neither efficient nor convenient for scripting, because each invocation loads a credential store, issues just one command against it, and then outputs the results in a format that is hard to parse. If you are looking to do scripting of keyring commands, you are better off using the Python wrapper for this crate available on PyPI in the [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/). Use the shell command
 ```shell
 pip install rust-native-keyring
 ```
@@ -25,7 +25,7 @@ to install it and
 ```python
 import rust_native_keyring
 ```
-to load it into your Python REPL. The `python` module documentation in this crate provides some sample usage information.
+to load it into your Python REPL.
 
 ## Credential Stores Wanted!
 

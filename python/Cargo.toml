@@ -1,0 +1,21 @@
+[package]
+name = "rust-native-keyring"
+authors = ["Daniel Brotsky <dev@brotsky.com>"]
+description = "Python wrapper for the Rust Keyring"
+readme = "README.md"
+repository = "https://github.com/open-source-cooperative/keyring-rs/tree/main/python/"
+homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
+keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
+license = "MIT OR Apache-2.0"
+version = "0.2.0"
+edition = "2024"
+rust-version = "1.88.0"
+
+[lib]
+name = "rust_native_keyring"
+crate-type = ["cdylib"]
+
+[dependencies]
+keyring = { version = "4.0.0-alpha.4", path = ".." }
+keyring-core = "0.7.1"
+pyo3 = {  version = "0.27", features = ["extension-module"] }
