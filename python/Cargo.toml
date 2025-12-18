@@ -16,6 +16,6 @@ name = "rust_native_keyring"
 crate-type = ["cdylib"]
 
 [dependencies]
-keyring = { version = "4.0.0-alpha.4", path = ".." }
+keyring = { version = "4.0.0-alpha.4" }
 keyring-core = "0.7.1"
 pyo3 = {  version = "0.27", features = ["extension-module"] }
