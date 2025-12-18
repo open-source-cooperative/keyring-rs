@@ -15,6 +15,22 @@
 //! import rust_native_keyring
 //! ```
 //!
+//! This module provides an `Entry` class that wraps the `Entry` type from the keyring-core crate.
+//! The `Entry` class constructor takes a service, a user, and an optional dictionary of modifiers
+//! as arguments and returns an instance that wraps the Rust-constructed `Entry` instance. All
+//! the (snake_case) Rust methods on the underlying instance are then available on the Python
+//! side, plus one more---`info`---that produces the debug format string of the
+//! Rust entry. The Entry class also provides a static `search` method
+//! that takes a search specification as its (optional) argument
+//! and searches the default credential store.
+//!
+//! This module also provides a `use_named_store` function that allows you to use any of
+//! the named stores provided by the keyring crate, and a `release_store` method that
+//! releases the underlying store. The `use_named_store`
+//! function takes a store name and an optional configuration dictionary as arguments.
+//! See the [keyring crate documentation](https://docs.rs/keyring/)
+//! for details on which store names are accepted.
+//!
 //! Here is a sample of what you can do:
 //! ```python
 //! import rust_native_keyring as rnk
@@ -36,6 +52,7 @@
 //!
 //! rnk.release_store()
 //! ```
+
 use pyo3::prelude::*;
 
 #[pymodule]
