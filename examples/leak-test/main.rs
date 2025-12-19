@@ -22,8 +22,9 @@ fn main() {
     let pass_result = entry.get_password();
     let mut password = pass_result.unwrap();
     password.zeroize();
+    // leave a string that can be scanned for to make sure scanning works
+    println!("Allocated string: {allocated_string}");
     // wait while the heap is scanned
-    println!("Allocated string: {}", allocated_string);
     std::thread::sleep(Duration::from_secs(get_env_int("DELAY_SECS", 10)));
     entry.delete_credential().unwrap();
     release_store()
