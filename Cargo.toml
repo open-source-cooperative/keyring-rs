@@ -19,6 +19,7 @@ fastrand = "2.3"
 keyring-core = { version = "0.7", features = ["sample"] }
 rpassword = "7.4"
 rprompt = "2.2"
+zeroize = "1.8.2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 apple-native-keyring-store = { version = "0.2", features = ["keychain", "protected"] }
