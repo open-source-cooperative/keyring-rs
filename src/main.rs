@@ -2,12 +2,7 @@
 //!
 //! This is more sample code than anything else because each command requires
 //! a separate invocation, including connecting to and disconnecting from a store.
-//!
-//! If you really want to play around with a keyring, you can import the Python module
-//! in the [rust-native-keyring](https://pypi.org/project/rust-native-keyring/) project
-//! into your Python REPL.
-//!
-//! Do `keyring --help` for usage information.
+//! Invoke this command with no arguments to see usage information.
 use std::collections::HashMap;
 
 use clap::{Args, Parser};

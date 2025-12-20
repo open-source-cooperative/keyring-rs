@@ -49,6 +49,34 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
     }
 }
 
+#[allow(unused_variables)]
+pub fn use_native_store(not_keyutils: bool) -> Result<()> {
+    #[cfg(target_os = "macos")]
+    use_apple_keychain_store(&HashMap::new())?;
+    #[cfg(target_os = "windows")]
+    use_windows_native_store(&HashMap::new())?;
+    #[cfg(target_os = "linux")]
+    if not_keyutils {
+        use_dbus_secret_service_store(&HashMap::new())?;
+    } else {
+        use_linux_keyutils_store(&HashMap::new())?;
+    }
+    #[cfg(any(target_os = "freebsd", target_os = "openbsd"))]
+    use_dbus_secret_service_store(&HashMap::new())?;
+    #[cfg(not(any(
+        target_os = "macos",
+        target_os = "windows",
+        target_os = "linux",
+        target_os = "freebsd",
+        target_os = "openbsd"
+    )))]
+    use_sample_store(&HashMap::from([(
+        "backing-file",
+        "keyring-sample-data.ron",
+    )]))?;
+    Ok(())
+}
+
 pub fn use_sample_store(config: &HashMap<&str, &str>) -> Result<()> {
     use keyring_core::sample::Store;
     set_default_store(Store::new_with_configuration(config)?);
