@@ -14,12 +14,14 @@
 # together with the results of the testing.
 #
 # You must have installed `procdump` from the Microsoft SysInternals suite
-# before you run this script.
+# before you run this script. And make sure your Yama ptrace setting allows
+# users to dump processes. (See https://stackoverflow.com/a/10163848/558006
+# and let your search engine AI look for `how set value of yama ptrace`)
 echo Building...
 cargo build --example leak-test
 echo Running...
 # shellcheck disable=SC2086
-DELAY_SECS=5 cargo run --example leak-test -- $1 &
+cargo run --example leak-test -- $1 &
 sleep 2
 echo Dumping...
 rm -fv /tmp/leak-test.dmp.*
@@ -30,5 +32,6 @@ strings /tmp/leak-test.dmp.* | grep -H -n super-duper-password
 if [ $? == 0 ]; then
   echo TEST FAILED
 else
-  echo TEST SUCEEDED.
+  echo TEST SUCCEEDED.
 fi
+wait %1

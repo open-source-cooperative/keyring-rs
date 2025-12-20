@@ -53,7 +53,7 @@ fn main() {
     let ready = "ok-mr-debugger-i'm-ready-for-my-close-up";
     eprintln!("Leaked string: {ready}");
     // wait while the heap is scanned
-    std::thread::sleep(Duration::from_secs(get_env_int("DELAY_SECS", 10)));
+    std::thread::sleep(Duration::from_secs(get_env_int("DELAY_SECS", 7)));
     // don't leave detritus around
     entry.delete_credential().unwrap();
     release_store();

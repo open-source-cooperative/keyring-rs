@@ -15,7 +15,7 @@ echo Building...
 cargo build --example leak-test
 echo Running...
 # shellcheck disable=SC2086
-DELAY_SECS=5 cargo run --example leak-test -- ${1:keychain} &
+cargo run --example leak-test -- ${1:-keychain} &
 sleep 2
 echo Dumping...
 rm -f /tmp/leak-test.modified.dmp
@@ -27,5 +27,6 @@ strings - /tmp/leak-test.modified.dmp | grep "super-duper-password"
 if [ $? == 0 ]; then
   echo TEST FAILED
 else
-  echo TEST SUCEEDED.
+  echo TEST SUCCEEDED.
 fi
+wait %1

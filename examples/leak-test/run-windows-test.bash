@@ -20,16 +20,17 @@ echo Building...
 cargo build --example leak-test
 echo Running...
 # shellcheck disable=SC2086
-DELAY_SECS=5 cargo run --example leak-test -- ${1:windows} &
+DELAY_SECS=5 cargo run --example leak-test -- ${1:-windows} &
 sleep 2
 echo Dumping...
 rm -f /tmp/keyring-test.dmp
-/c/Windows/procdump64a.exe -ma -o keyring-test /tmp/keyring-test.dmp
+/c/Windows/procdump64a.exe -ma -o leak-test /tmp/leak-test.dmp
 echo Grepping...
-/c/Windows/strings64a.exe /tmp/keyring-test.dmp | grep -H -n super-duper-password
+/c/Windows/strings64a.exe /tmp/leak-test.dmp | grep -H -n super-duper-password
 # shellcheck disable=SC2181
 if [ $? == 0 ]; then
   echo TEST FAILED
 else
-  echo TEST SUCEEDED.
+  echo TEST SUCCEEDED.
 fi
+wait %1
