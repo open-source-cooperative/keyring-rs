@@ -10,10 +10,12 @@ name: maturin-ci
 on:
   push:
     tags:
-      - v*
+      - pypi-*
     paths:
       - ./python/**
   pull_request:
+    paths:
+      - ./python/**
   workflow_dispatch:
 
 permissions:

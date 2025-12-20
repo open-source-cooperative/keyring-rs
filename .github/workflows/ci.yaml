@@ -5,6 +5,8 @@ on:
     paths-ignore:
       - ./python/**
   pull_request:
+    paths-ignore:
+      - ./python/**
   workflow_dispatch:
 
 jobs:
