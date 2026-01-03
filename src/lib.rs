@@ -17,7 +17,7 @@
 
 use std::collections::HashMap;
 
-use keyring_core::{Error, Result, get_default_store, set_default_store, unset_default_store};
+pub use keyring_core::{Entry, Error, Result, get_default_store, set_default_store, unset_default_store};
 
 pub fn use_named_store(name: &str) -> Result<()> {
     use_named_store_with_modifiers(name, &HashMap::new())
@@ -32,6 +32,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
         "secret-service" | "secret-service-sync" => use_dbus_secret_service_store(modifiers),
         "secret-service-async" => use_zbus_secret_service_store(modifiers),
         "windows" => use_windows_native_store(modifiers),
+        "android" => use_android_keyring_store(modifiers),
         _ => {
             let names = [
                 "sample",
@@ -41,6 +42,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
                 "secret-service",
                 "secret-service-async",
                 "windows",
+                "android",
             ];
             let ok = names.join(", ");
             let err = Error::Invalid(name.to_string(), format!("must be one of: {ok}"));
@@ -55,6 +57,8 @@ pub fn use_native_store(not_keyutils: bool) -> Result<()> {
     use_apple_keychain_store(&HashMap::new())?;
     #[cfg(target_os = "windows")]
     use_windows_native_store(&HashMap::new())?;
+    #[cfg(target_os = "android")]
+    use_android_keyring_store(&HashMap::new())?;
     #[cfg(target_os = "linux")]
     if not_keyutils {
         use_dbus_secret_service_store(&HashMap::new())?;
@@ -68,7 +72,8 @@ pub fn use_native_store(not_keyutils: bool) -> Result<()> {
         target_os = "windows",
         target_os = "linux",
         target_os = "freebsd",
-        target_os = "openbsd"
+        target_os = "openbsd",
+        target_os = "android"
     )))]
     use_sample_store(&HashMap::from([(
         "backing-file",
@@ -202,5 +207,21 @@ pub fn internalize(config: Option<&HashMap<String, String>>) -> HashMap<&str, &s
             .collect()
     } else {
         HashMap::new()
+    }
+}
+
+#[allow(unused_variables)]
+pub fn use_android_keyring_store(config: &HashMap<&str, &str>) -> Result<()> {
+    #[cfg(target_os = "android")]
+    {
+        use android_native_keyring_store::AndroidStore;
+        set_default_store(AndroidStore::from_ndk_context()?);
+        Ok(())
+    }
+    #[cfg(not(target_os = "android"))]
+    {
+        Err(Error::NotSupportedByStore(
+            "The Android Keyring store is only available on Android".to_string(),
+        ))
     }
 }

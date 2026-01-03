@@ -27,6 +27,9 @@ apple-native-keyring-store = { version = "0.2", features = ["keychain", "protect
 [target.'cfg(target_os = "ios")'.dependencies]
 apple-native-keyring-store = { version = "0.2", features = ["protected"] }
 
+[target.'cfg(target_os = "android")'.dependencies]
+android-native-keyring-store = { version = "0.4.1" }
+
 [target.'cfg(target_os = "linux")'.dependencies]
 linux-keyutils-keyring-store = { version = "0.2" }
 
