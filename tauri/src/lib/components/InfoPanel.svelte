@@ -76,7 +76,7 @@
 		dataModal = false;
 	}
 
-	let attributes: { [key: string]: string } | undefined = $derived(
+	let attributes: [string, string][] | undefined = $derived(
 		selected ? undefined : undefined
 	);
 	let attributeError = $derived(selected ? '' : '');
@@ -93,7 +93,8 @@
 				attributes = undefined;
 			}
 			if (result.value) {
-				attributes = result.value;
+				attributes = Object.entries(result.value as Record<string, string>)
+				attributes.sort((a, b) => a[0].localeCompare(b[0]));
 			}
 		});
 	}
@@ -119,7 +120,7 @@
 			form
 			bind:open={dataModal}
 			onaction={dataModalAction}
-			class="w-[400px]"
+			class="w-100"
 		>
 			<div>
 				<Label for="password">Password:</Label>
@@ -145,11 +146,11 @@
 			<Button onclick={retrieveAttributes}>Retrieve Attributes</Button>
 		</div>
 		{#if attributes}
-			{#if Object.keys(attributes).length === 0}
+			{#if attributes.length === 0}
 				<P class="italic">No attributes</P>
 			{:else}
 				<List class="list-disc">
-					{#each Object.entries(attributes) as [key, value]}
+					{#each attributes as [key, value]}
 						<Li><span class="font-semibold">{key}:</span> {value}</Li>
 					{/each}
 				</List>
