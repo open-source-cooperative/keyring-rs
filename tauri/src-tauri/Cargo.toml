@@ -15,12 +15,13 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 hex = "0.4.3"
 indexmap = "2.12.1"
+keyring = "4.0.0-alpha.6"
 keyring-core = "0.7.2"
 serde = { version = "1.0.228", features = ["derive"] }
 tauri = { version = "2.9.5", features = [] }
 tauri-plugin-os = "2.3.2"
 
-[dependencies.keyring]
-version = "4.0.0-alpha.6"
-git = "https://github.com/open-source-cooperative/keyring-rs"
-branch = "next"
+[patch.crates-io]
+keyring = { version = "4.0.0-alpha.6", git = "https://github.com/open-source-cooperative/keyring-rs", branch = "next" }
+windows-native-keyring-store = { version = "0.5.1", git = "https://github.com/open-source-cooperative/windows-native-keyring-store.git", branch = "next" }
+android-native-keyring-store = { version = "0.5.0", git = "https://github.com/open-source-cooperative/android-native-keyring-store.git", branch = "next" }

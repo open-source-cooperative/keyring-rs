@@ -2065,7 +2065,7 @@ dependencies = [
 [[package]]
 name = "keyring"
 version = "4.0.0-alpha.6"
-source = "git+https://github.com/open-source-cooperative/keyring-rs?branch=next#5d8be1c07ee93f468b72366558ece51621b8728f"
+source = "git+https://github.com/open-source-cooperative/keyring-rs?branch=next#c6b27bfc1db926bf1066aa9d93c1433a1380ee6a"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -5159,9 +5159,8 @@ checksum = "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
 
 [[package]]
 name = "windows-native-keyring-store"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9aeb875eb87bfceb88c4f9510382ba48016ca5992980c281c1b71d82d922d22e"
+version = "0.5.1"
+source = "git+https://github.com/open-source-cooperative/windows-native-keyring-store.git?branch=next#ba500672b89eb14f8b5058a928e9927b8e63c6bd"
 dependencies = [
  "byteorder",
  "keyring-core",
