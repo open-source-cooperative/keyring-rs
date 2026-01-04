@@ -7,25 +7,25 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.0.0-alpha.5"
+version = "4.0.0-alpha.6"
 rust-version = "1.88.0"     # uses let chains
 edition = "2024"
-exclude = ["python"]
+exclude = ["python", "tauri"]
 
 [dependencies]
 base64 = "0.22.1"
-clap = { version = "4.5.53", features = ["derive"] }
-fastrand = "2.3"
-keyring-core = { version = "0.7", features = ["sample"] }
-rpassword = "7.4"
-rprompt = "2.2"
+clap = { version = "4.5.54", features = ["derive"] }
+fastrand = "2.3.0"
+keyring-core = { version = "0.7.2", features = ["sample"] }
+rpassword = "7.4.0"
+rprompt = "2.2.0"
 zeroize = "1.8.2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "0.2", features = ["keychain", "protected"] }
+apple-native-keyring-store = { version = "0.2.1", features = ["keychain", "protected"] }
 
 [target.'cfg(target_os = "ios")'.dependencies]
-apple-native-keyring-store = { version = "0.2", features = ["protected"] }
+apple-native-keyring-store = { version = "0.2.1", features = ["protected"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 linux-keyutils-keyring-store = { version = "0.2" }
@@ -35,4 +35,7 @@ dbus-secret-service-keyring-store = { version = "0.3", features = ["crypto-rust"
 zbus-secret-service-keyring-store = { version = "0.2", features = ["rt-async-io-crypto-rust"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-native-keyring-store = { version = "0.4" }
+windows-native-keyring-store = { version = "0.4.0" }
+
+[target.'cfg(target_os = "android")'.dependencies]
+android-native-keyring-store = { version = "0.5.0", path = "../android-native-keyring-store"}
