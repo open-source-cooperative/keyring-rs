@@ -25,6 +25,7 @@ dependencies = [
 [[package]]
 name = "android-native-keyring-store"
 version = "0.5.0"
+source = "git+https://github.com/open-source-cooperative/android-native-keyring-store.git?branch=next#0aa7feb312420c76bca8926bcac8fd80212a0756"
 dependencies = [
  "base64",
  "jni",
