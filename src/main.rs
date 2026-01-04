@@ -73,6 +73,13 @@ fn main() {
             Ok(()) => args.success_message_for(&Value::None),
             Err(err) => args.error_message_for(err),
         },
+        Command::Search { query } => {
+            let spec = query.as_ref().map(|query| parse_attributes(query.clone()));
+            match Entry::search(&internalize(spec.as_ref())) {
+                Ok(entries) => args.success_message_for(&Value::CredentialVec(entries)),
+                Err(err) => args.error_message_for(err),
+            }
+        }
     }
     release_store()
 }
@@ -159,6 +166,12 @@ pub enum Command {
     Credential,
     /// Delete the credential from the secure store.
     Delete,
+    /// Search for credentials in the secure store.
+    Search {
+        #[clap(value_parser)]
+        /// The query spec for the search: key1=value1,key2=value2
+        query: Option<String>,
+    },
 }
 
 #[derive(Debug, Args)]
@@ -184,6 +197,7 @@ enum Value {
     Password(String),
     Attributes(HashMap<String, String>),
     Credential(Entry),
+    CredentialVec(Vec<Entry>),
     None,
 }
 
@@ -208,7 +222,7 @@ impl Cli {
                     println!("{: >4}: {cred:?}", i + 1);
                 }
             }
-            err => match self.command {
+            err => match &self.command {
                 Command::Info => panic!("Can't happen: info command should never fail"),
                 Command::Set { .. } => {
                     println!("Couldn't set credential data for '{description}': {err:?}");
@@ -228,6 +242,13 @@ impl Cli {
                 Command::Delete => {
                     println!("Couldn't delete credential for '{description}': {err:?}");
                 }
+                Command::Search { query } => {
+                    if let Some(query) = query {
+                        println!("Couldn't search for '{query}': {err:?}")
+                    } else {
+                        println!("Couldn't search: {err:?}");
+                    }
+                }
             },
         }
         std::process::exit(1)
@@ -235,7 +256,7 @@ impl Cli {
 
     fn success_message_for(&self, value: &Value) {
         let description = self.description();
-        match self.command {
+        match &self.command {
             Command::Info => panic!("Can't happen: info command should not invoke success message"),
             Command::Set { .. } => match value {
                 Value::Secret(secret) => {
@@ -286,6 +307,25 @@ impl Cli {
             Command::Delete => {
                 println!("Successfully deleted credential for '{description}'");
             }
+            Command::Search { query } => match value {
+                Value::CredentialVec(entries) => {
+                    let mut suffix = String::new();
+                    if let Some(query) = query {
+                        suffix = format!(" matching '{query}'")
+                    }
+                    if entries.is_empty() {
+                        println!("No credentials found{suffix}");
+                    } else {
+                        let el = entries.len();
+                        let c_word = if el > 1 { "credentials" } else { "credential" };
+                        println!("Search found {el} {c_word}{suffix}:");
+                        for (i, entry) in entries.iter().enumerate() {
+                            println!("{:6}: {entry:?}", i + 1);
+                        }
+                    }
+                }
+                _ => panic!("Wrong value type for command"),
+            },
         }
     }
 
