@@ -15,9 +15,12 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 hex = "0.4.3"
 indexmap = "2.12.1"
-keyring = "4.0.0-alpha.5"
 keyring-core = "0.7.2"
 serde = { version = "1.0.228", features = ["derive"] }
 tauri = { version = "2.9.5", features = [] }
 tauri-plugin-os = "2.3.2"
 
+[dependencies.keyring]
+version = "4.0.0-alpha.6"
+git = "https://github.com/open-source-cooperative/keyring-rs"
+branch = "next"

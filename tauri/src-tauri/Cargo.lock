@@ -44,6 +44,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "android-native-keyring-store"
+version = "0.5.0"
+source = "git+https://github.com/open-source-cooperative/android-native-keyring-store.git?branch=next#0aa7feb312420c76bca8926bcac8fd80212a0756"
+dependencies = [
+ "base64 0.22.1",
+ "jni",
+ "keyring-core",
+ "ndk-context",
+ "thiserror 2.0.17",
+ "tracing",
+]
+
+[[package]]
 name = "android_system_properties"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2041,7 +2054,7 @@ version = "0.1.0"
 dependencies = [
  "hex",
  "indexmap 2.12.1",
- "keyring 4.0.0-alpha.5",
+ "keyring 4.0.0-alpha.6",
  "keyring-core",
  "serde",
  "tauri",
@@ -2051,10 +2064,10 @@ dependencies = [
 
 [[package]]
 name = "keyring"
-version = "4.0.0-alpha.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f18d929a4ba905971f3a6ae9bcc501bc53818d3cae4214c7ca377f529d806974"
+version = "4.0.0-alpha.6"
+source = "git+https://github.com/open-source-cooperative/keyring-rs?branch=next#5d8be1c07ee93f468b72366558ece51621b8728f"
 dependencies = [
+ "android-native-keyring-store",
  "apple-native-keyring-store",
  "base64 0.22.1",
  "clap",
@@ -4425,9 +4438,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-util"
-version = "0.7.17"
+version = "0.7.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2efa149fe76073d6e8fd97ef4f4eca7b67f599660115591483572e406e165594"
+checksum = "9ae9cec805b01e8fc3fd2fe289f89149a9b66dd16786abd8b19cfa7b48cb0098"
 dependencies = [
  "bytes",
  "futures-core",
@@ -5749,9 +5762,9 @@ dependencies = [
 
 [[package]]
 name = "zmij"
-version = "1.0.9"
+version = "1.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ee2a72b10d087f75fb2e1c2c7343e308fe6970527c22a41caf8372e165ff5c1"
+checksum = "30e0d8dffbae3d840f64bda38e28391faef673a7b5a6017840f2a106c8145868"
 
 [[package]]
 name = "zvariant"

@@ -48,6 +48,16 @@ export function releaseStore(handler: (result: VoidResult) => void) {
 		.catch((error) => handler({ error } as VoidResult));
 }
 
+export function getStoreInfo(handler: (result: string) => void) {
+	invoke('store_info').then((info) => {
+		if (info === 'None') {
+			handler('No current store');
+		} else {
+			handler(`Current store: ${info}`);
+		}
+	});
+}
+
 export function getEntry(id: string, handler: (result: EntryResult) => void) {
 	invoke('get_entry', { id })
 		.then((entry) => handler({ value: entry } as EntryResult))

@@ -21,7 +21,7 @@
 
 <div class="w-full p-4">
 	<div class="flex items-center justify-center gap-2">
-		<SelectStoreButton {history} bind:selected bind:error />
+		<SelectStoreButton {history} bind:selected bind:error bind:message />
 		<SampleDataButton {history} bind:error bind:message />
 		<NewEntryButton {history} bind:selected bind:error />
 		<SearchButton {history} bind:selected bind:error bind:message />

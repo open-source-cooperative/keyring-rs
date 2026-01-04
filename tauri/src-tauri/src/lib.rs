@@ -43,6 +43,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             history::use_named_store,
             history::release_store,
+            history::store_info,
             history::get_entry,
             history::get_all_entries,
             history::remove_entry,
@@ -52,7 +53,7 @@ pub fn run() {
             history::entry_get_attributes,
             history::entry_update_attributes,
             history::entry_delete_value,
-            history::search_all
+            history::search_all,
         ])
         .run(tauri::generate_context!())
         .expect("valueError while running tauri application");

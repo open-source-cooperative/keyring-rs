@@ -45,12 +45,7 @@ pub type History = indexmap::IndexMap<String, HistoryEntry>;
 
 #[tauri::command]
 pub fn use_named_store(state: tauri::State<Mutex<State>>, name: String) -> Result<(), String> {
-    if name.eq("sample") {
-        let mods = &HashMap::from([("backing-file", "/tmp/keyring-sample.ron")]);
-        keyring::use_named_store_with_modifiers(&name, mods).map_err(|e| e.to_string())?;
-    } else {
-        keyring::use_named_store(&name).map_err(|e| e.to_string())?;
-    }
+    keyring::use_named_store(&name).map_err(|e| e.to_string())?;
     let mut state = state.lock().unwrap();
     state.reset();
     Ok(())
@@ -61,6 +56,11 @@ pub fn release_store(state: tauri::State<Mutex<State>>) {
     keyring::release_store();
     let mut state = state.lock().unwrap();
     state.reset();
+}
+
+#[tauri::command]
+pub fn store_info() -> String {
+    keyring::store_info()
 }
 
 #[tauri::command]
