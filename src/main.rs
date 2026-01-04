@@ -3,11 +3,12 @@
 //! This is more sample code than anything else because each command requires
 //! a separate invocation, including connecting to and disconnecting from a store.
 //! Invoke this command with no arguments to see usage information.
+use clap::{Args, Parser};
 use std::collections::HashMap;
 
-use clap::{Args, Parser};
-
-use keyring::{internalize, release_store, store_info, use_named_store_with_modifiers};
+use keyring::{
+    internalize, release_store, store_info, use_named_store, use_named_store_with_modifiers,
+};
 use keyring_core::{Entry, Error, Result};
 
 fn main() {
@@ -81,19 +82,21 @@ fn set_store(args: &Cli) {
         .module
         .split_once(':')
         .unwrap_or((args.module.as_str(), ""));
-    let modifiers = Some(parse_attributes(rest.to_string()));
-    let mods = internalize(modifiers.as_ref());
-    use_named_store_with_modifiers(name, &mods).unwrap_or_else(|err| {
-        println!("{err}");
-        std::process::exit(1);
-    });
-    if let Some(mods) = modifiers
-        && !mods.is_empty()
-    {
-        println!("Using the {name} credential store with the following attributes:");
-        print_attributes(&mods)
-    } else {
+    if rest.is_empty() {
+        use_named_store(name).unwrap_or_else(|err| {
+            println!("{err}");
+            std::process::exit(1);
+        });
         println!("Using the {name} credential store");
+    } else {
+        let modifiers = Some(parse_attributes(rest.to_string()));
+        let mods = internalize(modifiers.as_ref());
+        use_named_store_with_modifiers(name, &mods).unwrap_or_else(|err| {
+            println!("{err}");
+            std::process::exit(1);
+        });
+        println!("Using the {name} credential store with the following attributes:");
+        print_attributes(modifiers.as_ref().unwrap());
     }
 }
 
@@ -101,13 +104,7 @@ fn set_store(args: &Cli) {
 #[clap(author = "github.com/open-source-cooperative/keyring-rs")]
 /// Keyring CLI: A command-line interface to platform secure storage
 pub struct Cli {
-    #[clap(
-        global = true,
-        short,
-        long,
-        value_parser,
-        default_value = "sample:backing-file=/tmp/keyring-sample-data.ron"
-    )]
+    #[clap(global = true, short, long, value_parser, default_value = "sample")]
     /// The credential store module to use.
     pub module: String,
 
@@ -168,10 +165,10 @@ pub enum Command {
 #[group(multiple = false, required = true)]
 pub struct What {
     #[clap(short, long, action, help = "The input is a utf8-encoded password")]
-    utf8: bool,
+    password: bool,
 
-    #[clap(short, long, action, help = "The input is a base64-encoded secret")]
-    base64: bool,
+    #[clap(short, long, action, help = "The input is a base64-encoded blob")]
+    blob: bool,
 
     #[clap(
         short,
@@ -294,9 +291,9 @@ impl Cli {
 
     fn read_value_to_set(&self) -> Value {
         if let Command::Set { what, input } = &self.command {
-            if what.utf8 {
+            if what.password {
                 Value::Password(read_password(input))
-            } else if what.base64 {
+            } else if what.blob {
                 Value::Secret(decode_secret(input))
             } else {
                 Value::Attributes(read_and_parse_attributes(input))
