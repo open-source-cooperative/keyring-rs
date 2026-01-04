@@ -1795,9 +1795,8 @@ checksum = "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
 
 [[package]]
 name = "windows-native-keyring-store"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9aeb875eb87bfceb88c4f9510382ba48016ca5992980c281c1b71d82d922d22e"
+version = "0.5.1"
+source = "git+https://github.com/open-source-cooperative/windows-native-keyring-store.git?branch=next#003394368dc97a515546441f435a21322a82969b"
 dependencies = [
  "byteorder",
  "keyring-core",
