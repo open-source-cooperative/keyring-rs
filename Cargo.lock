@@ -1796,7 +1796,7 @@ checksum = "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
 [[package]]
 name = "windows-native-keyring-store"
 version = "0.5.1"
-source = "git+https://github.com/open-source-cooperative/windows-native-keyring-store.git?branch=next#003394368dc97a515546441f435a21322a82969b"
+source = "git+https://github.com/open-source-cooperative/windows-native-keyring-store.git?branch=next#7ef59f650b1b7ffb48cbadb4a04129f0366a36f7"
 dependencies = [
  "byteorder",
  "keyring-core",
