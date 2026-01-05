@@ -490,9 +490,9 @@ dependencies = [
 
 [[package]]
 name = "dbus-secret-service-keyring-store"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a1874d75fb8d54768cdd31156fa40918c3754e3d5a6d43e53bfdc27368295db"
+checksum = "fec3a0f31addb56ee6d5c55599068d2093bc737469a448b34e426603ef61f93e"
 dependencies = [
  "dbus-secret-service",
  "keyring-core",
