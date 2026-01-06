@@ -12,7 +12,7 @@
 		selected = $bindable()
 	}: {
 		history: Writable<HistoryEntry[]>;
-		selected: string | undefined;
+		selected: HistoryEntry | undefined;
 	} = $props();
 
 	let error = $state('');

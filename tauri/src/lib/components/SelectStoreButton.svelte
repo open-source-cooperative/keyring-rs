@@ -12,7 +12,7 @@
 		message = $bindable(),
 	}: {
 		history: Writable<HistoryEntry[]>;
-		selected: string | undefined;
+		selected: HistoryEntry | undefined;
 		error: string;
 		message: string;
 	} = $props();
@@ -101,7 +101,7 @@
 	{buttonName()}
 	<ChevronDownOutline class="ms-0 w-6 text-black" />
 </Button>
-<Dropdown bind:isOpen simple>
+<Dropdown isOpen={isOpen} simple>
 	{#each availableStores as choice}
 		{#if chosenStore !== choice}
 			<DropdownItem
