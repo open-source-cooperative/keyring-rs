@@ -1,5 +1,5 @@
 [package]
-name = "keyring"
+name = "keyring_lib"
 version = "0.1.0"
 description = "Rust back-end for keyring Tauri app"
 authors = ["Daniel Brotsky <dev@brotsky.com>"]

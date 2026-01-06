@@ -2050,20 +2050,6 @@ dependencies = [
 
 [[package]]
 name = "keyring"
-version = "0.1.0"
-dependencies = [
- "hex",
- "indexmap 2.12.1",
- "keyring 4.0.0-alpha.6",
- "keyring-core",
- "serde",
- "tauri",
- "tauri-build",
- "tauri-plugin-os",
-]
-
-[[package]]
-name = "keyring"
 version = "4.0.0-alpha.6"
 source = "git+https://github.com/open-source-cooperative/keyring-rs?branch=next#c6b27bfc1db926bf1066aa9d93c1433a1380ee6a"
 dependencies = [
@@ -2095,6 +2081,20 @@ dependencies = [
  "ron",
  "serde",
  "uuid",
+]
+
+[[package]]
+name = "keyring_lib"
+version = "0.1.0"
+dependencies = [
+ "hex",
+ "indexmap 2.12.1",
+ "keyring",
+ "keyring-core",
+ "serde",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-os",
 ]
 
 [[package]]
