@@ -83,9 +83,9 @@ dependencies = [
 
 [[package]]
 name = "apple-native-keyring-store"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10f9955235ce557bd0ea2c64d7ff09a887885f515e98572d2640a29520d9c98c"
+checksum = "6afd4ee68bf127d37d2eca62ec6ddb5871b58722273c8b6809119a51b4042111"
 dependencies = [
  "keyring-core",
  "log",
