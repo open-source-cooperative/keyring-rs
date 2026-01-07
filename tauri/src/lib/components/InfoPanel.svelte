@@ -76,9 +76,7 @@
 		dataModal = false;
 	}
 
-	let attributes: [string, string][] | undefined = $derived(
-		selected ? undefined : undefined
-	);
+	let attributes: [string, string][] | undefined = $derived(selected ? undefined : undefined);
 	let attributeError = $derived(selected ? '' : '');
 
 	function retrieveAttributes() {
@@ -93,7 +91,7 @@
 				attributes = undefined;
 			}
 			if (result.value) {
-				attributes = Object.entries(result.value as Record<string, string>)
+				attributes = Object.entries(result.value as Record<string, string>);
 				attributes.sort((a, b) => a[0].localeCompare(b[0]));
 			}
 		});
@@ -112,16 +110,10 @@
 	{/if}
 	<div class="m-2 space-y-4 border-t border-gray-200 px-2">
 		<div class="align-center mt-2 flex gap-2">
-			<Button onclick={retrieveValue}>Retrieve Data</Button>
-			<Button onclick={() => (dataModal = true)}>Update Data</Button>
+			<Button onclick={retrieveValue} color="light">Retrieve Data</Button>
+			<Button onclick={() => (dataModal = true)} color="light">Update Data</Button>
 		</div>
-		<Modal
-			title="Update Data"
-			form
-			bind:open={dataModal}
-			onaction={dataModalAction}
-			class="w-100"
-		>
+		<Modal title="Update Data" form bind:open={dataModal} onaction={dataModalAction} class="w-100">
 			<div>
 				<Label for="password">Password:</Label>
 				<Input type="text" name="password" />
@@ -143,7 +135,7 @@
 	</div>
 	<div class="m-2 space-y-4 border-t border-gray-200 px-2">
 		<div class="mt-2">
-			<Button onclick={retrieveAttributes}>Retrieve Attributes</Button>
+			<Button onclick={retrieveAttributes} color="light">Retrieve Attributes</Button>
 		</div>
 		{#if attributes}
 			{#if attributes.length === 0}
