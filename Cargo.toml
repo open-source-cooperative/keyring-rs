@@ -10,7 +10,7 @@ name = "keyring"
 version = "4.0.0-alpha.6"
 rust-version = "1.88.0"     # uses let chains
 edition = "2024"
-exclude = ["python", "tauri"]
+exclude = [".github", "python", "tauri"]
 
 [dependencies]
 base64 = "0.22.1"
