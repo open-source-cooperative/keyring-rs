@@ -22,17 +22,17 @@ rprompt = "2.2.0"
 zeroize = "1.8.2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "0.2.1", features = ["keychain", "protected"] }
+apple-native-keyring-store = { version = "0.2.2", features = ["keychain", "protected"] }
 
 [target.'cfg(target_os = "ios")'.dependencies]
-apple-native-keyring-store = { version = "0.2.1", features = ["protected"] }
+apple-native-keyring-store = { version = "0.2.2", features = ["protected"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-linux-keyutils-keyring-store = { version = "0.2" }
+linux-keyutils-keyring-store = { version = "0.2.1" }
 
 [target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
-dbus-secret-service-keyring-store = { version = "0.3", features = ["crypto-rust", "vendored"] }
-zbus-secret-service-keyring-store = { version = "0.2", features = ["rt-async-io-crypto-rust"] }
+dbus-secret-service-keyring-store = { version = "0.3.3", features = ["crypto-rust", "vendored"] }
+zbus-secret-service-keyring-store = { version = "0.2.2", features = ["rt-async-io-crypto-rust"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 windows-native-keyring-store = "0.5.1"
@@ -41,5 +41,9 @@ windows-native-keyring-store = "0.5.1"
 android-native-keyring-store = "0.5.0"
 
 [patch.crates-io]
-windows-native-keyring-store = { git = "https://github.com/open-source-cooperative/windows-native-keyring-store.git", branch = "next" }
 android-native-keyring-store = { git = "https://github.com/open-source-cooperative/android-native-keyring-store.git", branch = "next" }
+apple-native-keyring-store = { git = "https://github.com/open-source-cooperative/apple-native-keyring-store.git", branch = "next" }
+dbus-secret-service-keyring-store = { git = "https://github.com/open-source-cooperative/dbus-secret-service-keyring-store.git", branch = "next" }
+linux-keyutils-keyring-store = { git = "https://github.com/open-source-cooperative/linux-keyutils-keyring-store.git", branch = "next" }
+windows-native-keyring-store = { git = "https://github.com/open-source-cooperative/windows-native-keyring-store.git", branch = "next" }
+zbus-secret-service-keyring-store = { git = "https://github.com/open-source-cooperative/zbus-secret-service-keyring-store.git", branch = "next" }

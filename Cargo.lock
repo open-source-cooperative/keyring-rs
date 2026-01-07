@@ -25,7 +25,7 @@ dependencies = [
 [[package]]
 name = "android-native-keyring-store"
 version = "0.5.0"
-source = "git+https://github.com/open-source-cooperative/android-native-keyring-store.git?branch=next#0aa7feb312420c76bca8926bcac8fd80212a0756"
+source = "git+https://github.com/open-source-cooperative/android-native-keyring-store.git?branch=next#5b7a16461af98f4baa72d1b435e3f1ae98c1a328"
 dependencies = [
  "base64",
  "jni",
@@ -96,9 +96,8 @@ dependencies = [
 
 [[package]]
 name = "apple-native-keyring-store"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10f9955235ce557bd0ea2c64d7ff09a887885f515e98572d2640a29520d9c98c"
+version = "0.2.2"
+source = "git+https://github.com/open-source-cooperative/apple-native-keyring-store.git?branch=next#876cf3cf1cb21a57c3d2cb8988a9591888939c63"
 dependencies = [
  "keyring-core",
  "log",
@@ -525,9 +524,8 @@ dependencies = [
 
 [[package]]
 name = "dbus-secret-service-keyring-store"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a1874d75fb8d54768cdd31156fa40918c3754e3d5a6d43e53bfdc27368295db"
+version = "0.3.3"
+source = "git+https://github.com/open-source-cooperative/dbus-secret-service-keyring-store.git?branch=next#5391ebf2a65d3b422c1caa1c0fe31bbf12575e8a"
 dependencies = [
  "dbus-secret-service",
  "keyring-core",
@@ -916,9 +914,8 @@ dependencies = [
 
 [[package]]
 name = "linux-keyutils-keyring-store"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86a569337acf17e967acca223897d44adfa3323c0a5362393c8fb493038f73d4"
+version = "0.2.1"
+source = "git+https://github.com/open-source-cooperative/linux-keyutils-keyring-store.git?branch=next#540bdd1dfab735d69c091333fd8aa07950e2e97e"
 dependencies = [
  "keyring-core",
  "linux-keyutils",
@@ -1195,18 +1192,18 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.104"
+version = "1.0.105"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9695f8df41bb4f3d222c95a67532365f569318332d03d5f3f67f37b20e6ebdf0"
+checksum = "535d180e0ecab6268a3e718bb9fd44db66bbbc256257165fc699dadf70d16fe7"
 dependencies = [
  "unicode-ident",
 ]
 
 [[package]]
 name = "quote"
-version = "1.0.42"
+version = "1.0.43"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a338cc41d27e6cc6dce6cefc13a0729dfbb81c262b1f519331575dd80ef3067f"
+checksum = "dc74d9a594b72ae6656596548f56f667211f8a97b3d4c3d467150794690dc40a"
 dependencies = [
  "proc-macro2",
 ]
@@ -2031,9 +2028,8 @@ dependencies = [
 
 [[package]]
 name = "zbus-secret-service-keyring-store"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a18bc7d2904915ee2ec0a1a5511d586a436b039a19c9e0fbf8842161ed25d0d5"
+version = "0.2.2"
+source = "git+https://github.com/open-source-cooperative/zbus-secret-service-keyring-store.git?branch=next#4a8c0f66be5b8e37a2a589dc4c6fdda43c2aa87a"
 dependencies = [
  "keyring-core",
  "secret-service",
