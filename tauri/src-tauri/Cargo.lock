@@ -46,7 +46,7 @@ dependencies = [
 [[package]]
 name = "android-native-keyring-store"
 version = "0.5.0"
-source = "git+https://github.com/open-source-cooperative/android-native-keyring-store.git?branch=next#0aa7feb312420c76bca8926bcac8fd80212a0756"
+source = "git+https://github.com/open-source-cooperative/android-native-keyring-store.git?branch=next#e57bd4ae4c62a5396a51747f10f3c81d36073c43"
 dependencies = [
  "base64 0.22.1",
  "jni",
@@ -123,9 +123,8 @@ checksum = "a23eb6b1614318a8071c9b2521f36b424b2c83db5eb3a0fead4a6c0809af6e61"
 
 [[package]]
 name = "apple-native-keyring-store"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10f9955235ce557bd0ea2c64d7ff09a887885f515e98572d2640a29520d9c98c"
+version = "0.2.2"
+source = "git+https://github.com/open-source-cooperative/apple-native-keyring-store.git?branch=next#876cf3cf1cb21a57c3d2cb8988a9591888939c63"
 dependencies = [
  "keyring-core",
  "log",
@@ -845,9 +844,8 @@ dependencies = [
 
 [[package]]
 name = "dbus-secret-service-keyring-store"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a1874d75fb8d54768cdd31156fa40918c3754e3d5a6d43e53bfdc27368295db"
+version = "0.3.3"
+source = "git+https://github.com/open-source-cooperative/dbus-secret-service-keyring-store.git?branch=next#5391ebf2a65d3b422c1caa1c0fe31bbf12575e8a"
 dependencies = [
  "dbus-secret-service",
  "keyring-core",
@@ -2051,7 +2049,7 @@ dependencies = [
 [[package]]
 name = "keyring"
 version = "4.0.0-alpha.6"
-source = "git+https://github.com/open-source-cooperative/keyring-rs?branch=next#c6b27bfc1db926bf1066aa9d93c1433a1380ee6a"
+source = "git+https://github.com/open-source-cooperative/keyring-rs?branch=next#e1e6d375a521cd86a41f964666045fdfe9196ed9"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -2187,9 +2185,8 @@ dependencies = [
 
 [[package]]
 name = "linux-keyutils-keyring-store"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86a569337acf17e967acca223897d44adfa3323c0a5362393c8fb493038f73d4"
+version = "0.2.1"
+source = "git+https://github.com/open-source-cooperative/linux-keyutils-keyring-store.git?branch=next#540bdd1dfab735d69c091333fd8aa07950e2e97e"
 dependencies = [
  "keyring-core",
  "linux-keyutils",
@@ -3165,9 +3162,9 @@ checksum = "dc375e1527247fe1a97d8b7156678dfe7c1af2fc075c9a4db3690ecd2a148068"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.104"
+version = "1.0.105"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9695f8df41bb4f3d222c95a67532365f569318332d03d5f3f67f37b20e6ebdf0"
+checksum = "535d180e0ecab6268a3e718bb9fd44db66bbbc256257165fc699dadf70d16fe7"
 dependencies = [
  "unicode-ident",
 ]
@@ -3183,9 +3180,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.42"
+version = "1.0.43"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a338cc41d27e6cc6dce6cefc13a0729dfbb81c262b1f519331575dd80ef3067f"
+checksum = "dc74d9a594b72ae6656596548f56f667211f8a97b3d4c3d467150794690dc40a"
 dependencies = [
  "proc-macro2",
 ]
@@ -3656,9 +3653,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.148"
+version = "1.0.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3084b546a1dd6289475996f182a22aba973866ea8e8b02c51d9f46b1336a22da"
+checksum = "83fc039473c5595ace860d8c4fafa220ff474b3fc6bfdb4293327f1a37e94d86"
 dependencies = [
  "itoa",
  "memchr",
@@ -4727,14 +4724,15 @@ checksum = "f6ccf251212114b54433ec949fd6a7841275f9ada20dddd2f29e9ceea4501493"
 
 [[package]]
 name = "url"
-version = "2.5.7"
+version = "2.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08bc136a29a3d1758e07a9cca267be308aeebf5cfd5a10f3f67ab2097683ef5b"
+checksum = "ff67a8a4397373c3ef660812acab3268222035010ab8680ec4215f38ba3d0eed"
 dependencies = [
  "form_urlencoded",
  "idna",
  "percent-encoding",
  "serde",
+ "serde_derive",
 ]
 
 [[package]]
@@ -5160,7 +5158,7 @@ checksum = "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
 [[package]]
 name = "windows-native-keyring-store"
 version = "0.5.1"
-source = "git+https://github.com/open-source-cooperative/windows-native-keyring-store.git?branch=next#ba500672b89eb14f8b5058a928e9927b8e63c6bd"
+source = "git+https://github.com/open-source-cooperative/windows-native-keyring-store.git?branch=next#7ef59f650b1b7ffb48cbadb4a04129f0366a36f7"
 dependencies = [
  "byteorder",
  "keyring-core",
@@ -5629,9 +5627,8 @@ dependencies = [
 
 [[package]]
 name = "zbus-secret-service-keyring-store"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a18bc7d2904915ee2ec0a1a5511d586a436b039a19c9e0fbf8842161ed25d0d5"
+version = "0.2.2"
+source = "git+https://github.com/open-source-cooperative/zbus-secret-service-keyring-store.git?branch=next#4a8c0f66be5b8e37a2a589dc4c6fdda43c2aa87a"
 dependencies = [
  "keyring-core",
  "secret-service",
@@ -5667,18 +5664,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.31"
+version = "0.8.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd74ec98b9250adb3ca554bdde269adf631549f51d8a8f8f0a10b50f1cb298c3"
+checksum = "1fabae64378cb18147bb18bca364e63bdbe72a0ffe4adf0addfec8aa166b2c56"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.31"
+version = "0.8.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d8a8d209fdf45cf5138cbb5a506f6b52522a25afccc534d1475dad8e31105c6a"
+checksum = "c9c2d862265a8bb4471d87e033e730f536e2a285cc7cb05dbce09a2a97075f90"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5761,9 +5758,9 @@ dependencies = [
 
 [[package]]
 name = "zmij"
-version = "1.0.10"
+version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30e0d8dffbae3d840f64bda38e28391faef673a7b5a6017840f2a106c8145868"
+checksum = "2fc5a66a20078bf1251bde995aa2fdcc4b800c70b5d92dd2c62abc5c60f679f8"
 
 [[package]]
 name = "zvariant"

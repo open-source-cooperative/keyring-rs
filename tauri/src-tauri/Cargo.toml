@@ -23,4 +23,9 @@ tauri-plugin-os = "2.3.2"
 
 [patch.crates-io]
 keyring = { version = "4.0.0-alpha.6", git = "https://github.com/open-source-cooperative/keyring-rs", branch = "next" }
-android-native-keyring-store = { version = "0.5.0", git = "https://github.com/open-source-cooperative/android-native-keyring-store.git", branch = "next" }
+android-native-keyring-store = { git = "https://github.com/open-source-cooperative/android-native-keyring-store.git", branch = "next" }
+apple-native-keyring-store = { git = "https://github.com/open-source-cooperative/apple-native-keyring-store.git", branch = "next" }
+dbus-secret-service-keyring-store = { git = "https://github.com/open-source-cooperative/dbus-secret-service-keyring-store.git", branch = "next" }
+linux-keyutils-keyring-store = { git = "https://github.com/open-source-cooperative/linux-keyutils-keyring-store.git", branch = "next" }
+windows-native-keyring-store = { git = "https://github.com/open-source-cooperative/windows-native-keyring-store.git", branch = "next" }
+zbus-secret-service-keyring-store = { git = "https://github.com/open-source-cooperative/zbus-secret-service-keyring-store.git", branch = "next" }
