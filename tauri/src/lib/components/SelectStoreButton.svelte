@@ -2,14 +2,20 @@
 	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
 	import { platform } from '@tauri-apps/plugin-os';
-	import { getStoreInfo, type HistoryEntry, releaseStore, useNamedStore, type VoidResult } from '$lib/commands';
+	import {
+		getStoreInfo,
+		type HistoryEntry,
+		releaseStore,
+		useNamedStore,
+		type VoidResult
+	} from '$lib/commands';
 	import type { Writable } from 'svelte/store';
 
 	let {
 		history,
 		selected = $bindable(),
 		error = $bindable(),
-		message = $bindable(),
+		message = $bindable()
 	}: {
 		history: Writable<HistoryEntry[]>;
 		selected: HistoryEntry | undefined;
@@ -55,7 +61,7 @@
 				selected = undefined;
 				getStoreInfo((s) => {
 					message = s;
-				})
+				});
 			}
 		};
 		switch (name) {
@@ -101,7 +107,7 @@
 	{buttonName()}
 	<ChevronDownOutline class="ms-0 w-6 text-black" />
 </Button>
-<Dropdown isOpen={isOpen} simple>
+<Dropdown {isOpen} simple>
 	{#each availableStores as choice}
 		{#if chosenStore !== choice}
 			<DropdownItem
