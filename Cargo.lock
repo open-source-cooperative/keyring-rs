@@ -858,9 +858,9 @@ dependencies = [
 
 [[package]]
 name = "linux-keyutils-keyring-store"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86a569337acf17e967acca223897d44adfa3323c0a5362393c8fb493038f73d4"
+checksum = "07ce18cd294ff2e5de4ad61a8659a123e068859feafce12525511931f4f3d1a4"
 dependencies = [
  "keyring-core",
  "linux-keyutils",
