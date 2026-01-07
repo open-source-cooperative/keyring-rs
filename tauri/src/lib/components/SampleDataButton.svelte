@@ -2,7 +2,7 @@
 	import { createSampleEntries } from '$lib/sampleData';
 	import { getAllEntries, type HistoryEntry } from '$lib/commands';
 	import type { Writable } from 'svelte/store';
-	import { Button, Alert } from 'flowbite-svelte';
+	import { Button } from 'flowbite-svelte';
 
 	let {
 		history,
@@ -20,8 +20,12 @@
 		error = '';
 		message = '';
 		createSampleEntries((result) => {
-			if (result.count) {
-				message = `${result.count} sample entries added.`;
+			if (result.count !== undefined) {
+				if (result.count === 1) {
+					message = '1 sample entry added.';
+				} else {
+					message = `${result.count} sample entries added.`;
+				}
 			}
 			if (result.error) {
 				error = result.error;

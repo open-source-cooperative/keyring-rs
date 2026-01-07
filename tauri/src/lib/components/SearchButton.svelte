@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getAllEntries, searchAll, type HistoryEntry } from '$lib/commands';
+	import { getAllEntries, type HistoryEntry, searchAll } from '$lib/commands';
 	import type { Writable } from 'svelte/store';
-	import { Button, Alert } from 'flowbite-svelte';
+	import { Button } from 'flowbite-svelte';
 
 	let {
 		history,
@@ -19,8 +19,12 @@
 		error = '';
 		message = '';
 		searchAll((result) => {
-			if (result.value) {
-				message = `${result.value} entries found.`;
+			if (result.value !== undefined) {
+				if (result.value === 1) {
+					message = `${result.value} entry found.`;
+				} else {
+					message = `${result.value} entries found.`;
+				}
 			}
 			if (result.error) {
 				error = result.error;
