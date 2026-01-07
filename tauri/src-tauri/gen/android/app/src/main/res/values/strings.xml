@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">keyring</string>
-    <string name="main_activity_title">keyring</string>
+    <string name="app_name">keyring-demo</string>
+    <string name="main_activity_title">keyring-demo</string>
 </resources>

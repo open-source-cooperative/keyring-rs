@@ -1,4 +1,4 @@
-package com.brotskydotcom.keyring
+package com.brotsky.keyring_demo
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
