@@ -20,15 +20,20 @@ use std::collections::HashMap;
 use keyring_core::{Error, Result, get_default_store, set_default_store, unset_default_store};
 
 pub fn use_named_store(name: &str) -> Result<()> {
-    use_named_store_with_modifiers(name, &HashMap::new())
+    if name.to_lowercase().as_str() == "sample" {
+        use_sample_store(&HashMap::from([("persist", "true")]))
+    } else {
+        use_named_store_with_modifiers(name, &HashMap::new())
+    }
 }
 
 pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str>) -> Result<()> {
     match name.to_lowercase().as_str() {
-        "sample" => use_sample_store(modifiers),
+        "android" => use_android_native_store(modifiers),
         "keychain" => use_apple_keychain_store(modifiers),
-        "protected" => use_apple_protected_store(modifiers),
         "keyutils" => use_linux_keyutils_store(modifiers),
+        "protected" => use_apple_protected_store(modifiers),
+        "sample" => use_sample_store(modifiers),
         "secret-service" | "secret-service-sync" => use_dbus_secret_service_store(modifiers),
         "secret-service-async" => use_zbus_secret_service_store(modifiers),
         "windows" => use_windows_native_store(modifiers),
@@ -51,29 +56,29 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
 
 #[allow(unused_variables)]
 pub fn use_native_store(not_keyutils: bool) -> Result<()> {
+    #[cfg(target_os = "android")]
+    use_named_store("android")?;
     #[cfg(target_os = "macos")]
-    use_apple_keychain_store(&HashMap::new())?;
+    use_named_store("keychain")?;
     #[cfg(target_os = "windows")]
-    use_windows_native_store(&HashMap::new())?;
+    use_named_store("windows")?;
     #[cfg(target_os = "linux")]
     if not_keyutils {
-        use_dbus_secret_service_store(&HashMap::new())?;
+        use_named_store("secret-service")?;
     } else {
-        use_linux_keyutils_store(&HashMap::new())?;
+        use_named_store("keyutils")?;
     }
     #[cfg(any(target_os = "freebsd", target_os = "openbsd"))]
-    use_dbus_secret_service_store(&HashMap::new())?;
+    use_named_store("secret-service")?;
     #[cfg(not(any(
-        target_os = "macos",
-        target_os = "windows",
-        target_os = "linux",
+        target_os = "android",
         target_os = "freebsd",
-        target_os = "openbsd"
+        target_os = "linux",
+        target_os = "macos",
+        target_os = "openbsd",
+        target_os = "windows",
     )))]
-    use_sample_store(&HashMap::from([(
-        "backing-file",
-        "keyring-sample-data.ron",
-    )]))?;
+    use_named_store("sample")?;
     Ok(())
 }
 
@@ -175,6 +180,22 @@ pub fn use_windows_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     {
         Err(Error::NotSupportedByStore(
             "The Windows credential store is only available on Windows".to_string(),
+        ))
+    }
+}
+
+#[allow(unused_variables)]
+pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
+    #[cfg(target_os = "android")]
+    {
+        use android_native_keyring_store::Store;
+        set_default_store(Store::new_with_configuration(config)?);
+        Ok(())
+    }
+    #[cfg(not(target_os = "android"))]
+    {
+        Err(Error::NotSupportedByStore(
+            "The Android native store is only available on Android".to_string(),
         ))
     }
 }

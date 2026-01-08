@@ -3,11 +3,12 @@
 //! This is more sample code than anything else because each command requires
 //! a separate invocation, including connecting to and disconnecting from a store.
 //! Invoke this command with no arguments to see usage information.
+use clap::{Args, Parser};
 use std::collections::HashMap;
 
-use clap::{Args, Parser};
-
-use keyring::{internalize, release_store, store_info, use_named_store_with_modifiers};
+use keyring::{
+    internalize, release_store, store_info, use_named_store, use_named_store_with_modifiers,
+};
 use keyring_core::{Entry, Error, Result};
 
 fn main() {
@@ -72,6 +73,13 @@ fn main() {
             Ok(()) => args.success_message_for(&Value::None),
             Err(err) => args.error_message_for(err),
         },
+        Command::Search { query } => {
+            let spec = query.as_ref().map(|query| parse_attributes(query.clone()));
+            match Entry::search(&internalize(spec.as_ref())) {
+                Ok(entries) => args.success_message_for(&Value::CredentialVec(entries)),
+                Err(err) => args.error_message_for(err),
+            }
+        }
     }
     release_store()
 }
@@ -81,19 +89,21 @@ fn set_store(args: &Cli) {
         .module
         .split_once(':')
         .unwrap_or((args.module.as_str(), ""));
-    let modifiers = Some(parse_attributes(rest.to_string()));
-    let mods = internalize(modifiers.as_ref());
-    use_named_store_with_modifiers(name, &mods).unwrap_or_else(|err| {
-        println!("{err}");
-        std::process::exit(1);
-    });
-    if let Some(mods) = modifiers
-        && !mods.is_empty()
-    {
-        println!("Using the {name} credential store with the following attributes:");
-        print_attributes(&mods)
-    } else {
+    if rest.is_empty() {
+        use_named_store(name).unwrap_or_else(|err| {
+            println!("{err}");
+            std::process::exit(1);
+        });
         println!("Using the {name} credential store");
+    } else {
+        let modifiers = Some(parse_attributes(rest.to_string()));
+        let mods = internalize(modifiers.as_ref());
+        use_named_store_with_modifiers(name, &mods).unwrap_or_else(|err| {
+            println!("{err}");
+            std::process::exit(1);
+        });
+        println!("Using the {name} credential store with the following attributes:");
+        print_attributes(modifiers.as_ref().unwrap());
     }
 }
 
@@ -101,13 +111,7 @@ fn set_store(args: &Cli) {
 #[clap(author = "github.com/open-source-cooperative/keyring-rs")]
 /// Keyring CLI: A command-line interface to platform secure storage
 pub struct Cli {
-    #[clap(
-        global = true,
-        short,
-        long,
-        value_parser,
-        default_value = "sample:backing-file=/tmp/keyring-sample-data.ron"
-    )]
+    #[clap(global = true, short, long, value_parser, default_value = "sample")]
     /// The credential store module to use.
     pub module: String,
 
@@ -162,16 +166,22 @@ pub enum Command {
     Credential,
     /// Delete the credential from the secure store.
     Delete,
+    /// Search for credentials in the secure store.
+    Search {
+        #[clap(value_parser)]
+        /// The query spec for the search: key1=value1,key2=value2
+        query: Option<String>,
+    },
 }
 
 #[derive(Debug, Args)]
 #[group(multiple = false, required = true)]
 pub struct What {
     #[clap(short, long, action, help = "The input is a utf8-encoded password")]
-    utf8: bool,
+    password: bool,
 
-    #[clap(short, long, action, help = "The input is a base64-encoded secret")]
-    base64: bool,
+    #[clap(short, long, action, help = "The input is a base64-encoded blob")]
+    blob: bool,
 
     #[clap(
         short,
@@ -187,6 +197,7 @@ enum Value {
     Password(String),
     Attributes(HashMap<String, String>),
     Credential(Entry),
+    CredentialVec(Vec<Entry>),
     None,
 }
 
@@ -211,7 +222,7 @@ impl Cli {
                     println!("{: >4}: {cred:?}", i + 1);
                 }
             }
-            err => match self.command {
+            err => match &self.command {
                 Command::Info => panic!("Can't happen: info command should never fail"),
                 Command::Set { .. } => {
                     println!("Couldn't set credential data for '{description}': {err:?}");
@@ -231,6 +242,13 @@ impl Cli {
                 Command::Delete => {
                     println!("Couldn't delete credential for '{description}': {err:?}");
                 }
+                Command::Search { query } => {
+                    if let Some(query) = query {
+                        println!("Couldn't search for '{query}': {err:?}")
+                    } else {
+                        println!("Couldn't search: {err:?}");
+                    }
+                }
             },
         }
         std::process::exit(1)
@@ -238,7 +256,7 @@ impl Cli {
 
     fn success_message_for(&self, value: &Value) {
         let description = self.description();
-        match self.command {
+        match &self.command {
             Command::Info => panic!("Can't happen: info command should not invoke success message"),
             Command::Set { .. } => match value {
                 Value::Secret(secret) => {
@@ -289,14 +307,33 @@ impl Cli {
             Command::Delete => {
                 println!("Successfully deleted credential for '{description}'");
             }
+            Command::Search { query } => match value {
+                Value::CredentialVec(entries) => {
+                    let mut suffix = String::new();
+                    if let Some(query) = query {
+                        suffix = format!(" matching '{query}'")
+                    }
+                    if entries.is_empty() {
+                        println!("No credentials found{suffix}");
+                    } else {
+                        let el = entries.len();
+                        let c_word = if el > 1 { "credentials" } else { "credential" };
+                        println!("Search found {el} {c_word}{suffix}:");
+                        for (i, entry) in entries.iter().enumerate() {
+                            println!("{:6}: {entry:?}", i + 1);
+                        }
+                    }
+                }
+                _ => panic!("Wrong value type for command"),
+            },
         }
     }
 
     fn read_value_to_set(&self) -> Value {
         if let Command::Set { what, input } = &self.command {
-            if what.utf8 {
+            if what.password {
                 Value::Password(read_password(input))
-            } else if what.base64 {
+            } else if what.blob {
                 Value::Secret(decode_secret(input))
             } else {
                 Value::Attributes(read_and_parse_attributes(input))

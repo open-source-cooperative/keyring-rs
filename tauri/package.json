@@ -1,0 +1,43 @@
+{
+	"name": "keyring-demo",
+	"version": "0.1.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"tauri": "tauri",
+		"format": "prettier --write .",
+		"lint": "prettier --check ."
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@tauri-apps/api": "^2",
+		"@tauri-apps/plugin-http": "^2.5.4",
+		"@tauri-apps/plugin-opener": "^2",
+		"@tauri-apps/plugin-os": "^2.3.2"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/kit": "^2.9.0",
+		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"@tailwindcss/forms": "^0.5.10",
+		"@tailwindcss/typography": "^0.5.19",
+		"@tailwindcss/vite": "^4.1.17",
+		"@tauri-apps/cli": "^2.9.6",
+		"flowbite": "^4.0.1",
+		"flowbite-svelte": "^1.30.0",
+		"flowbite-svelte-icons": "^3.0.1",
+		"prettier": "^3.7.4",
+		"prettier-plugin-svelte": "^3.4.0",
+		"prettier-plugin-tailwindcss": "^0.7.2",
+		"svelte": "^5.0.0",
+		"svelte-check": "^4.0.0",
+		"tailwindcss": "^4.1.17",
+		"typescript": "~5.6.2",
+		"vite": "^6.0.3"
+	}
+}

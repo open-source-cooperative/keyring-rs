@@ -1,0 +1,492 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		011D7378AFDC850A17339321 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 3E29BF8FD46144FC347997A5 /* assets */; };
+		1908AC04FD5C2693E5566286 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB9FD694E9C3227BD4218F2 /* QuartzCore.framework */; };
+		37770022FB6C5792E8859D67 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D77E0131A69B4AAB9A94101 /* Metal.framework */; };
+		41389816ED860133E4E4C1EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB1EC07BE9E3F39D2E992C86 /* Assets.xcassets */; };
+		417DB6BE6A3BD9261F21C5AC /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35E033C041FEB40EC2027B26 /* MetalKit.framework */; };
+		5453E6E5CDEEF0E84B7CBF3A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A25172ADF451A16A656A6DBF /* WebKit.framework */; };
+		7FAA6DACA6AA999FA283FDB6 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7248F56C81E873B5173C3DD7 /* libapp.a */; };
+		8528F696DCBBBE3F9B394722 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 088AD6F4DF24F13C1EDD2E37 /* UIKit.framework */; };
+		9AE2B385F0E2F2AF38DA1910 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 418F9F5020348A3FEFE8F06E /* main.mm */; };
+		A9993AB242193909FDCEB787 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A62FECDB461287AE14643 /* Security.framework */; };
+		B282A2088DD1E7FE456CE6E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 039CF367A1C861DD5267F584 /* LaunchScreen.storyboard */; };
+		EEE4C928842389B511B2392E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C84E043F27D547B0D55D6694 /* CoreGraphics.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		039CF367A1C861DD5267F584 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		088AD6F4DF24F13C1EDD2E37 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		0D77E0131A69B4AAB9A94101 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		16137E0D69F3177540821813 /* keyring-demo_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "keyring-demo_iOS.entitlements"; sourceTree = "<group>"; };
+		2C256CEF5794FF878F510045 /* keyring-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "keyring-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3203CC4B1433BF1F0071F7E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		35E033C041FEB40EC2027B26 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		3E29BF8FD46144FC347997A5 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		418F9F5020348A3FEFE8F06E /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		699288EDEDDE95471C6E0466 /* lib.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = lib.rs; sourceTree = "<group>"; };
+		7248F56C81E873B5173C3DD7 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		72BA9F486A6D6F531BEC383A /* history.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = history.rs; sourceTree = "<group>"; };
+		80761A6E65995F90C37528BA /* main.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.rs; sourceTree = "<group>"; };
+		942A62FECDB461287AE14643 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A25172ADF451A16A656A6DBF /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		C84E043F27D547B0D55D6694 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CDB9FD694E9C3227BD4218F2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		DDB9AD06DF07A273FA926AE2 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		EB1EC07BE9E3F39D2E992C86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		34A513DE368C4CFDA2E79083 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7FAA6DACA6AA999FA283FDB6 /* libapp.a in Frameworks */,
+				EEE4C928842389B511B2392E /* CoreGraphics.framework in Frameworks */,
+				37770022FB6C5792E8859D67 /* Metal.framework in Frameworks */,
+				417DB6BE6A3BD9261F21C5AC /* MetalKit.framework in Frameworks */,
+				1908AC04FD5C2693E5566286 /* QuartzCore.framework in Frameworks */,
+				A9993AB242193909FDCEB787 /* Security.framework in Frameworks */,
+				8528F696DCBBBE3F9B394722 /* UIKit.framework in Frameworks */,
+				5453E6E5CDEEF0E84B7CBF3A /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		029990898F36CC1AAA5F165C /* keyring-demo_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				3203CC4B1433BF1F0071F7E8 /* Info.plist */,
+				16137E0D69F3177540821813 /* keyring-demo_iOS.entitlements */,
+			);
+			path = "keyring-demo_iOS";
+			sourceTree = "<group>";
+		};
+		0507CA15A5257C30FA1BA60F /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		27A7D75341C6245F3C8BF92F /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				895E8A7B2EF024A4C3714585 /* keyring-demo */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		2CBD19615D882992658E088E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C256CEF5794FF878F510045 /* keyring-demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5620A01D6EE5BDD1590CA536 /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				DDB9AD06DF07A273FA926AE2 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		59783AEE15061BD2E90DF66A = {
+			isa = PBXGroup;
+			children = (
+				3E29BF8FD46144FC347997A5 /* assets */,
+				EB1EC07BE9E3F39D2E992C86 /* Assets.xcassets */,
+				039CF367A1C861DD5267F584 /* LaunchScreen.storyboard */,
+				0507CA15A5257C30FA1BA60F /* Externals */,
+				029990898F36CC1AAA5F165C /* keyring-demo_iOS */,
+				27A7D75341C6245F3C8BF92F /* Sources */,
+				E2D7EE64C095F08FB78C8559 /* src */,
+				D0AB806229579D879AC8ABC8 /* Frameworks */,
+				2CBD19615D882992658E088E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		895E8A7B2EF024A4C3714585 /* keyring-demo */ = {
+			isa = PBXGroup;
+			children = (
+				418F9F5020348A3FEFE8F06E /* main.mm */,
+				5620A01D6EE5BDD1590CA536 /* bindings */,
+			);
+			path = "keyring-demo";
+			sourceTree = "<group>";
+		};
+		D0AB806229579D879AC8ABC8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C84E043F27D547B0D55D6694 /* CoreGraphics.framework */,
+				7248F56C81E873B5173C3DD7 /* libapp.a */,
+				0D77E0131A69B4AAB9A94101 /* Metal.framework */,
+				35E033C041FEB40EC2027B26 /* MetalKit.framework */,
+				CDB9FD694E9C3227BD4218F2 /* QuartzCore.framework */,
+				942A62FECDB461287AE14643 /* Security.framework */,
+				088AD6F4DF24F13C1EDD2E37 /* UIKit.framework */,
+				A25172ADF451A16A656A6DBF /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E2D7EE64C095F08FB78C8559 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				72BA9F486A6D6F531BEC383A /* history.rs */,
+				699288EDEDDE95471C6E0466 /* lib.rs */,
+				80761A6E65995F90C37528BA /* main.rs */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		91A0DBB60BAD17FD24947D0B /* keyring-demo_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A143684767A8A8955F1B604E /* Build configuration list for PBXNativeTarget "keyring-demo_iOS" */;
+			buildPhases = (
+				374374C7B1D6542F4653AC06 /* Build Rust Code */,
+				125A25376BA8A9C8F36E3110 /* Sources */,
+				48A20C18F9D89DA9EC82EBE7 /* Resources */,
+				34A513DE368C4CFDA2E79083 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "keyring-demo_iOS";
+			packageProductDependencies = (
+			);
+			productName = "keyring-demo_iOS";
+			productReference = 2C256CEF5794FF878F510045 /* keyring-demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DF35C07F2A75FE1BD6B2C431 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					91A0DBB60BAD17FD24947D0B = {
+						DevelopmentTeam = 85H73V9R3F;
+					};
+				};
+			};
+			buildConfigurationList = DE3BAB212A5DE893AA60A3AC /* Build configuration list for PBXProject "keyring-demo" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 59783AEE15061BD2E90DF66A;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				91A0DBB60BAD17FD24947D0B /* keyring-demo_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		48A20C18F9D89DA9EC82EBE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41389816ED860133E4E4C1EC /* Assets.xcassets in Resources */,
+				B282A2088DD1E7FE456CE6E6 /* LaunchScreen.storyboard in Resources */,
+				011D7378AFDC850A17339321 /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		374374C7B1D6542F4653AC06 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "npm run -- tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		125A25376BA8A9C8F36E3110 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AE2B385F0E2F2AF38DA1910 /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1C6B9A0F7A7D7AC3E970C400 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "keyring-demo_iOS/keyring-demo_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1.0.5;
+				DEVELOPMENT_TEAM = "85H73V9R3F";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "keyring-demo_iOS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Keyring Demo";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brotsky.keyring-demo;
+				PRODUCT_NAME = "keyring-demo";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+		A1BA8926D1F5E85F3F87FBA6 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "keyring-demo_iOS/keyring-demo_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1.0.5;
+				DEVELOPMENT_TEAM = "85H73V9R3F";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "keyring-demo_iOS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Keyring Demo";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brotsky.keyring-demo;
+				PRODUCT_NAME = "keyring-demo";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+		C6A7A53A8DF314E28847B4A8 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		E42BEAD1D940644B114DAC8F /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A143684767A8A8955F1B604E /* Build configuration list for PBXNativeTarget "keyring-demo_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1BA8926D1F5E85F3F87FBA6 /* debug */,
+				1C6B9A0F7A7D7AC3E970C400 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		DE3BAB212A5DE893AA60A3AC /* Build configuration list for PBXProject "keyring-demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C6A7A53A8DF314E28847B4A8 /* debug */,
+				E42BEAD1D940644B114DAC8F /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DF35C07F2A75FE1BD6B2C431 /* Project object */;
+}
