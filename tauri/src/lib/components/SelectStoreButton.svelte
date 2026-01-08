@@ -35,7 +35,7 @@
 			availableStores.push('keyutils', 'secret-service');
 			break;
 		case 'macos':
-			availableStores.push('keychain');
+			availableStores.push('keychain', 'protected');
 			break;
 		case 'windows':
 			availableStores.push('windows');
