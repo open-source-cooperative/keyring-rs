@@ -1,13 +1,13 @@
 # Uncomment the next line to define a global platform for your project
 
-target 'keyring_iOS' do
+target 'keyring-demo_iOS' do
 platform :ios, '14.0'
-  # Pods for keyring_iOS
+  # Pods for keyring-demo_iOS
 end
 
-target 'keyring_macOS' do
+target 'keyring-demo_macOS' do
 platform :osx, '11.0'
-  # Pods for keyring_macOS
+  # Pods for keyring-demo_macOS
 end
 
 # Delete the deployment target for iOS and macOS, causing it to be inherited from the Podfile

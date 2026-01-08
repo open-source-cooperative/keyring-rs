@@ -1,6 +1,6 @@
-name: keyring
+name: keyring-demo
 options:
-  bundleIdPrefix: com.brotskydotcom.keyring
+  bundleIdPrefix: com.brotsky.keyring-demo
   deploymentTarget:
     iOS: 14.0
 fileGroups: [../../src]
@@ -10,8 +10,9 @@ configs:
 settingGroups:
   app:
     base:
-      PRODUCT_NAME: keyring
-      PRODUCT_BUNDLE_IDENTIFIER: com.brotskydotcom.keyring
+      PRODUCT_NAME: keyring-demo
+      PRODUCT_BUNDLE_IDENTIFIER: com.brotsky.keyring-demo
+      DEVELOPMENT_TEAM: 85H73V9R3F
 targetTemplates:
   app:
     type: application
@@ -24,20 +25,20 @@ targetTemplates:
     settings:
       groups: [app]
 targets:
-  keyring_iOS:
+  keyring-demo_iOS:
     type: application
     platform: iOS
     sources:
       - path: Sources
       - path: Assets.xcassets
       - path: Externals
-      - path: keyring_iOS
+      - path: keyring-demo_iOS
       - path: assets
         buildPhase: resources
         type: folder
       - path: LaunchScreen.storyboard
     info:
-      path: keyring_iOS/Info.plist
+      path: keyring-demo_iOS/Info.plist
       properties:
         LSRequiresIPhoneOS: true
         UILaunchStoryboardName: LaunchScreen
@@ -51,10 +52,10 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        CFBundleShortVersionString: 0.1.0
-        CFBundleVersion: '0.1.0'
+        CFBundleShortVersionString: 1.0.0
+        CFBundleVersion: "1.0.0"
     entitlements:
-      path: keyring_iOS/keyring_iOS.entitlements
+      path: keyring-demo_iOS/keyring-demo_iOS.entitlements
     scheme:
       environmentVariables:
         RUST_BACKTRACE: full
@@ -63,7 +64,7 @@ targets:
       base:
         ENABLE_BITCODE: false
         ARCHS: [arm64]
-        VALID_ARCHS: arm64
+        VALID_ARCHS: arm64 
         LIBRARY_SEARCH_PATHS[arch=x86_64]: $(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)
         LIBRARY_SEARCH_PATHS[arch=arm64]: $(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: true

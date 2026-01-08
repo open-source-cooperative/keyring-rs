@@ -1,19 +1,19 @@
-use crate::history::HistoryEntry;
 use std::sync::Mutex;
 use tauri::Manager;
 
 mod history;
+use history::{History, HistoryEntry};
 
 struct State {
     next_entry_id: u32,
-    history: history::History,
+    history: History,
 }
 
 impl Default for State {
     fn default() -> Self {
         Self {
             next_entry_id: 1,
-            history: history::History::new(),
+            history: History::new(),
         }
     }
 }
