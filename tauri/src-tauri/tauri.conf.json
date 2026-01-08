@@ -32,7 +32,8 @@
 			"icons/icon.ico"
 		],
 		"iOS": {
-			"developmentTeam": "85H73V9R3F"
+			"developmentTeam": "85H73V9R3F",
+			"bundleVersion": "1.0"
 		}
 	}
 }

@@ -1,12 +1,12 @@
 [package]
-name = "keyring_lib"
+name = "keyring-demo"
 version = "0.1.0"
 description = "Rust back-end for keyring Tauri app"
 authors = ["Daniel Brotsky <dev@brotsky.com>"]
 edition = "2021"
 
 [lib]
-name = "keyring_lib"
+name = "keyring_demo"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
