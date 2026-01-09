@@ -11,8 +11,8 @@
 </script>
 
 <TopBar {history} bind:selected />
-<div class="grid grid-cols-2 gap-4 p-4">
-	<div class="col-span-1 space-y-4">
+<div class="grid w-full grid-cols-2 gap-4">
+	<div class="col-span-1 space-y-2">
 		<div class="flex justify-center">
 			<Heading tag="h5">Entry History</Heading>
 		</div>
@@ -20,7 +20,7 @@
 			<HistoryPanel {history} bind:selected />
 		</div>
 	</div>
-	<div class="col-span-1 space-y-4">
+	<div class="col-span-1">
 		<InfoPanel {selected} />
 	</div>
 </div>

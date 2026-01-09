@@ -37,7 +37,7 @@
 </script>
 
 {#if entries.length}
-	<div class="max-h-[500px] w-full overflow-y-auto p-4">
+	<div class="w-full pr-4 pl-4">
 		<Listgroup active items={entries} />
 	</div>
 {:else}
