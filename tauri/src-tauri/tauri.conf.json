@@ -37,13 +37,9 @@
 			"bundleVersion": "1.0.6"
 		},
 		"macOS": {
-			"bundleVersion": "1.0.2",
+			"bundleVersion": "1.0.3",
 			"minimumSystemVersion": "12.0",
-			"entitlements": "./Entitlements.plist",
-			"signingIdentity": "3rd Party Mac Developer Application: Daniel Brotsky (85H73V9R3F)",
-			"files": {
-				"embedded.provisionprofile": "/Users/dbrotsky/.appstoreconnect/profiles/Keyring_Demo_MacAppStore_Profile.provisionprofile"
-			}
+			"signingIdentity": "3rd Party Mac Developer Application: Daniel Brotsky (85H73V9R3F)"
 		}
 	}
 }
