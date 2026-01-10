@@ -1,6 +1,6 @@
 [package]
 name = "keyring-demo"
-version = "0.1.0"
+version = "1.0.0"
 description = "Rust back-end for keyring Tauri app"
 authors = ["Daniel Brotsky <dev@brotsky.com>"]
 edition = "2021"
