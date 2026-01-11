@@ -29,9 +29,7 @@ to load it into your Python REPL. The sources for this Python module are built u
 
 ## Cross-platform GUI
 
-There is a [Tauri 2.0](https://tauri.app/) cross-platform GUI in the `tauri` subdirectory of this repository. This GUI allows you to poke around in any of the keyring-compatible credential stores available on your platform. This GUI is currently in public beta testing on iOS, macOS, and Android (see [this issue for details](https://github.com/open-source-cooperative/keyring-rs/issues/259), and it’s available for MacOS (not sandboxed), Linux (Ubuntu), and Windows on [CrabNebula](https://web.crabnebula.cloud/brotskydotcom/keyring-demo/releases).
-
-(Thanks to the good people at C)
+There is a [Tauri 2.0](https://tauri.app/) cross-platform GUI in the `tauri` subdirectory of this repository. This GUI allows you to poke around in any of the keyring-compatible credential stores available on your platform. This GUI is currently in public beta testing on iOS, macOS, and Android (see [this issue for details](https://github.com/open-source-cooperative/keyring-rs/issues/259)), and it’s available for MacOS (not sandboxed), Linux (Ubuntu), and Windows on [CrabNebula](https://web.crabnebula.cloud/brotskydotcom/keyring-demo/releases).
 
 ## Credential Stores Wanted!
 

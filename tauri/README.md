@@ -59,3 +59,17 @@ To build the macOS app for the app store, follow these steps (after having fixed
 ### Google Play
 
 In order to distribute Android apps through Google Play you must be a Google Play Developer. The Tauri 2.0 documentation has tons of information about how developers configure their builds so they are signed correctly for Google Play upload. The configuration files in this repo have all been configured correctly for the `brotskydotcom` Google Play developer, org ID `85H73V9R3F`.
+
+### CrabNebula
+
+### Debian (Ubuntu)
+
+In addition to Rust and an up-to-date Node/Npm, you need to have these packages installed on Debian to build the app:
+
+* build-essentials (meta-package) - this is also needed for Rust, of course
+* libgtk2.0-dev 
+* libgtk-3-dev
+* libjavascriptcoregtk-4.1-dev
+* libsoup-3.0-dev
+* libwebkit2gtk-4.1-dev
+
