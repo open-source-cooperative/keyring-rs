@@ -10,7 +10,7 @@
 		message = $bindable()
 	}: {
 		history: Writable<HistoryEntry[]>;
-		selected: string | undefined;
+		selected: HistoryEntry | undefined;
 		error: string;
 		message: string;
 	} = $props();

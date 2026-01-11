@@ -1,0 +1,10 @@
+{
+	"bundle": {
+		"macOS": {
+			"entitlements": "./Entitlements.plist",
+			"files": {
+				"embedded.provisionprofile": "/Users/dbrotsky/.appstoreconnect/profiles/Keyring_Demo_MacAppStore_Profile.provisionprofile"
+			}
+		}
+	}
+}

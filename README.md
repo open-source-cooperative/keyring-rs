@@ -11,11 +11,11 @@ This crate provides a simple CLI for the [Rust keyring ecosystem](https://github
 
 The `keyring` binary produced by building this crate is a command-line interface for issuing one keyring call at a time and examining its results. Issue the command
 ```shell
-keyring  help
+keyring --help
 ```
 for usage information.
 
-## Python interface for scripting
+## Python Module
 
 The CLI provided by this crate is neither efficient nor convenient for scripting, because each invocation loads a credential store, issues just one command against it, and then outputs the results in a format that is hard to parse. If you are looking to do scripting of keyring commands, you are better off using the Python wrapper for this crate available on PyPI in the [rust-native-keyring project](https://pypi.org/project/rust-native-keyring/). Use the shell command
 ```shell
@@ -25,11 +25,15 @@ to install it and
 ```python
 import rust_native_keyring
 ```
-to load it into your Python REPL.
+to load it into your Python REPL. The sources for this Python module are built using [PyO3](https://github.com/PyO3/pyo3) and can be found in the `python` subdirectory of this repository.
+
+## Cross-platform GUI
+
+There is a [Tauri 2.0](https://tauri.app/) cross-platform GUI in the `tauri` subdirectory of this repository. This GUI allows you to poke around in any of the keyring-compatible credential stores available on your platform. This GUI is currently in public beta testing on iOS, macOS, and Android (see [this issue for details](https://github.com/open-source-cooperative/keyring-rs/issues/259)), and it’s available for MacOS (not sandboxed), Linux (Ubuntu), and Windows on [CrabNebula](https://web.crabnebula.cloud/brotskydotcom/keyring-demo/releases).
 
 ## Credential Stores Wanted!
 
-If you are a credential store module developer, you are strongly encouraged to contribute a connector for your module to the library in this crate, thus making it available to both client applications. See the [module documentation](https://docs.rs/keyring/latest/keyring/) for details.
+If you are a credential store module developer, you are strongly encouraged to contribute a connector for your module to the library in this crate, thus making it available to users (in the test apps) and application developers (via sample code). See the [module documentation](https://docs.rs/keyring/latest/keyring/) for details.
 
 ## License
 

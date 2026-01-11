@@ -24,6 +24,7 @@
 	"bundle": {
 		"active": true,
 		"targets": "all",
+		"category": "Utility",
 		"icon": [
 			"icons/32x32.png",
 			"icons/128x128.png",
@@ -31,9 +32,17 @@
 			"icons/icon.icns",
 			"icons/icon.ico"
 		],
+		"android": {
+			"versionCode": 1000001
+		},
 		"iOS": {
 			"developmentTeam": "85H73V9R3F",
-			"bundleVersion": "1.0"
+			"bundleVersion": "1.0.7"
+		},
+		"macOS": {
+			"bundleVersion": "1.0.4",
+			"minimumSystemVersion": "12.0",
+			"signingIdentity": "3rd Party Mac Developer Application: Daniel Brotsky (85H73V9R3F)"
 		}
 	}
 }

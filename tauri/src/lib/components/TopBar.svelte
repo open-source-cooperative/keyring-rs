@@ -27,13 +27,13 @@
 		<SearchButton {history} bind:selected bind:error bind:message />
 	</div>
 	{#if message}
-		<div class="w-full p-4">
-			<Alert color="green" dismissable>{message}</Alert>
+		<div class="w-full p-4 pb-0">
+			<Alert color="green" onclick={() => (message = '')} dismissable>{message}</Alert>
 		</div>
 	{/if}
 	{#if error}
-		<div class="w-full p-4">
-			<Alert color="red" dismissable>{error}</Alert>
+		<div class="w-full p-4 pb-0">
+			<Alert color="red" onclick={() => (error = '')} dismissable>{error}</Alert>
 		</div>
 	{/if}
 </div>
