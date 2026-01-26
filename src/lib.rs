@@ -37,6 +37,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
         "secret-service" | "secret-service-sync" => use_dbus_secret_service_store(modifiers),
         "secret-service-async" => use_zbus_secret_service_store(modifiers),
         "windows" => use_windows_native_store(modifiers),
+        "sqlite" => use_sqlite_store(modifiers),
         _ => {
             let names = [
                 "sample",
@@ -46,6 +47,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
                 "secret-service",
                 "secret-service-async",
                 "windows",
+                "sqlite",
             ];
             let ok = names.join(", ");
             let err = Error::Invalid(name.to_string(), format!("must be one of: {ok}"));
@@ -198,6 +200,12 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
             "The Android native store is only available on Android".to_string(),
         ))
     }
+}
+
+pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
+    use db_keystore::DbKeyStore;
+    set_default_store(std::sync::Arc::new(DbKeyStore::new_with_modifiers(config)?));
+    Ok(())
 }
 
 pub fn release_store() {
