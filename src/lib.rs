@@ -37,6 +37,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
         "secret-service" | "secret-service-sync" => use_dbus_secret_service_store(modifiers),
         "secret-service-async" => use_zbus_secret_service_store(modifiers),
         "windows" => use_windows_native_store(modifiers),
+        #[cfg(feature = "sqlite")]
         "sqlite" => use_sqlite_store(modifiers),
         _ => {
             let names = [
@@ -47,6 +48,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
                 "secret-service",
                 "secret-service-async",
                 "windows",
+                #[cfg(feature = "sqlite")]
                 "sqlite",
             ];
             let ok = names.join(", ");
@@ -202,6 +204,7 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+#[cfg(feature = "sqlite")]
 pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
     use db_keystore::DbKeyStore;
     set_default_store(std::sync::Arc::new(DbKeyStore::new_with_modifiers(config)?));
