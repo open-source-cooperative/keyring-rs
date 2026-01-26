@@ -1,2 +1,0 @@
-# don't check in the built python wheels
-dist/
