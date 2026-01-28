@@ -36,8 +36,8 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
         "sample" => use_sample_store(modifiers),
         "secret-service" | "secret-service-sync" => use_dbus_secret_service_store(modifiers),
         "secret-service-async" => use_zbus_secret_service_store(modifiers),
-        "windows" => use_windows_native_store(modifiers),
         "sqlite" => use_sqlite_store(modifiers),
+        "windows" => use_windows_native_store(modifiers),
         _ => {
             let names = [
                 "sample",
@@ -46,8 +46,8 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
                 "keyutils",
                 "secret-service",
                 "secret-service-async",
-                "windows",
                 "sqlite",
+                "windows",
             ];
             let ok = names.join(", ");
             let err = Error::Invalid(name.to_string(), format!("must be one of: {ok}"));
