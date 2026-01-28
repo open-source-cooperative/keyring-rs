@@ -204,7 +204,7 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
 
 pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
     use db_keystore::DbKeyStore;
-    set_default_store(std::sync::Arc::new(DbKeyStore::new_with_modifiers(config)?));
+    set_default_store(DbKeyStore::new_with_modifiers(config)?);
     Ok(())
 }
 
