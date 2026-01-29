@@ -8,13 +8,14 @@ keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
 version = "4.0.0-beta.3"
-rust-version = "1.88.0"     # uses let chains
+rust-version = "1.88.0"                                                         # uses let chains
 edition = "2024"
 exclude = [".github", "python", "tauri"]
 
 [dependencies]
 base64 = "0.22.1"
 clap = { version = "4.5.54", features = ["derive"] }
+db-keystore = "0.3.1"
 fastrand = "2.3.0"
 keyring-core = { version = "0.7.2", features = ["sample"] }
 rpassword = "7.4.0"
