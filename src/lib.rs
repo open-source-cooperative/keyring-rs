@@ -19,7 +19,8 @@ use std::collections::HashMap;
 
 use keyring_core::{Error, Result, get_default_store, set_default_store, unset_default_store};
 
-const NAMED_STORES: [&str; 9] = [
+/// An alphabetic list of known credential stores.
+pub const NAMED_STORES: [&str; 9] = [
     "android",
     "keychain",
     "keyutils",
@@ -31,6 +32,11 @@ const NAMED_STORES: [&str; 9] = [
     "windows",
 ];
 
+/// Set the default store to one of the known stores (default configuration).
+///
+/// Gives an `Invalid` error if the store name is not known.
+///
+/// If store creation fails with an error, yields that error.
 pub fn use_named_store(name: &str) -> Result<()> {
     if name.to_lowercase().as_str() == "sample" {
         use_sample_store(&HashMap::from([("persist", "true")]))
@@ -39,6 +45,13 @@ pub fn use_named_store(name: &str) -> Result<()> {
     }
 }
 
+/// Set the default store to one of the known stores (specified configuration).
+///
+/// The modifiers are passed to the store builder.
+///
+/// Gives an `Invalid` error if the store name is not known.
+///
+/// If store creation fails with an error, yields that error.
 pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str>) -> Result<()> {
     match name.to_lowercase().as_str() {
         "android" => use_android_native_store(modifiers),
@@ -58,6 +71,13 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
     }
 }
 
+/// Set the default store to the platform's OS-provided credential store.
+///
+/// If the platform has no OS-provided credential store, the sample store is used.
+///
+/// On Linux (only), the kernel keyutils store is used unless
+/// `not_keyutils` is true, in which case the Secret Service
+/// (synchronous) store is used.
 #[allow(unused_variables)]
 pub fn use_native_store(not_keyutils: bool) -> Result<()> {
     #[cfg(target_os = "android")]
@@ -86,12 +106,18 @@ pub fn use_native_store(not_keyutils: bool) -> Result<()> {
     Ok(())
 }
 
+/// Set the default store to the `keyring-core::Sample` store.
+///
+/// This is available on all platforms.
 pub fn use_sample_store(config: &HashMap<&str, &str>) -> Result<()> {
     use keyring_core::sample::Store;
     set_default_store(Store::new_with_configuration(config)?);
     Ok(())
 }
 
+/// Use the macOS Keychain Services store.
+///
+/// Fails with a `NotSupportedByStore` error on other platforms.
 #[allow(unused_variables)]
 pub fn use_apple_keychain_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(target_os = "macos")]
@@ -108,6 +134,14 @@ pub fn use_apple_keychain_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+/// Use the iOS/macOS Protected Data store.
+///
+/// NOTE: macOS apps can instantiate the protected store only
+/// when running on Apple Silicon.
+/// In addition, only apps with a provisioning profile (and a sandbox entitlement)
+/// can access items in the Protected Data store.
+///
+/// Fails with a `NotSupportedByStore` error on other platforms.
 #[allow(unused_variables)]
 pub fn use_apple_protected_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(any(target_os = "macos", target_os = "ios"))]
@@ -124,6 +158,9 @@ pub fn use_apple_protected_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+/// Use the Linux Keyutils store.
+///
+/// Fails with a `NotSupportedByStore` error on other platforms.
 #[allow(unused_variables)]
 pub fn use_linux_keyutils_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(target_os = "linux")]
@@ -140,6 +177,9 @@ pub fn use_linux_keyutils_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+/// Use the dbus-based Secret Service store via `libdbus`.
+///
+/// Fails with a `NotSupportedByStore` error except on Linux and *nix platforms.
 #[allow(unused_variables)]
 pub fn use_dbus_secret_service_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(any(target_os = "linux", target_os = "freebsd"))]
@@ -156,6 +196,9 @@ pub fn use_dbus_secret_service_store(config: &HashMap<&str, &str>) -> Result<()>
     }
 }
 
+/// Use the dbus-based Secret Service store via `zbus`.
+///
+/// Fails with a `NotSupportedByStore` error except on Linux and *nix platforms.
 #[allow(unused_variables)]
 pub fn use_zbus_secret_service_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(any(target_os = "linux", target_os = "freebsd"))]
@@ -172,6 +215,9 @@ pub fn use_zbus_secret_service_store(config: &HashMap<&str, &str>) -> Result<()>
     }
 }
 
+/// Use the Windows Credential store.
+///
+/// Fails with a `NotSupportedByStore` error on other platforms.
 #[allow(unused_variables)]
 pub fn use_windows_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(target_os = "windows")]
@@ -188,6 +234,11 @@ pub fn use_windows_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+/// Use the Android Shared Preferences store.
+///
+/// Shared Preference data is encrypted using the Android keystore.
+///
+/// Fails with a `NotSupportedByStore` error on other platforms.
 #[allow(unused_variables)]
 pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(target_os = "android")]
@@ -204,6 +255,10 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+/// Use a cross-platform encrypted sqlite (Turso) database.
+///
+/// Fails with a `NotSupportedByStore` error on Windows/AArch64
+/// until the Turso release supports it.
 #[allow(unused_variables)]
 pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(not(all(target_os = "windows", target_arch = "aarch64")))]
@@ -220,10 +275,12 @@ pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+/// Release the current default store.
 pub fn release_store() {
     unset_default_store();
 }
 
+/// Returns a debug description of the current default store.
 pub fn store_info() -> String {
     if let Some(store) = get_default_store() {
         format!("{store:?}")
