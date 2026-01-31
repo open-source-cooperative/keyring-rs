@@ -7,20 +7,23 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.0.0-beta.3"
-rust-version = "1.88.0"                                                         # uses let chains
+version = "4.0.0-rc.2"
 edition = "2024"
-exclude = [".github", "python", "tauri"]
+# uses let chains
+rust-version = "1.88.0"
+exclude = [".github"]
 
 [dependencies]
 base64 = "0.22.1"
-clap = { version = "4.5.54", features = ["derive"] }
-db-keystore = "0.3.1"
+clap = { version = "4.5.56", features = ["derive"] }
 fastrand = "2.3.0"
 keyring-core = { version = "0.7.2", features = ["sample"] }
 rpassword = "7.4.0"
 rprompt = "2.2.0"
 zeroize = "1.8.2"
+
+[target.'cfg(not(all(target_os = "windows", target_arch = "aarch64")))'.dependencies]
+db-keystore = { version = "0.3.1" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 apple-native-keyring-store = { version = "0.2.2", features = ["keychain", "protected"] }

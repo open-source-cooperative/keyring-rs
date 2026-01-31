@@ -202,10 +202,20 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     }
 }
 
+#[allow(unused_variables)]
 pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
-    use db_keystore::DbKeyStore;
-    set_default_store(DbKeyStore::new_with_modifiers(config)?);
-    Ok(())
+    #[cfg(not(all(target_os = "windows", target_arch = "aarch64")))]
+    {
+        use db_keystore::DbKeyStore;
+        set_default_store(DbKeyStore::new_with_modifiers(config)?);
+        Ok(())
+    }
+    #[cfg(all(target_os = "windows", target_arch = "aarch64"))]
+    {
+        Err(Error::NotSupportedByStore(
+            "The sqlite store is not available on Windows AArch64".to_string(),
+        ))
+    }
 }
 
 pub fn release_store() {

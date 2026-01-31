@@ -49,9 +49,16 @@ fn main() {
     let mut password = pass_result.unwrap();
     password.zeroize();
     // signal that we're ready to be scanned.
-    // This leaks a string that can be scanned for to make sure scanning works
-    let ready = "ok-mr-debugger-i'm-ready-for-my-close-up";
-    eprintln!("Leaked string: {ready}");
+    // This leaks a modified string that can be scanned for to make sure scanning works
+    let ready_master = b"r e a d y - f o r - a - c l o s e - u p";
+    let mut ready = [0u8; 20];
+    for (i, b) in ready_master.iter().enumerate() {
+        if i % 2 == 1 {
+            continue;
+        }
+        ready[i / 2] = *b;
+    }
+    eprintln!("Leaked string: {}", from_utf8(&ready).unwrap());
     // wait while the heap is scanned
     std::thread::sleep(Duration::from_secs(get_env_int("DELAY_SECS", 7)));
     // don't leave detritus around
