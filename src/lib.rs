@@ -19,6 +19,18 @@ use std::collections::HashMap;
 
 use keyring_core::{Error, Result, get_default_store, set_default_store, unset_default_store};
 
+const NAMED_STORES: [&str; 9] = [
+    "android",
+    "keychain",
+    "keyutils",
+    "protected",
+    "sample",
+    "secret-service",
+    "secret-service-async",
+    "sqlite",
+    "windows",
+];
+
 pub fn use_named_store(name: &str) -> Result<()> {
     if name.to_lowercase().as_str() == "sample" {
         use_sample_store(&HashMap::from([("persist", "true")]))
@@ -39,17 +51,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
         "sqlite" => use_sqlite_store(modifiers),
         "windows" => use_windows_native_store(modifiers),
         _ => {
-            let names = [
-                "sample",
-                "keychain",
-                "protected",
-                "keyutils",
-                "secret-service",
-                "secret-service-async",
-                "sqlite",
-                "windows",
-            ];
-            let ok = names.join(", ");
+            let ok = NAMED_STORES.join(", ");
             let err = Error::Invalid(name.to_string(), format!("must be one of: {ok}"));
             Err(err)
         }
