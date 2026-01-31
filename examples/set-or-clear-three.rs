@@ -25,6 +25,9 @@ If you don't specify a prefix, then the created credentials will have these spec
 If you do specify a prefix, then the prefix will be prepended to the service and user names.
 The first two creds will have string passwords; the third will have a random secret.
 
+If you specify the 'set' (or 's') operation, the credentials will be created.
+If you specify the 'clear' (or 'c') operation, the credentials will be deleted.
+
 The OS-native credential stores are:
 - macOS: the login keychain
 - Windows: the Credential Manager
