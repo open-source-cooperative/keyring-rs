@@ -29,7 +29,7 @@ rm -f /tmp/keyring-test.dmp
 echo Dumping...
 /c/Windows/procdump64a.exe -ma -o leak-test /tmp/leak-test.dmp
 # shellcheck disable=SC2181
-if [ $? != 0 ]; then
+if [ $? != 1 ]; then
   echo TEST ABORT - procdump failure
   echo Waiting for leak test to clean up...
   wait %1
