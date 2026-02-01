@@ -136,19 +136,27 @@ pub fn use_apple_keychain_store(config: &HashMap<&str, &str>) -> Result<()> {
 
 /// Use the iOS/macOS Protected Data store.
 ///
-/// NOTE: macOS apps can instantiate the protected store only
-/// when running on Apple Silicon.
-/// In addition, only apps with a provisioning profile (and a sandbox entitlement)
-/// can access items in the Protected Data store.
+/// NOTE: macOS apps without a provisioning profile
+/// cannot use the protected store. Because an app cannot
+/// check itself for a provisioning profile, we use
+/// whether the app is sandboxed as a proxy for this.
+/// However, it is possible for apps to be sandboxed
+/// without a provisioning profile, in which case this
+/// function will instantiate a store successfully, but
+/// all attempts to read or write credentials will fail.
 ///
 /// Fails with a `NotSupportedByStore` error on other platforms.
 #[allow(unused_variables)]
 pub fn use_apple_protected_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(any(target_os = "macos", target_os = "ios"))]
-    {
+    if std::env::var("APP_SANDBOX_CONTAINER_ID").is_ok() {
         use apple_native_keyring_store::protected::Store;
         set_default_store(Store::new_with_configuration(config)?);
         Ok(())
+    } else {
+        Err(Error::NotSupportedByStore(
+            "The macOS Protected Data store requires a provisioning profile".to_string(),
+        ))
     }
     #[cfg(not(any(target_os = "macos", target_os = "ios")))]
     {
