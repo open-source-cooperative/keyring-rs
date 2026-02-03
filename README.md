@@ -25,11 +25,11 @@ to install it and
 ```python
 import rust_native_keyring
 ```
-to load it into your Python REPL. The sources for this Python module are built using [PyO3](https://github.com/PyO3/pyo3) and can be found in the `python` subdirectory of this repository.
+to load it into your Python REPL. The sources for this Python module are built using [PyO3](https://github.com/PyO3/pyo3) and can be found in [this repository](https://github.com/open-source-cooperative/keyring-for-python).
 
 ## Cross-platform GUI
 
-There is a [Tauri 2.0](https://tauri.app/) cross-platform GUI in the `tauri` subdirectory of this repository. This GUI allows you to poke around in any of the keyring-compatible credential stores available on your platform. This GUI is currently in public beta testing on iOS, macOS, and Android (see [this issue for details](https://github.com/open-source-cooperative/keyring-rs/issues/259)), and it’s available for MacOS (not sandboxed), Linux (Ubuntu), and Windows on [CrabNebula](https://web.crabnebula.cloud/brotskydotcom/keyring-demo/releases).
+There is a [Tauri 2.0](https://tauri.app/) cross-platform GUI for Keyring in [this repository](https://github.com/open-source-cooperative/keyring-demo). This GUI allows you to poke around in any of the keyring-compatible credential stores available on your platform. This GUI is currently in public beta testing on iOS, macOS, and Android (instructions [here for iOS/macOS](https://github.com/open-source-cooperative/keyring-demo/issues/2) and [here for Android](https://github.com/open-source-cooperative/keyring-demo/issues/1)), and it’s available for MacOS (not sandboxed), Linux, and Windows on [CrabNebula](https://web.crabnebula.cloud/brotskydotcom/keyring-demo/releases).
 
 ## Credential Stores Wanted!
 
