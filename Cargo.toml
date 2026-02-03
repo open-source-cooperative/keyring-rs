@@ -23,7 +23,7 @@ rprompt = "2.2.0"
 zeroize = "1.8.2"
 
 [target.'cfg(not(all(target_os = "windows", target_arch = "aarch64")))'.dependencies]
-db-keystore = { version = "0.3.1" }
+db-keystore = { version = "0.4.0" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 apple-native-keyring-store = { version = "0.2.2", features = ["keychain", "protected"] }
