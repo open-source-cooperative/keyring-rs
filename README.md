@@ -7,6 +7,16 @@
 
 This crate provides a simple CLI for the [Rust keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring). It also provides sample Rust code for developers who are looking to use the keyring infrastructure in their projects and an inventory of available credential store modules.
 
+## History
+
+This crate has a long history. It was first written by [Walther Chen](https://github.com/hwchen) as an "API library plus credential store" combination. Currently maintained by [Dan Brotsky](https://github.com/brotskydotcom), it is now just a "sample code" crate, with the library/API parts now part of the [keyring-core crate](https://crates.io/crates/keyring-core) and the credential stores all in [separate crates](https://crates.io/search?q=keyring%20credential%20store) of their own. The [Contributors file](Contributors.md) lists the many, many people who have contributed to all generations of this crate.
+
+## Do not depend on this crate!
+
+If you are writing an application that uses keyring-compatible credential stores, you should _not_ take a depedency on this crate!! You should _instead_ be relying on the [keyring-core crate](https://crates.io/crates/keyring-core).
+
+If you have an existing application that relies on v3.x of this crate, do _not_ update it to use v4 of this crate! Instead replace your dependency on this crate with a dependency on the [keyring-core crate](https://crates.io/crates/keyring-core). The docs for that crate explain the changes you will need to make in your application.
+
 ## Rust CLI
 
 The `keyring` binary produced by building this crate is a command-line interface for issuing one keyring call at a time and examining its results. Issue the command
