@@ -64,7 +64,7 @@ checksum = "48c6349ddff23194f8fdce2ea8849380f5a4868c1648965b70e801e104cba9b3"
 dependencies = [
  "base64",
  "jni",
- "keyring-core 1.0.0",
+ "keyring-core",
  "log",
  "ndk-context",
  "regex",
@@ -161,7 +161,7 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7be2f067ccd8d4b4d4a66ddafe0f32a5dff31732f32dbff85fefc40929b1f72"
 dependencies = [
- "keyring-core 1.0.0",
+ "keyring-core",
  "log",
  "security-framework",
 ]
@@ -724,14 +724,13 @@ dependencies = [
 
 [[package]]
 name = "db-keystore"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21a31e1e8c0e7a0d7dd7f097f479d3da0e9dfdc66b2c4c70f0292c711d734efd"
+version = "0.4.2-pre.2"
+source = "git+https://github.com/stevelr/db-keystore.git?branch=v0.4.2-pre.2#ddfb8b53969af5eb335df89c71f39a269d4e2de2"
 dependencies = [
  "anyhow",
  "clap",
  "futures",
- "keyring-core 0.7.4",
+ "keyring-core",
  "log",
  "regex",
  "serde",
@@ -778,7 +777,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "21d8f54da401bb5eb2a4d873ac4b359f4a599df2ca8634bb5b8c045e5ee78757"
 dependencies = [
  "dbus-secret-service",
- "keyring-core 1.0.0",
+ "keyring-core",
 ]
 
 [[package]]
@@ -1383,22 +1382,13 @@ dependencies = [
  "db-keystore",
  "dbus-secret-service-keyring-store",
  "fastrand",
- "keyring-core 1.0.0",
+ "keyring-core",
  "linux-keyutils-keyring-store",
  "rpassword",
  "rprompt",
  "windows-native-keyring-store",
  "zbus-secret-service-keyring-store",
  "zeroize",
-]
-
-[[package]]
-name = "keyring-core"
-version = "0.7.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d8286c3ab222af2fa9e57874fe419893d967f739c7bf1743f98a88678edbf08"
-dependencies = [
- "log",
 ]
 
 [[package]]
@@ -1511,7 +1501,7 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39fbed79f71dc21eb21d3d07c0e908a3c58ff9a1fdbf5cf44230fb3deb6d994b"
 dependencies = [
- "keyring-core 1.0.0",
+ "keyring-core",
  "linux-keyutils",
 ]
 
@@ -3171,7 +3161,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b5fd986f648459dd29aa252ed3a5ad11a60c0b1251bf81625fb03a86c69d274e"
 dependencies = [
  "byteorder",
- "keyring-core 1.0.0",
+ "keyring-core",
  "regex",
  "windows-sys 0.61.2",
  "zeroize",
@@ -3505,7 +3495,7 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4ccede190ba363386a24e8021c7f3848393976609ec9f5d1f8c6c09ef37075b4"
 dependencies = [
- "keyring-core 1.0.0",
+ "keyring-core",
  "secret-service",
  "zbus",
 ]
