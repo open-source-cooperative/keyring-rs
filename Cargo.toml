@@ -16,7 +16,7 @@ exclude = [".github"]
 [dependencies]
 base64 = "0.22.1"
 clap = { version = "4.6.1", features = ["derive"] }
-keyring-core = { version = "0.7.4", features = ["sample"] }
+keyring-core = { version = "1.0.0", features = ["sample"] }
 rpassword = "7.4.0"
 rprompt = "2.2.0"
 
@@ -28,20 +28,20 @@ zeroize = "1.8.2"
 db-keystore = { version = "0.4.1" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "0.2.3", features = ["keychain", "protected"] }
+apple-native-keyring-store = { version = "1.0.0", features = ["keychain", "protected"] }
 
 [target.'cfg(target_os = "ios")'.dependencies]
-apple-native-keyring-store = { version = "0.2.3", features = ["protected"] }
+apple-native-keyring-store = { version = "1.0.0", features = ["protected"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-linux-keyutils-keyring-store = { version = "0.2.1" }
+linux-keyutils-keyring-store = { version = "1.0.0" }
 
 [target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
-dbus-secret-service-keyring-store = { version = "0.3.3", features = ["crypto-rust", "vendored"] }
-zbus-secret-service-keyring-store = { version = "0.3.0", features = ["rt-async-io-crypto-rust"] }
+dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust", "vendored"] }
+zbus-secret-service-keyring-store = { version = "1.0.0", features = ["rt-async-io-crypto-rust"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-native-keyring-store = "0.5.1"
+windows-native-keyring-store = "1.0.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
-android-native-keyring-store = "0.6.0"
+android-native-keyring-store = "1.0.0"
