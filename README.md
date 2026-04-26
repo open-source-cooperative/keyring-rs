@@ -7,6 +7,16 @@
 
 This crate provides a simple CLI for the [Rust keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring). It also provides sample Rust code for developers who are looking to use the keyring infrastructure in their projects and an inventory of available credential store modules.
 
+## History
+
+This crate has a long history. It was first written by [Walther Chen](https://github.com/hwchen) as an "API library plus credential store" combination. Currently maintained by [Dan Brotsky](https://github.com/brotskydotcom), it is now just a "sample code" crate, with the library/API parts now part of the [keyring-core crate](https://crates.io/crates/keyring-core) and the credential stores all in [separate crates](https://crates.io/search?q=keyring%20credential%20store) of their own. The [Contributors file](Contributors.md) lists the many, many people who have contributed to all generations of this crate.
+
+## Do not depend on this crate!
+
+If you are writing an application that uses keyring-compatible credential stores, you should _not_ take a depedency on this crate!! You should _instead_ be relying on the [keyring-core crate](https://crates.io/crates/keyring-core).
+
+If you have an existing application that relies on v3.x of this crate, do _not_ update it to use v4 of this crate! Instead replace your dependency on this crate with a dependency on the [keyring-core crate](https://crates.io/crates/keyring-core). The docs for that crate explain the changes you will need to make in your application.
+
 ## Rust CLI
 
 The `keyring` binary produced by building this crate is a command-line interface for issuing one keyring call at a time and examining its results. Issue the command
@@ -25,11 +35,11 @@ to install it and
 ```python
 import rust_native_keyring
 ```
-to load it into your Python REPL. The sources for this Python module are built using [PyO3](https://github.com/PyO3/pyo3) and can be found in the `python` subdirectory of this repository.
+to load it into your Python REPL. The sources for this Python module are built using [PyO3](https://github.com/PyO3/pyo3) and can be found in [this repository](https://github.com/open-source-cooperative/keyring-for-python).
 
 ## Cross-platform GUI
 
-There is a [Tauri 2.0](https://tauri.app/) cross-platform GUI in the `tauri` subdirectory of this repository. This GUI allows you to poke around in any of the keyring-compatible credential stores available on your platform. This GUI is currently in public beta testing on iOS, macOS, and Android (see [this issue for details](https://github.com/open-source-cooperative/keyring-rs/issues/259)), and it’s available for MacOS (not sandboxed), Linux (Ubuntu), and Windows on [CrabNebula](https://web.crabnebula.cloud/brotskydotcom/keyring-demo/releases).
+There is a [Tauri 2.0](https://tauri.app/) cross-platform GUI for Keyring in [this repository](https://github.com/open-source-cooperative/keyring-demo). This GUI allows you to poke around in any of the keyring-compatible credential stores available on your platform. This GUI is currently in public beta testing on iOS, macOS, and Android (instructions [here for iOS/macOS](https://github.com/open-source-cooperative/keyring-demo/issues/2) and [here for Android](https://github.com/open-source-cooperative/keyring-demo/issues/1)), and it’s available for MacOS (not sandboxed), Linux, and Windows on [CrabNebula](https://web.crabnebula.cloud/brotskydotcom/keyring-demo/releases).
 
 ## Credential Stores Wanted!
 

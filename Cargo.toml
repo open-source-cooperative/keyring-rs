@@ -7,7 +7,7 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.0.0-rc.3"
+version = "4.0.0"
 edition = "2024"
 # uses let chains
 rust-version = "1.88.0"
@@ -15,8 +15,8 @@ exclude = [".github"]
 
 [dependencies]
 base64 = "0.22.1"
-clap = { version = "4.5.56", features = ["derive"] }
-keyring-core = { version = "0.7.2", features = ["sample"] }
+clap = { version = "4.6.1", features = ["derive"] }
+keyring-core = { version = "1.0.0", features = ["sample"] }
 rpassword = "7.4.0"
 rprompt = "2.2.0"
 
@@ -24,32 +24,24 @@ rprompt = "2.2.0"
 fastrand = "2.4.1"
 zeroize = "1.8.2"
 
-[target.'cfg(not(all(target_os = "windows", target_arch = "aarch64")))'.dependencies]
-db-keystore = { version = "0.4.0" }
+[target.'cfg(not(any(target_os = "ios", target_os = "android")))'.dependencies]
+db-keystore = { version = "0.4.2-pre.2" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "0.2.2", features = ["keychain", "protected"] }
+apple-native-keyring-store = { version = "1.0.0", features = ["keychain", "protected"] }
 
 [target.'cfg(target_os = "ios")'.dependencies]
-apple-native-keyring-store = { version = "0.2.2", features = ["protected"] }
+apple-native-keyring-store = { version = "1.0.0", features = ["protected"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-linux-keyutils-keyring-store = { version = "0.2.1" }
+linux-keyutils-keyring-store = { version = "1.0.0" }
 
 [target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
-dbus-secret-service-keyring-store = { version = "0.3.3", features = ["crypto-rust", "vendored"] }
-zbus-secret-service-keyring-store = { version = "0.2.2", features = ["rt-async-io-crypto-rust"] }
+dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust", "vendored"] }
+zbus-secret-service-keyring-store = { version = "1.0.0", features = ["rt-async-io-crypto-rust"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-native-keyring-store = "0.5.1"
+windows-native-keyring-store = "1.0.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
-android-native-keyring-store = "0.5.0"
-
-[patch.crates-io]
-android-native-keyring-store = { git = "https://github.com/open-source-cooperative/android-native-keyring-store.git", branch = "next" }
-apple-native-keyring-store = { git = "https://github.com/open-source-cooperative/apple-native-keyring-store.git", branch = "next" }
-dbus-secret-service-keyring-store = { git = "https://github.com/open-source-cooperative/dbus-secret-service-keyring-store.git", branch = "next" }
-linux-keyutils-keyring-store = { git = "https://github.com/open-source-cooperative/linux-keyutils-keyring-store.git", branch = "next" }
-windows-native-keyring-store = { git = "https://github.com/open-source-cooperative/windows-native-keyring-store.git", branch = "next" }
-zbus-secret-service-keyring-store = { git = "https://github.com/open-source-cooperative/zbus-secret-service-keyring-store.git", branch = "next" }
+android-native-keyring-store = "1.0.0"

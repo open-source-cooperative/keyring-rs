@@ -8,7 +8,6 @@ type TestFn = fn() -> TestResult;
 pub fn run_tests() -> (i32, i32) {
     let tests: Vec<(&'static str, TestFn)> = vec![
         ("test_store_methods", test_store_methods),
-        ("test_empty_service_and_user", test_empty_service_and_user),
         ("test_empty_password", test_empty_password),
         ("test_missing_entry", test_missing_entry),
         (
@@ -27,6 +26,7 @@ pub fn run_tests() -> (i32, i32) {
             "test_round_trip_random_secret",
             test_round_trip_random_secret,
         ),
+        ("test_bad_password", test_bad_password),
         ("test_update", test_update),
         ("test_duplicate_entries", test_duplicate_entries),
         ("test_get_update_attributes", test_get_update_attributes),
@@ -98,16 +98,8 @@ fn print_dot() {
 }
 
 fn entry_new(service: &str, user: &str) -> Result<Entry, String> {
-    let s = if service.is_empty() {
-        String::new()
-    } else {
-        format!("test-{service}")
-    };
-    let u = if user.is_empty() {
-        String::new()
-    } else {
-        format!("test-{user}")
-    };
+    let s = format!("test-{service}");
+    let u = format!("test-{user}");
     Entry::new(&s, &u).map_err(|err| {
         format!("Couldn't create entry (service: '{service}', user: '{user}'): {err:?}")
     })
@@ -162,8 +154,8 @@ fn round_trip_case(case: &str, entry: &Entry, in_pass: &str) -> TestResult {
     delete_credential_case(case, entry)
 }
 
-// A round-trip secret test that does delete the credential afterward
-fn test_round_trip_secret(case: &str, entry: &Entry, in_secret: &[u8]) -> TestResult {
+// A round-trip secret test that doesn't delete the credential afterward
+fn round_trip_case_secret_no_delete(case: &str, entry: &Entry, in_secret: &[u8]) -> TestResult {
     entry
         .set_secret(in_secret)
         .map_err(|err| format!("Can't set secret for {case}: {err:?}"))?;
@@ -175,14 +167,13 @@ fn test_round_trip_secret(case: &str, entry: &Entry, in_secret: &[u8]) -> TestRe
             "Secrets don't match for {case}: set='{in_secret:?}', get='{out_secret:?}'",
         ));
     }
-    entry
-        .delete_credential()
-        .map_err(|err| format!("Can't delete credential for {case}: {err:?}"))?;
-    match entry.get_secret() {
-        Err(Error::NoEntry) => Ok(()),
-        Err(e) => Err(format!("Get secret failure: {e}")),
-        Ok(value) => Err(format!("Got a deleted secret: {} bytes", value.len())),
-    }
+    Ok(())
+}
+
+// A round-trip secret test that does delete the credential afterward
+fn round_trip_case_secret(case: &str, entry: &Entry, in_secret: &[u8]) -> TestResult {
+    round_trip_case_secret_no_delete(case, entry, in_secret)?;
+    delete_credential_case(case, entry)
 }
 
 fn test_store_methods() -> TestResult {
@@ -209,15 +200,6 @@ fn test_store_methods() -> TestResult {
             "Store debug description ({description} doesn't contain id: {id}"
         ));
     }
-    Ok(())
-}
-
-fn test_empty_service_and_user() -> TestResult {
-    let name = generate_random_string();
-    let in_pass = "it doesn't matter";
-    round_trip_case("empty user", &entry_new(&name, "")?, in_pass)?;
-    round_trip_case("empty service", &entry_new("", &name)?, in_pass)?;
-    round_trip_case("empty service & user", &entry_new("", "")?, in_pass)?;
     Ok(())
 }
 
@@ -273,7 +255,28 @@ fn test_round_trip_random_secret() -> TestResult {
     let name = generate_random_string();
     let entry = entry_new(&name, &name)?;
     let secret = generate_random_bytes();
-    test_round_trip_secret("non-ascii password", &entry, secret.as_slice())
+    round_trip_case_secret("secret", &entry, secret.as_slice())
+}
+
+fn test_bad_password() -> TestResult {
+    let name = generate_random_string();
+    let entry = entry_new(&name, &name)?;
+    let mut secret = generate_random_bytes();
+    while std::str::from_utf8(secret.as_slice()).is_ok() {
+        secret = generate_random_bytes();
+    }
+    round_trip_case_secret_no_delete("secret", &entry, secret.as_slice())?;
+    match entry.get_password() {
+        Err(Error::BadEncoding(val)) => {
+            if val.eq(secret.as_slice()) {
+                Ok(())
+            } else {
+                Err(format!("Encoding error returned unexpected value: {val:?}"))
+            }
+        }
+        Err(e) => Err(format!("Unexpected error getting password: {e}")),
+        Ok(_) => Err("Password retrieval succeeded unexpectedly".to_string()),
+    }
 }
 
 fn test_update() -> TestResult {
