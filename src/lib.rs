@@ -269,24 +269,16 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
 /// until the Turso release supports it.
 #[allow(unused_variables)]
 pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
-    #[cfg(not(any(
-        target_os = "ios",
-        target_os = "android",
-        all(target_os = "windows", target_arch = "aarch64")
-    )))]
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     {
         use db_keystore::DbKeyStore;
         set_default_store(DbKeyStore::new_with_modifiers(config)?);
         Ok(())
     }
-    #[cfg(any(
-        target_os = "ios",
-        target_os = "android",
-        all(target_os = "windows", target_arch = "aarch64")
-    ))]
+    #[cfg(any(target_os = "ios", target_os = "android"))]
     {
         Err(Error::NotSupportedByStore(
-            "The sqlite store is not available on, iOS, Android, or Windows AArch64".to_string(),
+            "The sqlite store is not available on iOS or Android".to_string(),
         ))
     }
 }
