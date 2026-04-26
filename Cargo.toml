@@ -25,7 +25,7 @@ fastrand = "2.4.1"
 zeroize = "1.8.2"
 
 [target.'cfg(not(any(target_os = "ios", target_os = "android", all(target_os = "windows", target_arch = "aarch64"))))'.dependencies]
-db-keystore = { version = "0.4.2-pre.2", git = "https://github.com/stevelr/db-keystore.git", branch="v0.4.2-pre.2" }
+db-keystore = { version = "0.4.2-pre.2" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 apple-native-keyring-store = { version = "1.0.0", features = ["keychain", "protected"] }
