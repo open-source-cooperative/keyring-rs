@@ -148,7 +148,7 @@ pub fn use_apple_keychain_store(config: &HashMap<&str, &str>) -> Result<()> {
 /// Fails with a `NotSupportedByStore` error on other platforms.
 #[allow(unused_variables)]
 pub fn use_apple_protected_store(config: &HashMap<&str, &str>) -> Result<()> {
-    #[cfg(any(target_os = "macos", target_os = "ios"))]
+    #[cfg(target_os = "macos")]
     if std::env::var("APP_SANDBOX_CONTAINER_ID").is_ok() {
         use apple_native_keyring_store::protected::Store;
         set_default_store(Store::new_with_configuration(config)?);
@@ -157,6 +157,12 @@ pub fn use_apple_protected_store(config: &HashMap<&str, &str>) -> Result<()> {
         Err(Error::NotSupportedByStore(
             "The macOS Protected Data store requires a provisioning profile".to_string(),
         ))
+    }
+    #[cfg(target_os = "ios")]
+    {
+        use apple_native_keyring_store::protected::Store;
+        set_default_store(Store::new_with_configuration(config)?);
+        Ok(())
     }
     #[cfg(not(any(target_os = "macos", target_os = "ios")))]
     {

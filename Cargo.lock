@@ -1539,7 +1539,7 @@ dependencies = [
 
 [[package]]
 name = "keyring"
-version = "4.0.0"
+version = "4.0.1"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
