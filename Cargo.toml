@@ -41,7 +41,7 @@ dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rus
 zbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-native-keyring-store = "1.0.0"
+windows-native-keyring-store = "1.1.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
 android-native-keyring-store = "1.0.0"
