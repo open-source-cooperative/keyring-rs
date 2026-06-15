@@ -1,0 +1,36 @@
+[package]
+authors = ["Daniel Brotsky <dev@brotsky.com>"]
+description = "Sample code and CLI for the Rust Keyring"
+readme = "README.md"
+repository = "https://github.com/open-source-cooperative/keyring-rs"
+homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
+keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
+license = "MIT OR Apache-2.0"
+name = "keyring"
+version = "4.0.1"
+edition = "2024"
+# uses let chains
+rust-version = "1.88.0"
+exclude = [".github"]
+
+[dependencies]
+base64 = { version = "0.22.1" }
+clap = { version = "4.6.1", features = ["derive"] }
+keyring-core = { version = "1.0.0", features = ["sample"] }
+rpassword = { version = "7.5.4" }
+rprompt = { version = "2.2.0" }
+keyring = { path = "..", features = ["linux-keyctl", "unix-dbus", "unix-zbus"] }
+
+
+[target.'cfg(not(any(target_os = "ios", target_os = "android")))'.dependencies]
+db-keystore = { version = "0.4.3", optional = true }
+
+[target.'cfg(any(target_os = "linux", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))'.dependencies]
+dbus-secret-service-keyring-store = { version = "1.0.0", optional = true, features = [
+  "crypto-rust",
+  "vendored",
+] }
+
+zbus-secret-service-keyring-store = { version = "1.0.0", optional = true, features = [
+  "crypto-rust",
+] }

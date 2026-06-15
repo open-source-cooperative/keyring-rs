@@ -20,15 +20,24 @@ use std::collections::HashMap;
 use keyring_core::{Error, Result, get_default_store, set_default_store, unset_default_store};
 
 /// An alphabetic list of known credential stores.
-pub const NAMED_STORES: [&str; 9] = [
+pub const NAMED_STORES: &[&str] = &[
+    #[cfg(target_os = "android")]
     "android",
+    #[cfg(target_os = "macos")]
     "keychain",
+    #[cfg(any(target_os = "ios", target_os = "macos"))]
+    "keychain-protected",
+    #[cfg(any(target_os = "linux", feature = "linux-keyctls"))]
     "keyutils",
-    "protected",
-    "sample",
-    "secret-service",
-    "secret-service-async",
-    "sqlite",
+    #[cfg(all(feature = "unix-dbus"))]
+    "secret-service-dbus",
+    #[cfg(all(feature = "unix-dbus"))]
+    "secret-service-dbus-async",
+    #[cfg(feature = "zbus")]
+    "secret-service-zbus",
+    #[cfg(feature = "zbus")]
+    "secret-service-zbus-async",
+    #[cfg(target_os = "windows")]
     "windows",
 ];
 
@@ -94,31 +103,13 @@ pub fn use_native_store(not_keyutils: bool) -> Result<()> {
     }
     #[cfg(any(target_os = "freebsd", target_os = "openbsd"))]
     use_named_store("secret-service")?;
-    #[cfg(not(any(
-        target_os = "android",
-        target_os = "freebsd",
-        target_os = "linux",
-        target_os = "macos",
-        target_os = "openbsd",
-        target_os = "windows",
-    )))]
-    use_named_store("sample")?;
-    Ok(())
-}
-
-/// Set the default store to the `keyring-core::Sample` store.
-///
-/// This is available on all platforms.
-pub fn use_sample_store(config: &HashMap<&str, &str>) -> Result<()> {
-    use keyring_core::sample::Store;
-    set_default_store(Store::new_with_configuration(config)?);
     Ok(())
 }
 
 /// Use the macOS Keychain Services store.
 ///
 /// Fails with a `NotSupportedByStore` error on other platforms.
-#[allow(unused_variables)]
+#[cfg(target_os = "macos")]
 pub fn use_apple_keychain_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(target_os = "macos")]
     {
@@ -145,8 +136,11 @@ pub fn use_apple_keychain_store(config: &HashMap<&str, &str>) -> Result<()> {
 /// function will instantiate a store successfully, but
 /// all attempts to read or write credentials will fail.
 ///
+/// Requires `APP_SANDBOX_CONTAINER_ID` environment variable
+/// to be set to pass a provisioning profile.
+///
 /// Fails with a `NotSupportedByStore` error on other platforms.
-#[allow(unused_variables)]
+#[cfg(any(target_os = "macos", target_os = "ios"))]
 pub fn use_apple_protected_store(config: &HashMap<&str, &str>) -> Result<()> {
     #[cfg(target_os = "macos")]
     if std::env::var("APP_SANDBOX_CONTAINER_ID").is_ok() {
@@ -164,31 +158,16 @@ pub fn use_apple_protected_store(config: &HashMap<&str, &str>) -> Result<()> {
         set_default_store(Store::new_with_configuration(config)?);
         Ok(())
     }
-    #[cfg(not(any(target_os = "macos", target_os = "ios")))]
-    {
-        Err(Error::NotSupportedByStore(
-            "The macOS keychain is only available on macOS".to_string(),
-        ))
-    }
 }
 
 /// Use the Linux Keyutils store.
 ///
 /// Fails with a `NotSupportedByStore` error on other platforms.
-#[allow(unused_variables)]
+#[cfg(all(target_os = "linux", feature = "linux-keyctls"))]
 pub fn use_linux_keyutils_store(config: &HashMap<&str, &str>) -> Result<()> {
-    #[cfg(target_os = "linux")]
-    {
-        use linux_keyutils_keyring_store::Store;
-        set_default_store(Store::new_with_configuration(config)?);
-        Ok(())
-    }
-    #[cfg(not(target_os = "linux"))]
-    {
-        Err(Error::NotSupportedByStore(
-            "The keyutils store is only available on Linux".to_string(),
-        ))
-    }
+    use linux_keyutils_keyring_store::Store;
+    set_default_store(Store::new_with_configuration(config)?);
+    Ok(())
 }
 
 /// Use the dbus-based Secret Service store via `libdbus`.
@@ -265,26 +244,6 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
     {
         Err(Error::NotSupportedByStore(
             "The Android native store is only available on Android".to_string(),
-        ))
-    }
-}
-
-/// Use a cross-platform encrypted sqlite (Turso) database.
-///
-/// Fails with a `NotSupportedByStore` error on Windows/AArch64
-/// until the Turso release supports it.
-#[allow(unused_variables)]
-pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    {
-        use db_keystore::DbKeyStore;
-        set_default_store(DbKeyStore::new_with_modifiers(config)?);
-        Ok(())
-    }
-    #[cfg(any(target_os = "ios", target_os = "android"))]
-    {
-        Err(Error::NotSupportedByStore(
-            "The sqlite store is not available on iOS or Android".to_string(),
         ))
     }
 }

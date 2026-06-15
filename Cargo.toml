@@ -14,44 +14,55 @@ rust-version = "1.88.0"
 exclude = [".github"]
 
 [dependencies]
-base64 = "0.22.1"
-clap = { version = "4.6.1", features = ["derive"] }
-keyring-core = { version = "1.0.0", features = ["sample"] }
-rpassword = "7.5.3"
-rprompt = "2.2.0"
+keyring-core = { version = "1.0.0" }
 
 [dev-dependencies]
 fastrand = "2.4.1"
-zeroize = "1.8.2"
-
-[target.'cfg(not(any(target_os = "ios", target_os = "android")))'.dependencies]
-db-keystore = { version = "0.4.2-pre.2" }
+zeroize = "1.9.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "1.0.0", features = ["keychain", "protected"] }
+apple-native-keyring-store = { version = "1.0.0", features = [
+  "keychain",
+  "protected",
+] }
 
 [target.'cfg(target_os = "ios")'.dependencies]
 apple-native-keyring-store = { version = "1.0.0", features = ["protected"] }
 
-[target.'cfg(target_os = "linux")'.dependencies]
-linux-keyutils-keyring-store = { version = "1.0.0" }
-
-[target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
-dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust", "vendored"] }
-zbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust"] }
-
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-native-keyring-store = "1.0.0"
+windows-native-keyring-store = { version = "1.1.0" }
 
 [target.'cfg(target_os = "android")'.dependencies]
-android-native-keyring-store = "1.0.0"
+android-native-keyring-store = { version = "1.0.0" }
+
+# Linux keyctl store.
+# [target.'cfg(target_os = "linux")'.dependencies]
+linux-keyutils-keyring-store = { version = "1.0.0", optional = true, target="cfg(target_os = \"linux\")"}
+
+# unix DBUS secret service via ZBUS.
+# It's available on macOS via MacPorts (at least)
+dbus-secret-service-keyring-store = { version = "1.0.0", optional = true, features = [
+  "crypto-rust",
+  "vendored",
+], target = "cfg(all(unix, feature=\"unix-dbus\")" }
+
+# unix DBUS secret service via ZBUS.
+# it's available even on Windows (for more see zbus crate info).
+zbus-secret-service-keyring-store = { version = "1.0.0", optional = true, features = [
+  "crypto-rust",
+], target = "cfg(feature=\"zbus\")" }
 
 [package.metadata.docs.rs]
 targets = [
-    "x86_64-unknown-linux-gnu",
-    "x86_64-pc-windows-gnu",
-    "x86_64-linux-android",
-    "x86_64-unknown-freebsd",
-    "aarch64-apple-darwin",
-    "aarch64-apple-ios"
+  "x86_64-unknown-linux-gnu",
+  "x86_64-pc-windows-gnu",
+  "x86_64-linux-android",
+  "x86_64-unknown-freebsd",
+  "aarch64-apple-darwin",
+  "aarch64-apple-ios",
 ]
+
+[features]
+linux-keyctls = []
+unix-dbus = ["dbus-secret-service-keyring-store"]
+zbus = ["zbus-secret-service-keyring-store"]
