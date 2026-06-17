@@ -1,52 +1,92 @@
 [package]
 authors = ["Daniel Brotsky <dev@brotsky.com>"]
-description = "Sample code and CLI for the Rust Keyring"
+description = "All-in-One Rust Keyring"
 readme = "README.md"
 repository = "https://github.com/open-source-cooperative/keyring-rs"
 homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.0.1"
+version = "4.1.0"
 edition = "2024"
-# uses let chains
 rust-version = "1.88.0"
 exclude = [".github"]
 
+[features]
+default = ["v1"]
+v1 = [
+    "apple-native-keyring-store/keychain",
+    "windows-native-keyring-store",
+    "zbus-secret-service-keyring-store"
+]
+cli = [
+    "keyring-core/sample",
+    "apple-native-keyring-store/keychain",
+    "apple-native-keyring-store/protected",
+    "windows-native-keyring-store",
+    "zbus-secret-service-keyring-store",
+    "dbus-secret-service-keyring-store",
+    "linux-keyutils-keyring-store",
+    "db-keystore"
+]
+
+[[example]]
+name = "keyring-v1-usage"
+path = "examples/v1/main.rs"
+required-features = ["v1"]
+
+[[example]]
+name = "keyring-cli"
+path = "examples/cli/main.rs"
+required-features = ["cli"]
+
+[[example]]
+name = "leak-test"
+path = "examples/leak-test/main.rs"
+required-features = ["cli"]
+
+[[example]]
+name = "unit-test"
+path = "examples/unit-test/main.rs"
+required-features = ["cli"]
+
+[[example]]
+name = "set-or-clear-three"
+path = "examples/set-or-clear-three.rs"
+required-features = ["cli"]
+
 [dependencies]
-base64 = "0.22.1"
-clap = { version = "4.6.1", features = ["derive"] }
-keyring-core = { version = "1.0.0", features = ["sample"] }
-rpassword = "7.5.3"
-rprompt = "2.2.0"
+keyring-core = "1.0.0"
 
 [dev-dependencies]
+base64 = "0.22.1"
+clap = { version = "4.6.1", features = ["derive"] }
 fastrand = "2.4.1"
-zeroize = "1.8.2"
+rpassword = "7.5.4"
+rprompt = "2.2.0"
+zeroize = "1.9.0"
 
 [target.'cfg(not(any(target_os = "ios", target_os = "android")))'.dependencies]
-db-keystore = { version = "0.4.2-pre.2" }
+db-keystore = { version = "0.4.3", optional = true }
 
-[target.'cfg(target_os = "macos")'.dependencies]
-apple-native-keyring-store = { version = "1.0.0", features = ["keychain", "protected"] }
-
-[target.'cfg(target_os = "ios")'.dependencies]
-apple-native-keyring-store = { version = "1.0.0", features = ["protected"] }
+[target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
+apple-native-keyring-store = { version = "1.0.0", optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-linux-keyutils-keyring-store = { version = "1.0.0" }
+linux-keyutils-keyring-store = { version = "1.0.0", optional = true }
 
 [target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
-dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust", "vendored"] }
-zbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust"] }
+dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust", "vendored"], optional = true }
+zbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust"], optional = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-native-keyring-store = "1.0.0"
+windows-native-keyring-store = { version = "1.1.0", optional = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
-android-native-keyring-store = "1.0.0"
+android-native-keyring-store = { version="1.0.0", optional = true }
 
 [package.metadata.docs.rs]
+features = ["v1", "cli"]
 targets = [
     "x86_64-unknown-linux-gnu",
     "x86_64-pc-windows-gnu",
