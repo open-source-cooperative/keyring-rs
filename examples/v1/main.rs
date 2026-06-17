@@ -5,7 +5,7 @@ fn main() -> Result<()> {
     //noinspection SpellCheckingInspection
     entry.set_password("topS3cr3tP4$$w0rd")?;
     let password = entry.get_password()?;
-    println!("My password is '{}'", password);
+    println!("My password is '{password}'");
     entry.delete_credential()?;
     Ok(())
 }
