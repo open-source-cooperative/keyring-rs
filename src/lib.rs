@@ -1,7 +1,8 @@
 //! The Rust Keyring
 //!
 //! This library operates in one of two modes, depending on which of the two features
-//! `v1` or `cli` are enabled. (You can't enable both except when building docs.)
+//! `v1` or `cli` are enabled. Both can be enabled if desired, but typically you use
+//! one or the other.
 //!
 //! If you enable the `v1` feature, this library behaves essentially the same as the v1
 //! version of Keyring behaved: it allows easy, platform-independent setting and reading
@@ -32,11 +33,11 @@
 compile_error!("At least one of the features 'v1' or 'cli' must be enabled");
 
 #[cfg(feature = "cli")]
-mod cli;
+pub mod cli;
 #[cfg(feature = "cli")]
 pub use cli::*;
 
 #[cfg(feature = "v1")]
-mod v1;
+pub mod v1;
 #[cfg(feature = "v1")]
 pub use v1::*;
