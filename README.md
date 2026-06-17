@@ -21,7 +21,7 @@ This crate has a long history. It was first written by [Walther Chen](https://gi
 
 The `keyring-cli` binary produced by building the `keyring-cli` example app in this crate is a command-line interface for issuing one keyring call at a time and examining its results. Issue the command
 ```shell
-keyring --help
+keyring-cli --help
 ```
 for usage information.
 

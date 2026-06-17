@@ -86,7 +86,7 @@ windows-native-keyring-store = { version = "1.1.0", optional = true }
 android-native-keyring-store = { version="1.0.0", optional = true }
 
 [package.metadata.docs.rs]
-features = ["v1", "cli"]
+all-features = true
 targets = [
     "x86_64-unknown-linux-gnu",
     "x86_64-pc-windows-gnu",
