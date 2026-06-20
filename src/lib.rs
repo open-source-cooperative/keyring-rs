@@ -23,7 +23,7 @@
 //! stores they want to use. While this library provides high-quality, maintained sample
 //! code for how to link to every known credential store, linking to this library using
 //! the `cli` feature will saddle an application with a lot of dependent modules it won't
-//! need. Instead, as explained the README for this crate, developers should just
+//! need. Instead, as explained in the README for this crate, developers should just
 //! copy/paste useful code from the `cli` module into their applications.
 //!
 //! For more about how to write an application that uses the Keyring ecosystem, see [this
