@@ -75,7 +75,7 @@ apple-native-keyring-store = { version = "1.0.0", optional = true }
 [target.'cfg(target_os = "linux")'.dependencies]
 linux-keyutils-keyring-store = { version = "1.0.0", optional = true }
 
-[target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
+[target.'cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))'.dependencies]
 dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust", "vendored"], optional = true }
 zbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust"], optional = true }
 

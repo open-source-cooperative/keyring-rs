@@ -101,7 +101,10 @@ fn set_credential_store() {
             keyring_core::set_default_store(store);
         }
     }
-    #[cfg(any(target_os = "linux", target_os = "freebsd"))]
+    #[cfg(all(
+        unix,
+        not(any(target_os = "macos", target_os = "ios", target_os = "android"))
+    ))]
     {
         if let Ok(store) = zbus_secret_service_keyring_store::Store::new() {
             keyring_core::set_default_store(store);
