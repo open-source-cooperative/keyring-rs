@@ -211,16 +211,22 @@ pub fn use_linux_keyutils_store(config: &HashMap<&str, &str>) -> Result<()> {
 /// [keyring-core] crate and your chosen Secret Service credential store module.
 #[allow(unused_variables)]
 pub fn use_dbus_secret_service_store(config: &HashMap<&str, &str>) -> Result<()> {
-    #[cfg(any(target_os = "linux", target_os = "freebsd"))]
+    #[cfg(all(
+        unix,
+        not(any(target_os = "macos", target_os = "ios", target_os = "android"))
+    ))]
     {
         use dbus_secret_service_keyring_store::Store;
         set_default_store(Store::new_with_configuration(config)?);
         Ok(())
     }
-    #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
+    #[cfg(not(all(
+        unix,
+        not(any(target_os = "macos", target_os = "ios", target_os = "android"))
+    )))]
     {
         Err(Error::NotSupportedByStore(
-            "The dbus Secret Service store is only available on Linux and FreeBSD".to_string(),
+            "The dbus Secret Service store is only available on *nix operating systems".to_string(),
         ))
     }
 }
@@ -236,16 +242,22 @@ pub fn use_dbus_secret_service_store(config: &HashMap<&str, &str>) -> Result<()>
 /// [keyring-core] crate and your chosen Secret Service credential store module.
 #[allow(unused_variables)]
 pub fn use_zbus_secret_service_store(config: &HashMap<&str, &str>) -> Result<()> {
-    #[cfg(any(target_os = "linux", target_os = "freebsd"))]
+    #[cfg(all(
+        unix,
+        not(any(target_os = "macos", target_os = "ios", target_os = "android"))
+    ))]
     {
         use zbus_secret_service_keyring_store::Store;
         set_default_store(Store::new_with_configuration(config)?);
         Ok(())
     }
-    #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
+    #[cfg(not(all(
+        unix,
+        not(any(target_os = "macos", target_os = "ios", target_os = "android"))
+    )))]
     {
         Err(Error::NotSupportedByStore(
-            "The zbus Secret Service store is only available on Linux and FreeBSD".to_string(),
+            "The zbus Secret Service store is only available on *nix operating systems".to_string(),
         ))
     }
 }
