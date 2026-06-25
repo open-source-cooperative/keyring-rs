@@ -22,7 +22,7 @@
 //! it in the [Keyring
 //! wiki](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring).
 
-use std::sync::Once;
+use std::sync::{Mutex, Once};
 
 pub use keyring_core::{Error, Result};
 
@@ -46,8 +46,13 @@ impl Entry {
     /// credential store could not be initialized.
     pub fn new(service: &str, username: &str) -> Result<Self> {
         SET_CREDENTIAL_STORE.call_once(set_credential_store);
-        let inner = keyring_core::Entry::new(service, username)?;
-        Ok(Self { inner })
+        let mut guard = SET_CREDENTIAL_STORE_RESULT.lock().unwrap();
+        if guard.is_none() {
+            let inner = keyring_core::Entry::new(service, username)?;
+            Ok(Self { inner })
+        } else {
+            Err(guard.take().unwrap())
+        }
     }
 
     /// Set the password for this entry.
@@ -86,28 +91,36 @@ impl Entry {
     }
 }
 
+static SET_CREDENTIAL_STORE_RESULT: Mutex<Option<Error>> = Mutex::new(None);
 static SET_CREDENTIAL_STORE: Once = Once::new();
 
 fn set_credential_store() {
-    #[cfg(target_os = "macos")]
-    {
-        if let Ok(store) = apple_native_keyring_store::keychain::Store::new() {
+    let inner = || -> Result<()> {
+        #[cfg(target_os = "macos")]
+        {
+            let store = apple_native_keyring_store::keychain::Store::new()?;
+            keyring_core::set_default_store(store)
+        }
+        #[cfg(target_os = "windows")]
+        {
+            let store = windows_native_keyring_store::Store::new()?;
             keyring_core::set_default_store(store);
         }
-    }
-    #[cfg(target_os = "windows")]
-    {
-        if let Ok(store) = windows_native_keyring_store::Store::new() {
+        #[cfg(all(
+            unix,
+            not(any(target_os = "macos", target_os = "ios", target_os = "android"))
+        ))]
+        {
+            let store = zbus_secret_service_keyring_store::Store::new()?;
             keyring_core::set_default_store(store);
         }
-    }
-    #[cfg(all(
-        unix,
-        not(any(target_os = "macos", target_os = "ios", target_os = "android"))
-    ))]
-    {
-        if let Ok(store) = zbus_secret_service_keyring_store::Store::new() {
-            keyring_core::set_default_store(store);
+        Ok(())
+    };
+    match inner() {
+        Ok(()) => {}
+        Err(err) => {
+            let mut result = SET_CREDENTIAL_STORE_RESULT.lock().unwrap();
+            *result = Some(err);
         }
     }
 }
