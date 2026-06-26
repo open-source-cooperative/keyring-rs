@@ -22,7 +22,7 @@
 //! it in the [Keyring
 //! wiki](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring).
 
-use std::sync::Once;
+use core::sync::atomic::{AtomicBool, Ordering};
 
 pub use keyring_core::{Error, Result};
 
@@ -45,7 +45,11 @@ impl Entry {
     /// [NoDefaultStore](Error::NoDefaultStore) error, it means that the platform-specific
     /// credential store could not be initialized.
     pub fn new(service: &str, username: &str) -> Result<Self> {
-        SET_CREDENTIAL_STORE.call_once(set_credential_store);
+        if SET_CREDENTIAL_STORE.compare_exchange(false, true, Ordering::Release, Ordering::Acquire)
+            == Ok(true)
+        {
+            set_credential_store()?
+        }
         let inner = keyring_core::Entry::new(service, username)?;
         Ok(Self { inner })
     }
@@ -86,28 +90,19 @@ impl Entry {
     }
 }
 
-static SET_CREDENTIAL_STORE: Once = Once::new();
+static SET_CREDENTIAL_STORE: AtomicBool = AtomicBool::new(false);
 
-fn set_credential_store() {
+fn set_credential_store() -> Result<()> {
     #[cfg(target_os = "macos")]
-    {
-        if let Ok(store) = apple_native_keyring_store::keychain::Store::new() {
-            keyring_core::set_default_store(store);
-        }
-    }
+    let store = apple_native_keyring_store::keychain::Store::new()?;
     #[cfg(target_os = "windows")]
-    {
-        if let Ok(store) = windows_native_keyring_store::Store::new() {
-            keyring_core::set_default_store(store);
-        }
-    }
+    let store = windows_native_keyring_store::Store::new()?;
     #[cfg(all(
         unix,
         not(any(target_os = "macos", target_os = "ios", target_os = "android"))
     ))]
-    {
-        if let Ok(store) = zbus_secret_service_keyring_store::Store::new() {
-            keyring_core::set_default_store(store);
-        }
-    }
+    let store = zbus_secret_service_keyring_store::Store::new()?;
+    #[cfg(any(unix, windows))]
+    keyring_core::set_default_store(store);
+    Ok(())
 }
