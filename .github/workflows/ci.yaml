@@ -28,8 +28,31 @@ jobs:
       - name: Clippy check
         run: cargo clippy --no-deps --all-targets --all-features -- -D warnings
 
-      - name: Build all targets
+      - name: Build native
         run: cargo build --all-targets --all-features --verbose
+
+      - name: Build iOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          rustup target add aarch64-apple-ios
+          cargo build --target aarch64-apple-ios --all-features --verbose
+
+      - name: Setup Android NDK
+        if: matrix.os == 'ubuntu-latest'
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r29
+
+      - name: Build Android
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          rustup target add aarch64-linux-android
+          cargo install cargo-ndk
+          cargo ndk -t arm64-v8a build --all-features --verbose
 
       - name: Run tests
         run: cargo test --verbose
