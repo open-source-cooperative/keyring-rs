@@ -31,7 +31,18 @@ jobs:
       - name: Build native
         run: cargo build --all-targets --all-features --verbose
 
+      - name: Install and start gnome-keyring
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnome-keyring
+          # run gnome-keyring with 'foobar' as the password for the login keyring
+          # this will create a new login keyring and unlock it
+          # the login password doesn't matter, but the keyring must be unlocked for the tests to work
+          gnome-keyring-daemon --components=secrets --daemonize --unlock <<< 'foobar'
+
       - name: Test native
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' || matrix.os == 'windows-latest'
         run: cargo test --lib --all-features --verbose
 
       - name: Build iOS
@@ -56,9 +67,6 @@ jobs:
           rustup target add aarch64-linux-android
           cargo install cargo-ndk
           cargo ndk -t arm64-v8a build --all-features --verbose
-
-      - name: Run tests
-        run: cargo test --verbose
 
   ci_msrv:
     runs-on: ubuntu-latest
