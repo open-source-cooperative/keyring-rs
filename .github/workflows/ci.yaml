@@ -31,6 +31,9 @@ jobs:
       - name: Build native
         run: cargo build --all-targets --all-features --verbose
 
+      - name: Test native
+        run: cargo test --lib --all-features --verbose
+
       - name: Build iOS
         if: matrix.os == 'macos-latest'
         run: |

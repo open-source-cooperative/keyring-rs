@@ -46,7 +46,7 @@ impl Entry {
     /// credential store could not be initialized.
     pub fn new(service: &str, username: &str) -> Result<Self> {
         if SET_CREDENTIAL_STORE.compare_exchange(false, true, Ordering::Release, Ordering::Acquire)
-            == Ok(true)
+            == Ok(false)
         {
             set_credential_store()?
         }
@@ -105,4 +105,18 @@ fn set_credential_store() -> Result<()> {
     #[cfg(all(any(unix, windows), not(any(target_os = "ios", target_os = "android"))))]
     keyring_core::set_default_store(store);
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_new() {
+        let service = "test_service";
+        let username = "test_username";
+        let entry = super::Entry::new(service, username);
+        #[cfg(all(any(unix, windows), not(any(target_os = "ios", target_os = "android"))))]
+        assert!(entry.is_ok());
+        #[cfg(not(all(any(unix, windows), not(any(target_os = "ios", target_os = "android")))))]
+        assert!(entry.is_err());
+    }
 }
