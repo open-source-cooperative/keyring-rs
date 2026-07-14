@@ -203,7 +203,7 @@ enum Value {
 
 impl Cli {
     fn description(&self) -> String {
-        format!("{}@{}", &self.user, &self.service)
+        format!("{}@{}", self.user, self.service)
     }
 
     fn entry_for(&self) -> Result<Entry> {
