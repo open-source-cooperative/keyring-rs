@@ -59,7 +59,7 @@ required-features = ["cli"]
 keyring-core = "1.0.0"
 
 [dev-dependencies]
-base64 = "0.22.1"
+base64 = "0.23.0"
 clap = { version = "4.6.1", features = ["derive"] }
 fastrand = "2.4.1"
 rpassword = "7.5.4"
