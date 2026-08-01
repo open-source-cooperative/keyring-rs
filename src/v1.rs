@@ -22,8 +22,9 @@
 //! it in the [Keyring
 //! wiki](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring).
 
-pub use keyring_core::{Error, Result};
 use std::sync::LazyLock;
+
+pub use keyring_core::{Error, Result};
 
 /// A named entry in a credential store.
 ///
