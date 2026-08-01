@@ -9,7 +9,7 @@ This crate provides a simple wrapper library for the [Rust keyring ecosystem](ht
 
 This crate also provides well-maintained and comprehensive sample Rust code for developers who are looking to use the full power of the Keyring ecosystem in their projects. This sample code is kept in the `cli` module wrapped by the `cli` feature and is used in a number of demonstration applications, described below.
 
-Developers who build applications that use the full power of the [Keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring) should not link directly against this crate using the `cli` feature, because that will bring with it a host of credential stores they don’t need. Instead, developers should take dependencies on the [keyring-core crate](https://crates.io/crates/keyring-core) and the specific credential stores they want to use. They can then copy any of the code in the `cli` module of this crate that they want to instantiate and access the desired credential stores.
+Developers who build applications that use the full power of the [Keyring ecosystem](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring) should not link directly against this crate using the `cli` feature, because that will bring with it a host of credential stores (and other libraries) they don’t need. Instead, developers should take dependencies on the [keyring-core crate](https://crates.io/crates/keyring-core) and the specific credential stores they want to use. They can then copy any of the code in the `cli` module of this crate that they they find useful to instantiate and access the desired credential stores.
 
 ## History
 
