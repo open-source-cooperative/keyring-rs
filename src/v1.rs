@@ -22,7 +22,7 @@
 //! it in the [Keyring
 //! wiki](https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring).
 
-use core::sync::atomic::{AtomicBool, Ordering};
+use std::sync::LazyLock;
 
 pub use keyring_core::{Error, Result};
 
@@ -43,15 +43,29 @@ impl Entry {
     ///
     /// For details about possible errors, see [keyring_core::Entry::new]. If you get a
     /// [NoDefaultStore](Error::NoDefaultStore) error, it means that the platform-specific
-    /// credential store could not be initialized.
+    /// credential store could not be initialized. (See [Entry::store_status].)
     pub fn new(service: &str, username: &str) -> Result<Self> {
-        if SET_CREDENTIAL_STORE.compare_exchange(false, true, Ordering::Release, Ordering::Acquire)
-            == Ok(false)
-        {
-            set_credential_store()?
+        if SET_CREDENTIAL_STORE_RESULT.is_err() {
+            return Err(Error::NoDefaultStore);
         }
         let inner = keyring_core::Entry::new(service, username)?;
         Ok(Self { inner })
+    }
+
+    /// Return the results of the (one-time) credential store initialization that's
+    /// done on the first call to [Entry::new].
+    ///
+    /// If this is `Ok(())`, then the credential store is available. If this is an
+    /// [Invalid](Error::Invalid) error with `platform` as the invalid parameter, then it
+    /// indicates that your runtime platform is not supported by this feature. Any other
+    /// error is one that came back from the attempted credential store initialization.
+    ///
+    /// Note that calling this function will initialize the credential store if that
+    /// hasn't already been done. So if you want to do runtime checking of credential
+    /// store initialization without first creating an entry, you can just call this
+    /// function before [Entry::new].
+    pub fn store_status() -> &'static Result<()> {
+        &SET_CREDENTIAL_STORE_RESULT
     }
 
     /// Set the password for this entry.
@@ -90,7 +104,7 @@ impl Entry {
     }
 }
 
-static SET_CREDENTIAL_STORE: AtomicBool = AtomicBool::new(false);
+static SET_CREDENTIAL_STORE_RESULT: LazyLock<Result<()>> = LazyLock::new(set_credential_store);
 
 fn set_credential_store() -> Result<()> {
     #[cfg(target_os = "macos")]
@@ -103,20 +117,38 @@ fn set_credential_store() -> Result<()> {
     ))]
     let store = zbus_secret_service_keyring_store::Store::new()?;
     #[cfg(all(any(unix, windows), not(any(target_os = "ios", target_os = "android"))))]
-    keyring_core::set_default_store(store);
-    Ok(())
+    {
+        keyring_core::set_default_store(store);
+        Ok(())
+    }
+    #[cfg(not(all(any(unix, windows), not(any(target_os = "ios", target_os = "android")))))]
+    Err(Error::Invalid(
+        "platform".to_string(),
+        "must be macOS, Windows, or a non-iOS, non-Android *nix variant".to_string(),
+    ))
 }
 
 #[cfg(test)]
 mod tests {
+    use super::Entry;
+
     #[test]
-    fn test_new() {
-        let service = "test_service";
-        let username = "test_username";
-        let entry = super::Entry::new(service, username);
+    fn test_new_before_store() {
+        let entry = Entry::new("svc", "usr");
         #[cfg(all(any(unix, windows), not(any(target_os = "ios", target_os = "android"))))]
         assert!(entry.is_ok());
         #[cfg(not(all(any(unix, windows), not(any(target_os = "ios", target_os = "android")))))]
         assert!(entry.is_err());
+        assert_eq!(entry.is_ok(), Entry::store_status().is_ok());
+    }
+
+    #[test]
+    fn test_new_after_store() {
+        let store = Entry::store_status();
+        #[cfg(all(any(unix, windows), not(any(target_os = "ios", target_os = "android"))))]
+        assert!(store.is_ok());
+        #[cfg(not(all(any(unix, windows), not(any(target_os = "ios", target_os = "android")))))]
+        assert!(store.is_err());
+        assert_eq!(store.is_ok(), Entry::new("svc", "usr").is_ok());
     }
 }
