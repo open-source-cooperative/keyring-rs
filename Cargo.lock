@@ -763,9 +763,9 @@ dependencies = [
 
 [[package]]
 name = "db-keystore"
-version = "0.5.1"
+version = "0.5.2-pre.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f931b36efd0ee1ed6f7cbc44f76600811e1e0542fe343f57ea0678cd11670790"
+checksum = "ec066cc912813677ef16b74f62c1b958f8acb1adaa2265be77da60d735939a3b"
 dependencies = [
  "anyhow",
  "clap",
@@ -1532,7 +1532,7 @@ dependencies = [
 
 [[package]]
 name = "keyring"
-version = "4.1.6"
+version = "4.2.0-pre.1"
 dependencies = [
  "android-native-keyring-store",
  "apple-native-keyring-store",
@@ -1608,15 +1608,6 @@ name = "libm"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981"
-
-[[package]]
-name = "libmimalloc-sys"
-version = "0.1.49"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a45a52f43e1c16f667ccfe4dd8c85b7f7c204fd5e3bf46c5b0db9a5c3c0b8e9"
-dependencies = [
- "cc",
-]
 
 [[package]]
 name = "linkme"
@@ -1748,15 +1739,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.119",
-]
-
-[[package]]
-name = "mimalloc"
-version = "0.1.52"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d4139bb28d14ad1facf21d5eb8825051b326e172d216b39f6d31df53cc97862"
-dependencies = [
- "libmimalloc-sys",
 ]
 
 [[package]]
@@ -2924,7 +2906,6 @@ version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f9491d7a80312c5abe66a4409e4dce02065503a235453c94b9e4133877e39ffc"
 dependencies = [
- "mimalloc",
  "thiserror 2.0.19",
  "tracing",
  "tracing-subscriber",

@@ -7,7 +7,7 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.1.6"
+version = "4.2.0-pre.1"
 edition = "2024"
 rust-version = "1.88.0"
 exclude = [".github"]
@@ -27,7 +27,7 @@ cli = [
     "zbus-secret-service-keyring-store",
     "dbus-secret-service-keyring-store",
     "linux-keyutils-keyring-store",
-    "db-keystore"
+    "db-keystore",
 ]
 
 [[example]]
@@ -66,8 +66,8 @@ rpassword = "7.5.4"
 rprompt = "2.2.0"
 zeroize = "1.9.0"
 
-[target.'cfg(not(any(target_os = "ios", target_os = "android")))'.dependencies]
-db-keystore = { version = "0.5.1", optional = true }
+[target.'cfg(all(target_pointer_width = "64", not(any(target_os = "ios", target_os = "android"))))'.dependencies]
+db-keystore = { version = "0.5.2-pre.1", default-features = false, optional = true }
 
 [target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
 apple-native-keyring-store = { version = "1.0.1", optional = true }
