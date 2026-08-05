@@ -7,7 +7,7 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.1.6"
+version = "4.2.0"
 edition = "2024"
 rust-version = "1.88.0"
 exclude = [".github"]
@@ -27,7 +27,7 @@ cli = [
     "zbus-secret-service-keyring-store",
     "dbus-secret-service-keyring-store",
     "linux-keyutils-keyring-store",
-    "db-keystore"
+    "db-keystore",
 ]
 
 [[example]]
@@ -59,31 +59,31 @@ required-features = ["cli"]
 keyring-core = "1.0.0"
 
 [dev-dependencies]
-base64 = "0.23.0"
-clap = { version = "4.6.5", features = ["derive"] }
-fastrand = "2.5.0"
-rpassword = "7.5.4"
-rprompt = "2.2.0"
-zeroize = "1.9.0"
+base64 = "0.23"
+clap = { version = "4", features = ["derive"] }
+fastrand = "2"
+rpassword = "7"
+rprompt = "2"
+zeroize = "1"
 
-[target.'cfg(not(any(target_os = "ios", target_os = "android")))'.dependencies]
-db-keystore = { version = "0.5.1", optional = true }
+[target.'cfg(all(target_pointer_width = "64", not(any(target_os = "ios", target_os = "android"))))'.dependencies]
+db-keystore = { version = "0.5", default-features = false, optional = true }
 
 [target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
-apple-native-keyring-store = { version = "1.0.1", optional = true }
+apple-native-keyring-store = { version = "1", optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-linux-keyutils-keyring-store = { version = "1.0.0", optional = true }
+linux-keyutils-keyring-store = { version = "1", optional = true }
 
 [target.'cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))'.dependencies]
-dbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust", "vendored"], optional = true }
-zbus-secret-service-keyring-store = { version = "1.0.0", features = ["crypto-rust"], optional = true }
+dbus-secret-service-keyring-store = { version = "1", features = ["crypto-rust", "vendored"], optional = true }
+zbus-secret-service-keyring-store = { version = "1", features = ["crypto-rust"], optional = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-native-keyring-store = { version = "1.1.0", optional = true }
+windows-native-keyring-store = { version = "1", optional = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
-android-native-keyring-store = { version="1.0.0", optional = true }
+android-native-keyring-store = { version="1", optional = true }
 
 [package.metadata.docs.rs]
 all-features = true
