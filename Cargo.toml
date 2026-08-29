@@ -20,14 +20,15 @@ v1 = [
     "zbus-secret-service-keyring-store"
 ]
 cli = [
-    "keyring-core/sample",
+    "android-native-keyring-store",
     "apple-native-keyring-store/keychain",
     "apple-native-keyring-store/protected",
+    "db-keystore",
+    "dbus-secret-service-keyring-store",
+    "keyring-core/sample",
+    "linux-keyutils-keyring-store",
     "windows-native-keyring-store",
     "zbus-secret-service-keyring-store",
-    "dbus-secret-service-keyring-store",
-    "linux-keyutils-keyring-store",
-    "db-keystore",
 ]
 
 [[example]]
