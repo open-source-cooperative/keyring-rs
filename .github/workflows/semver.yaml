@@ -23,15 +23,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install rust stable
-        uses: actions-rust-lang/setup-rust-toolchain@ecabd13d1c56bd1345c230e542e9144811ad706f # v2
-        with:
-          toolchain: stable
-
-      - name: Install cargo-semver-checks
-        uses: taiki-e/install-action@83ac0ad63c0167e6f06796fab0fce28db1bf3db0 # v2
-        with:
-          tool: cargo-semver-checks
-
       - name: Check semver
-        run: cargo semver-checks check-release --all-features
+        uses: obi1kenobi/cargo-semver-checks-action@6b69fcf40e9b5fb17adeb57e4b6ecd020649a239 # v2.9
+        with:
+          feature-group: all-features
