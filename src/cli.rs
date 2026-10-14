@@ -34,7 +34,7 @@ pub const NAMED_STORES: [&str; 9] = [
     "sample",
     "secret-service",
     "dbus-secret-service",
-    "sqlite",
+    "turso",
     "windows",
 ];
 
@@ -67,7 +67,7 @@ pub fn use_named_store_with_modifiers(name: &str, modifiers: &HashMap<&str, &str
         "sample" => use_sample_store(modifiers),
         "secret-service" | "zbus-secret-service" => use_zbus_secret_service_store(modifiers),
         "dbus-secret-service" => use_dbus_secret_service_store(modifiers),
-        "sqlite" => use_sqlite_store(modifiers),
+        "turso" => use_turso_store(modifiers),
         "windows" => use_windows_native_store(modifiers),
         _ => {
             let ok = NAMED_STORES.join(", ");
@@ -304,18 +304,20 @@ pub fn use_android_native_store(config: &HashMap<&str, &str>) -> Result<()> {
 
 /// Use a cross-platform encrypted sqlite (Turso) database.
 #[allow(unused_variables)]
-pub fn use_sqlite_store(config: &HashMap<&str, &str>) -> Result<()> {
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+pub fn use_turso_store(config: &HashMap<&str, &str>) -> Result<()> {
+    #[cfg(all(feature = "turso", not(any(target_os = "ios", target_os = "android"))))]
     {
         use db_keystore::DbKeyStore;
         set_default_store(DbKeyStore::new_with_modifiers(config)?);
         Ok(())
     }
-    #[cfg(any(target_os = "ios", target_os = "android"))]
+    #[cfg(any(target_os = "ios", target_os = "android", not(feature = "turso")))]
     {
-        Err(Error::NotSupportedByStore(
-            "The sqlite store is not available on iOS or Android".to_string(),
-        ))
+        Err(Error::NotSupportedByStore(if cfg!(feature = "turso") {
+            "The turso store is not available on iOS or Android".to_string()
+        } else {
+            "The turso store requires building with the `turso` feature".to_string()
+        }))
     }
 }
 
