@@ -32,6 +32,7 @@ pub use keyring_core::{Error, Result};
 /// defined by the [keyring-core library](https://crates.io/crates/keyring-core). We do this
 /// to make use of the functionality of entries while overriding their constructor.
 pub struct Entry {
+    /// The wrapped [keyring_core::Entry] object.
     pub inner: keyring_core::Entry,
 }
 
