@@ -33,4 +33,3 @@ jobs:
           inputs: .github/workflows
           annotations: true
           advanced-security: false
-          version: 1.30.1
