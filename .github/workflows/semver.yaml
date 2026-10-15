@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  semver_checks:
+  cargo-semver:
     runs-on: ubuntu-latest
 
     steps:
