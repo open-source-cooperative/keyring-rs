@@ -12,8 +12,14 @@ jobs:
   ci:
     uses: $/.github/workflows/ci.yaml
 
+  semver:
+    uses: $/.github/workflows/semver.yaml
+
+  docs:
+    uses: $/.github/workflows/docs.yaml
+
   publish:
-    needs: ci
+    needs: [ci, semver, docs]
     runs-on: ubuntu-latest
     environment: release
     permissions:
