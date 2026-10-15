@@ -9,11 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  ci:
-    uses: $/.github/workflows/ci.yaml
-
   publish:
-    needs: ci
     runs-on: ubuntu-latest
     environment: release
     permissions:
