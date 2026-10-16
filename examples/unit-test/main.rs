@@ -10,7 +10,7 @@ expected by `keyring-core`.
 use keyring::{NAMED_STORES, release_store, use_named_store};
 use keyring_core::Error;
 
-mod runner;
+pub mod runner;
 
 fn main() {
     println!("Running tests on {} stores...", NAMED_STORES.len());
