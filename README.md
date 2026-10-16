@@ -1,6 +1,6 @@
 ## Keyring-rs
 
-[![build](https://github.com/open-source-cooperative/keyring-rs/actions/workflows/ci.yaml/badge.svg)](https://github.com/open-source-cooperative/keyring-rs/actions)
+[![build](https://github.com/open-source-cooperative/keyring-rs/actions/workflows/ci.yaml/badge.svg)](https://github.com/open-source-cooperative/keyring-rs/actions) [![codecov](https://codecov.io/gh/open-source-cooperative/keyring-rs/graph/badge.svg)](https://codecov.io/gh/open-source-cooperative/keyring-rs)
 [![dependencies](https://deps.rs/repo/github/open-source-cooperative/keyring-rs/status.svg)](https://deps.rs/repo/github/open-source-cooperative/keyring-rs)
 [![crates.io](https://img.shields.io/crates/v/keyring.svg)](https://crates.io/crates/keyring)
 [![docs.rs](https://docs.rs/keyring/badge.svg)](https://docs.rs/keyring)
