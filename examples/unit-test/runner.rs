@@ -5,7 +5,7 @@ type TestResult = Result<(), String>;
 
 type TestFn = fn() -> TestResult;
 
-pub fn run_tests() -> (i32, i32) {
+pub(crate) fn run_tests() -> (i32, i32) {
     let tests: Vec<(&'static str, TestFn)> = vec![
         ("test_store_methods", test_store_methods),
         ("test_empty_password", test_empty_password),
