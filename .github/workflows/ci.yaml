@@ -6,7 +6,6 @@ on:
       - '**'
   pull_request:
   workflow_dispatch:
-  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_id || github.ref }}
@@ -97,3 +96,12 @@ jobs:
 
       - name: Clippy check
         run: cargo clippy --no-deps --all-targets --all-features -- -D warnings
+
+  ci-success:
+    if: always()
+    needs: [ ci_stable, ci_msrv ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any CI job failed
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
