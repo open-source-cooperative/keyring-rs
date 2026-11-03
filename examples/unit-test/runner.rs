@@ -5,6 +5,7 @@ type TestResult = Result<(), String>;
 
 type TestFn = fn() -> TestResult;
 
+/// Runs the tests against the default credential store.
 pub fn run_tests() -> (i32, i32) {
     let tests: Vec<(&'static str, TestFn)> = vec![
         ("test_store_methods", test_store_methods),
