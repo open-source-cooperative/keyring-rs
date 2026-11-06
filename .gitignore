@@ -1,7 +1,10 @@
 # don't check in .cargo directory because not every developer
 # uses it; the typical use is to enable cross-compiling.
 /.cargo/
+# check in the cargo-mutants config
+!/.cargo/mutants.toml
 # don't check in the binary and testing artifacts
+mutants.out
 target
 fuzz
 libtest.rmeta
