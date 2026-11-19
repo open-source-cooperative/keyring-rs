@@ -7,7 +7,7 @@ homepage = "https://github.com/open-source-cooperative/keyring-rs/wiki/Keyring"
 keywords = ["password", "credential", "keychain", "keyring", "cross-platform"]
 license = "MIT OR Apache-2.0"
 name = "keyring"
-version = "4.2.0"
+version = "4.2.1"
 edition = "2024"
 rust-version = "1.88.0"
 exclude = [".github"]
@@ -23,13 +23,13 @@ cli = [
     "android-native-keyring-store",
     "apple-native-keyring-store/keychain",
     "apple-native-keyring-store/protected",
-    "db-keystore",
     "dbus-secret-service-keyring-store",
     "keyring-core/sample",
     "linux-keyutils-keyring-store",
     "windows-native-keyring-store",
     "zbus-secret-service-keyring-store",
 ]
+"turso" = ["db-keystore"]
 
 [[example]]
 name = "keyring-v1-usage"
@@ -57,7 +57,7 @@ path = "examples/set-or-clear-three.rs"
 required-features = ["cli"]
 
 [dependencies]
-keyring-core = "1.0.0"
+keyring-core = "1.0.1"
 
 [dev-dependencies]
 base64 = "0.23"
@@ -68,7 +68,7 @@ rprompt = "2"
 zeroize = "1"
 
 [target.'cfg(all(target_pointer_width = "64", not(any(target_os = "ios", target_os = "android"))))'.dependencies]
-db-keystore = { version = "0.5", default-features = false, optional = true }
+db-keystore = { version = "0.6.0", default-features = false, optional = true }
 
 [target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
 apple-native-keyring-store = { version = "1", optional = true }
